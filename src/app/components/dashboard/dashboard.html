@@ -1,0 +1,107 @@
+      <!-- Content Header (Page header) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0">La Fortaleza - Inicio</h1>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+  
+      <!-- Main content -->
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12 col-sm-6 col-md-3">
+              <div class="info-box">
+                <span class="info-box-icon bg-info elevation-1"><i class="fas fa-dollar-sign"></i></span>
+                <div class="info-box-content">
+                  <span class="info-box-text">Ventas del Día</span>
+                  <span class="info-box-number">
+                    $0.00
+                  </span>
+                </div>
+              </div>
+            </div>
+      
+            <div class="col-12 col-sm-6 col-md-3">
+              <div class="info-box mb-3">
+                <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-boxes"></i></span>
+                <div class="info-box-content">
+                  <span class="info-box-text">Valor de Inventario</span>
+                  <span class="info-box-number">
+                    {{ inventoryValue | currency }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3">
+              <div class="info-box mb-3">
+                <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-boxes"></i></span>
+                <div class="info-box-content">
+                  <span class="info-box-text">Productos en Inventario</span>
+                  <span class="info-box-number">
+                    {{ activeProducts.length }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3">
+              <div class="info-box mb-3">
+                <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-boxes"></i></span>
+                <div class="info-box-content">
+                  <span class="info-box-text">Productos con Bajo Inventario</span>
+                  <span class="info-box-number">
+                    {{ lowStockProducts.length }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-header border-0">
+                  <div class="d-flex justify-content-center">
+                    <h3 class="card-title">Resumen de Productos con Bajo Inventario</h3>
+                  </div>
+                </div>
+                <div class="card-body table-responsive" style="height: 300px;">
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <table class="table table-head-fixed text-nowrap">
+                        <thead>
+                          <tr>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Stock</th>
+                            <th>Stock Min.</th>
+                            <th>Stock Max.</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let product of lowStockProducts">
+                            <td>{{ product.code | uppercase }}</td>
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.stock }}</td>
+                            <td>{{ product.minimumStock }}</td>
+                            <td>{{ product.recommendedStock }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.container-fluid-->
+      </div>
+      <!-- /.content -->
+

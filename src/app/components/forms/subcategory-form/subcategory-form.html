@@ -1,0 +1,36 @@
+<form (ngSubmit)="onSubmit()" #subcategoryForm="ngForm">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="name">Nombre</label>
+                <input type="text" class="form-control" id="name" name="name" [(ngModel)]="formSubcategory.name" required>
+              </div>
+        </div>
+<!--         <div class="col-md-6">
+            <div class="form-group">
+                <label for="category">Categoría</label>
+                <select 
+                  class="form-control" 
+                  id="category" 
+                  name="category" 
+                  [(ngModel)]="formSubcategory.categoryId" 
+                  required>
+                  <option [ngValue]="null" disabled selected>Seleccione una categoría</option>
+                  <option *ngFor="let category of categories" [ngValue]="category.id">
+                    {{ category.name }}
+                  </option>
+                </select>
+              </div>
+        </div> -->
+    </div>
+
+    <div class="form-group">
+      <label for="description">Descripción</label>
+      <textarea class="form-control" id="description" name="description" [(ngModel)]="formSubcategory.description"></textarea>
+    </div>
+    
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeSubcategoryForm()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="!subcategoryForm.valid">Guardar</button>
+    </div>
+  </form>
