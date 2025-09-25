@@ -1,0 +1,42 @@
+<form (ngSubmit)="onSubmit()" #supplierForm="ngForm">
+
+    <div class="form-group">
+        <label for="name">Nombre</label>
+        <input type="text" class="form-control" id="name" name="name" [(ngModel)]="formSupplier.name">
+    </div>
+
+    <div class="form-group">
+        <label for="contact">Contacto</label>
+        <input type="text" class="form-control" id="contact" name="contact" [(ngModel)]="formSupplier.contact">
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="contactPhone">Tel. Contacto</label>
+                <input type="text" class="form-control" id="contactPhone" name="contactPhone" [(ngModel)]="formSupplier.contactPhone" required>
+              </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="officePhone">Tel. Oficina</label>
+                <input type="text" class="form-control" id="officePhone" name="officePhone" [(ngModel)]="formSupplier.officePhone" required>
+              </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="text" class="form-control" id="email" name="email" [(ngModel)]="formSupplier.email" required>
+    </div>
+
+    <div class="form-group">
+        <label for="address">Dirección</label>
+        <textarea class="form-control" id="address" name="address" [(ngModel)]="formSupplier.address"></textarea>
+    </div>
+    
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeSupplierForm()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="!supplierForm.valid">Guardar</button>
+    </div>
+  </form>

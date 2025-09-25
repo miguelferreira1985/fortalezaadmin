@@ -3,6 +3,7 @@ import { environment } from '../../environment/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Subcategory } from '../models/subcategory';
+import { SubcategoryRequestDto } from '../models/subcategory-request-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -18,12 +19,12 @@ export class SubcategoryService {
     return this.http.get<Subcategory[]>(`${this.apiUrl}${this.apiPath}`);
   }
 
-  createSubcategory(subcategory: Subcategory): Observable<Subcategory> {
-    return this.http.post<Subcategory>(`${this.apiUrl}${this.apiPath}`, subcategory);
+  createSubcategory(subcategoryRequestDto: SubcategoryRequestDto): Observable<Subcategory> {
+    return this.http.post<Subcategory>(`${this.apiUrl}${this.apiPath}`, subcategoryRequestDto);
   }
 
-  updateCategory(id: number, subcategory: Subcategory): Observable<Subcategory> {
-    return this.http.put<Subcategory>(`${this.apiUrl}${this.apiPath}/${id}`, subcategory);
+  updateSubcategory(id: number, subcategoryRequestDto: SubcategoryRequestDto): Observable<Subcategory> {
+    return this.http.put<Subcategory>(`${this.apiUrl}${this.apiPath}/${id}`, subcategoryRequestDto);
   }
   
 }

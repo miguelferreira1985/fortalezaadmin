@@ -1,0 +1,52 @@
+<form (ngSubmit)="onSubmit()" #clientForm="ngForm">
+
+    <div class="form-group">
+        <label for="companyName">Compañia</label>
+        <input type="text" class="form-control" id="companyName" name="companyName" [(ngModel)]="formClient.companyName">
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="firstName">Nombre</label>
+                <input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="formClient.firstName" required>
+              </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="lastName">Apellido</label>
+                <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="formClient.lastName" required>
+              </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" [(ngModel)]="formClient.email">
+              </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+              <label for="phone">Telefono</label>
+              <input type="tel" class="form-control" id="phone" name="phone" [(ngModel)]="formClient.phone">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="rfc">RFC</label>
+        <input type="text" class="form-control" id="rfc" name="rfc" [(ngModel)]="formClient.rfc" required>
+    </div>
+
+    <div class="form-group">
+        <label for="address">Dirección</label>
+        <textarea class="form-control" id="address" name="address" [(ngModel)]="formClient.address"></textarea>
+    </div>
+    
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeClientForm()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="!clientForm.valid">Guardar</button>
+    </div>
+  </form>

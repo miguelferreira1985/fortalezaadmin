@@ -1,11 +1,12 @@
-export interface Supplier {
+export interface Client {
     id?: number;
-    name: string;
-    contact?: string;
+    companyName?: string;
+    firstName: string;
+    lastName: string;
     address?: string;
     email?: string;
-    contactPhone?: string;
-    officePhone?: string,
+    phone?: string;
+    rfc: string;
     isActivate?: boolean;
     createdDateTime?: Date;
     updatedDateTime?: Date;

@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Product } from '../models/product';
 import { param } from 'jquery';
+import { ProductRequestDto } from '../models/product-request-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -31,12 +32,12 @@ export class ProductService {
       return this.http.get<Product[]>(`${this.apiUrl}${this.apiPath}/low-stock`);
     }
 
-    createProduct(product: Product): Observable<Product> {
-      return this.http.post<Product>(`${this.apiUrl}${this.apiPath}`, product);
+    createProduct(productRequestDto: ProductRequestDto): Observable<Product> {
+      return this.http.post<Product>(`${this.apiUrl}${this.apiPath}`, productRequestDto);
     }
 
-    updateProduct(id: number, product: Product): Observable<Product> {
-      return this.http.put<Product>(`${this.apiUrl}${this.apiPath}/${id}`, product);
+    updateProduct(id: number, productRequestDto: ProductRequestDto): Observable<Product> {
+      return this.http.put<Product>(`${this.apiUrl}${this.apiPath}/${id}`, productRequestDto);
     }
 
     activateProduct(id: number): Observable<Product> {
@@ -45,6 +46,10 @@ export class ProductService {
 
     desactivateProduct(id: number): Observable<Product> {
       return this.http.patch<Product>(`${this.apiUrl}${this.apiPath}/${id}/desactivate`, null);
+    }
+
+    deleteProduct(id: number): Observable<any> {
+      return this.http.delete(`${this.apiUrl}${this.apiPath}/${id}`);
     }
   
 }

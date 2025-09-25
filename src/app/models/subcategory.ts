@@ -1,9 +1,10 @@
+import { Category } from "./category";
+
 export interface Subcategory {
     id?: number;
     name: string;
     description?: string;
-    categoryId: number;
-    productIds?: number[];
+    category: Category;
     isActivate?: boolean;
     createdDateTime?: Date;
     updatedDateTime?: Date;
