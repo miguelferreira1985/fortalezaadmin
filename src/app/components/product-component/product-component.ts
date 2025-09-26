@@ -118,12 +118,12 @@ export class ProductComponent implements OnInit {
   onProductSaved(productRequestDto: ProductRequestDto): void {
     if (productRequestDto.id) {
       this.productService.updateProduct(productRequestDto.id, productRequestDto).subscribe({
-        next: () => {
+        next: (res) => {
           this.getProducts()
           Swal.fire({
             icon: 'success',
             title: 'Producto Actulizada',
-            text: 'El producto fue actualizado con exito.',
+            text: res.message,
             confirmButtonText: 'OK'
           });
           $('#productModal').modal('hide');
@@ -140,12 +140,12 @@ export class ProductComponent implements OnInit {
     } else {
       console.log("Producto para crear:" + productRequestDto)
       this.productService.createProduct(productRequestDto).subscribe({
-        next: () => {
+        next: (res) => {
           this.getProducts();
           Swal.fire({
             icon: 'success',
             title: 'Producto Guardado!',
-            text: 'El producto fue guardado con exito.',
+            text: res.message,
             confirmButtonText: 'OK'
           });
           $('#productModal').modal('hide');
@@ -250,12 +250,12 @@ export class ProductComponent implements OnInit {
       if (result.isConfirmed) {
         let id: number = product.id ?? 0;
         this.productService.deleteProduct(id).subscribe({
-          next: () => {
+          next: (res) => {
             this.getProducts();
             Swal.fire({
               icon: 'success',
               title: 'Producto Eliminado!',
-              text: 'El producto fue eliminado con exito.',
+              text: res.message,
               confirmButtonText: 'OK'
             });
           },

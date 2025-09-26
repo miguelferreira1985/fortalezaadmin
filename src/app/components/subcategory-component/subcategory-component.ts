@@ -87,12 +87,12 @@ export class SubcategoryComponent implements OnInit {
   onSubcategorySaved(subcategoryRequestDto: SubcategoryRequestDto): void {
     if (subcategoryRequestDto.id) {
       this.subcategoryService.updateSubcategory(subcategoryRequestDto.id, subcategoryRequestDto).subscribe({
-        next: () => {
+        next: (res) => {
           this.getSubcategories()
           Swal.fire({
             icon: 'success',
             title: '¡Subcategoría Actualizada!',
-            text: 'La subcategoría fue actualizada con exito.',
+            text: res.message,
             confirmButtonText: 'OK'
           });
           $('#subcategoryModal').modal('hide');
@@ -108,12 +108,12 @@ export class SubcategoryComponent implements OnInit {
       });
     } else {
       this.subcategoryService.createSubcategory(subcategoryRequestDto).subscribe({
-        next: () => {
+        next: (res) => {
           this.getSubcategories();
           Swal.fire({
             icon: 'success',
             title: '¡Subcategoría Guardada!',
-            text: 'La subcategoría fue guardada con exito.',
+            text: res.message,
             confirmButtonText: 'OK'
           });
           $('#subcategoryModal').modal('hide');

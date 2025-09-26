@@ -3,6 +3,8 @@ import { environment } from '../../environment/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Client } from '../models/client';
+import { ApiResponse } from '../models/api-response';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -19,15 +21,17 @@ export class ClientService {
     if (isActivate !== undefined) {
       params = params.set('isActivate', isActivate.toString());
     }
-    return this.http.get<Client[]>(`${this.apiUrl}${this.apiPath}`, { params });
+    return this.http
+      .get<ApiResponse<Client[]>>(`${this.apiUrl}${this.apiPath}`, { params })
+      .pipe(map(res => res.data));
   }
 
-  createClient(client: Client): Observable<Client> {
-    return this.http.post<Client>(`${this.apiUrl}${this.apiPath}`, client);
+  createClient(client: Client): Observable<ApiResponse<Client>> {
+    return this.http.post<ApiResponse<Client>>(`${this.apiUrl}${this.apiPath}`, client);
   }
 
-  updateClient(id: number, client: Client): Observable<Client> {
-    return this.http.put<Client>(`${this.apiUrl}${this.apiPath}/${id}`, client);
+  updateClient(id: number, client: Client): Observable<ApiResponse<Client>> {
+    return this.http.put<ApiResponse<Client>>(`${this.apiUrl}${this.apiPath}/${id}`, client);
   }
   
 }

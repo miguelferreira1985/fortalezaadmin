@@ -87,12 +87,12 @@ export class PresentationComponent {
   onPresentationSaved(presentation: Presentation): void {
     if (presentation.id) {
       this.presentationService.updatePresentation(presentation.id, presentation).subscribe({
-        next: () => {
+        next: (res) => {
           this.getPresentations()
           Swal.fire({
             icon: 'success',
             title: 'Presentación Actualizada!',
-            text: 'La presentación fue actualizada con exito.',
+            text: res.message,
             confirmButtonText: 'OK'
           });
           $('#presentationModal').modal('hide');
@@ -108,12 +108,12 @@ export class PresentationComponent {
       });
     } else {
       this.presentationService.createPresentation(presentation).subscribe({
-        next: () => {
+        next: (res) => {
           this.getPresentations();
           Swal.fire({
             icon: 'success',
             title: 'Presentación Guardada!',
-            text: 'La presentación fue guardada con exito.',
+            text: res.message,
             confirmButtonText: 'OK'
           });
           $('#presentationModal').modal('hide');

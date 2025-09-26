@@ -91,12 +91,12 @@ export class SupplierComponent {
   onSupplierSaved(supplier: Supplier): void {
     if (supplier.id) {
       this.supplierService.updateSupplier(supplier.id, supplier).subscribe({
-        next: () => {
+        next: (res) => {
           this.getSuppliers()
           Swal.fire({
             icon: 'success',
             title: 'Proveedor Actulizada',
-            text: 'El proveedor fue actualizado con exito.',
+            text: res.message,
             confirmButtonText: 'OK'
           });
           $('#supplierModal').modal('hide');
@@ -113,12 +113,12 @@ export class SupplierComponent {
     } else {
       console.log("Proveedor para crear:" + supplier)
       this.supplierService.createSupplier(supplier).subscribe({
-        next: () => {
+        next: (res) => {
           this.getSuppliers();
           Swal.fire({
             icon: 'success',
             title: 'Proveedor Guardado!',
-            text: 'El Proveedor fue guardado con exito.',
+            text: res.message,
             confirmButtonText: 'OK'
           });
           $('#supplierModal').modal('hide');
@@ -149,12 +149,12 @@ export class SupplierComponent {
       if (result.isConfirmed) {
         let id: number = supplier.id ?? 0;
         this.supplierService.deleteSupplier(id).subscribe({
-          next: () => {
+          next: (res) => {
             this.getSuppliers();
             Swal.fire({
               icon: 'success',
               title: 'Proveedor Eliminado!',
-              text: 'El proveedor fue eliminado con exito.',
+              text: res.message,
               confirmButtonText: 'OK'
             });
           },

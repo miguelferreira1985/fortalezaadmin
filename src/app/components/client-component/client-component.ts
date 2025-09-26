@@ -93,12 +93,12 @@ export class ClientComponent implements OnInit {
   onClientSaved(client: Client): void {
     if (client.id) {
       this.clientService.updateClient(client.id, client).subscribe({
-        next: () => {
+        next: (res) => {
           this.getClients()
           Swal.fire({
             icon: 'success',
             title: 'Cliente Actulizada',
-            text: 'El cliente fue actualizado con exito.',
+            text: res.message,
             confirmButtonText: 'OK'
           });
           $('#clientModal').modal('hide');
@@ -115,12 +115,12 @@ export class ClientComponent implements OnInit {
     } else {
       console.log("Cliente para crear:" + client)
       this.clientService.createClient(client).subscribe({
-        next: () => {
+        next: (res) => {
           this.getClients();
           Swal.fire({
             icon: 'success',
             title: 'Cliente Guardado!',
-            text: 'El cliente fue guardado con exito.',
+            text: res.message,
             confirmButtonText: 'OK'
           });
           $('#clientModal').modal('hide');

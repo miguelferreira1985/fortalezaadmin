@@ -86,12 +86,12 @@ export class CategoryComponent {
   onCategorySaved(category: Category): void {
     if (category.id) {
       this.categoryService.updateCategory(category.id, category).subscribe({
-        next: () => {
+        next: (res) => {
           this.getCategories()
           Swal.fire({
             icon: 'success',
             title: '¡Categoría Actualizada!',
-            text: 'La categoría fue actualizada con exito.',
+            text: res.message,
             confirmButtonText: 'OK'
           });
           $('#categoryModal').modal('hide');
@@ -107,12 +107,12 @@ export class CategoryComponent {
       });
     } else {
       this.categoryService.createCategory(category).subscribe({
-        next: () => {
+        next: (res) => {
           this.getCategories();
           Swal.fire({
             icon: 'success',
             title: '¡Categoría Guardada!',
-            text: 'La categoría fue guardada con exito.',
+            text: res.message,
             confirmButtonText: 'OK'
           });
           $('#categoryModal').modal('hide');

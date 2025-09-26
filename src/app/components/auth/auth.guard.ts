@@ -1,18 +1,18 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { isExpired } from '../../core/jwt.util';
 
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn = () => {
   const router = inject(Router);
-  const accessToken = localStorage.getItem('accessToken');
+  const token = localStorage.getItem('accessToken');
+  console.log('Token from localStorage:', token);
 
-  console.log('Token from localStorage:', accessToken);
-
-  if (accessToken) {
-    console.log('Guard sent true');
+  if (token && !isExpired(token)) {
+    console.log('Token válido, acceso permitido ✅');
     return true;
-  } else {
-    router.navigate(['/login']);
-    console.log('Guard sent false');
-    return false;
-  }
+  } 
+
+  console.warn('Token inválido/expirado ❌, redirigiendo a login');
+  router.navigate(['/login']);
+  return false;
 };
