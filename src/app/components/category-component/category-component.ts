@@ -3,8 +3,8 @@ import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Category } from '../../models/category';
 import { CategoryService } from '../../services/category.service';
-import Swal from 'sweetalert2';
 import { CategoryFormComponent } from '../forms/category-form-component/category-form';
+import { NotificationService } from '../../core/notification.service';
 
 declare var $: any;
 
@@ -28,7 +28,7 @@ export class CategoryComponent {
   categoryForDetails: Category | null = null;
   searchTerm: string = '';
 
-  constructor(private categoryService: CategoryService) {}
+  constructor(private categoryService: CategoryService, private notify: NotificationService) {}
 
   ngOnInit(): void {
     this.getCategories();
@@ -88,20 +88,10 @@ export class CategoryComponent {
       this.categoryService.updateCategory(category.id, category).subscribe({
         next: (res) => {
           this.getCategories()
-          Swal.fire({
-            icon: 'success',
-            title: '¡Categoría Actualizada!',
-            text: res.message,
-            confirmButtonText: 'OK'
-          });
+          this.notify.toastSuccess(res?.message);
           $('#categoryModal').modal('hide');
         }, 
         error(err) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.message
-          });
           console.log(err);
         }
       });
@@ -109,20 +99,10 @@ export class CategoryComponent {
       this.categoryService.createCategory(category).subscribe({
         next: (res) => {
           this.getCategories();
-          Swal.fire({
-            icon: 'success',
-            title: '¡Categoría Guardada!',
-            text: res.message,
-            confirmButtonText: 'OK'
-          });
+          this.notify.toastSuccess(res?.message);
           $('#categoryModal').modal('hide');
         },
         error(err) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.message
-          });
           console.error(err);
         }
       });

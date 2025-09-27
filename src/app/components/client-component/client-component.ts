@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ClientFormComponent } from '../forms/client-form-component/client-form-component';
 import { Client } from '../../models/client';
 import { ClientService } from '../../services/client.service';
-import Swal from 'sweetalert2';
+import { NotificationService } from '../../core/notification.service';
 
 declare var $: any;
 
@@ -29,7 +29,7 @@ export class ClientComponent implements OnInit {
   searchTerm: string = '';
   showActivateClients: boolean = true;
 
-  constructor(private clientService: ClientService) {}
+  constructor(private clientService: ClientService, private notify: NotificationService) {}
 
   ngOnInit(): void {
     this.getClients();
@@ -95,20 +95,10 @@ export class ClientComponent implements OnInit {
       this.clientService.updateClient(client.id, client).subscribe({
         next: (res) => {
           this.getClients()
-          Swal.fire({
-            icon: 'success',
-            title: 'Cliente Actulizada',
-            text: res.message,
-            confirmButtonText: 'OK'
-          });
+          this.notify.toastSuccess(res?.message);
           $('#clientModal').modal('hide');
         }, 
         error(err) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.message
-          });
           console.log(err);
         }
       });
@@ -117,20 +107,10 @@ export class ClientComponent implements OnInit {
       this.clientService.createClient(client).subscribe({
         next: (res) => {
           this.getClients();
-          Swal.fire({
-            icon: 'success',
-            title: 'Cliente Guardado!',
-            text: res.message,
-            confirmButtonText: 'OK'
-          });
+          this.notify.toastSuccess(res?.message)
           $('#clientModal').modal('hide');
         },
         error(err) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.message
-          });
           console.error(err);
         }
       });

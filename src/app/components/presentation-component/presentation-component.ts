@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { PresentationFormComponent } from '../forms/presentation-form-component/presentation-form';
 import { Presentation } from '../../models/presentation';
 import { PresentationService } from '../../services/presentation.service';
-import Swal from 'sweetalert2';
+import { NotificationService } from '../../core/notification.service';
 
 declare var $: any;
 
@@ -29,7 +29,7 @@ export class PresentationComponent {
   presentationForDetails: Presentation | null = null;
   searchTerm: string = '';
 
-  constructor(private presentationService: PresentationService) {}
+  constructor(private presentationService: PresentationService, private notify: NotificationService) {}
 
   ngOnInit(): void {
     this.getPresentations();
@@ -88,21 +88,11 @@ export class PresentationComponent {
     if (presentation.id) {
       this.presentationService.updatePresentation(presentation.id, presentation).subscribe({
         next: (res) => {
-          this.getPresentations()
-          Swal.fire({
-            icon: 'success',
-            title: 'Presentación Actualizada!',
-            text: res.message,
-            confirmButtonText: 'OK'
-          });
+          this.getPresentations();
+          this.notify.toastSuccess(res?.message);
           $('#presentationModal').modal('hide');
         }, 
         error(err) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.message
-          });
           console.log(err);
         }
       });
@@ -110,20 +100,10 @@ export class PresentationComponent {
       this.presentationService.createPresentation(presentation).subscribe({
         next: (res) => {
           this.getPresentations();
-          Swal.fire({
-            icon: 'success',
-            title: 'Presentación Guardada!',
-            text: res.message,
-            confirmButtonText: 'OK'
-          });
+          this.notify.toastSuccess(res?.message);
           $('#presentationModal').modal('hide');
         },
         error(err) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.message
-          });
           console.error(err);
         }
       });

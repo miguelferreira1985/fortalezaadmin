@@ -3,9 +3,9 @@ import { Subcategory } from '../../models/subcategory';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SubcategoryService } from '../../services/subcategory.service';
-import Swal from 'sweetalert2';
 import { SubcategoryFormComponent } from '../forms/subcategory-form-component/subcategory-form';
 import { SubcategoryRequestDto } from '../../models/subcategory-request-dto';
+import { NotificationService } from '../../core/notification.service';
 
 declare var $: any;
 
@@ -29,7 +29,7 @@ export class SubcategoryComponent implements OnInit {
   subcategoryForDetails: Subcategory | null = null;
   searchTerm: string = '';
 
-  constructor(private subcategoryService: SubcategoryService) {}
+  constructor(private subcategoryService: SubcategoryService, private notify: NotificationService) {}
 
   ngOnInit(): void {
     this.getSubcategories();
@@ -88,21 +88,11 @@ export class SubcategoryComponent implements OnInit {
     if (subcategoryRequestDto.id) {
       this.subcategoryService.updateSubcategory(subcategoryRequestDto.id, subcategoryRequestDto).subscribe({
         next: (res) => {
-          this.getSubcategories()
-          Swal.fire({
-            icon: 'success',
-            title: '¡Subcategoría Actualizada!',
-            text: res.message,
-            confirmButtonText: 'OK'
-          });
+          this.getSubcategories();
+          this.notify.toastSuccess(res?.message);
           $('#subcategoryModal').modal('hide');
         }, 
         error(err) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.message
-          });
           console.log(err);
         }
       });
@@ -110,20 +100,10 @@ export class SubcategoryComponent implements OnInit {
       this.subcategoryService.createSubcategory(subcategoryRequestDto).subscribe({
         next: (res) => {
           this.getSubcategories();
-          Swal.fire({
-            icon: 'success',
-            title: '¡Subcategoría Guardada!',
-            text: res.message,
-            confirmButtonText: 'OK'
-          });
+          this.notify.toastSuccess(res?.message);
           $('#subcategoryModal').modal('hide');
         },
         error(err) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.message
-          });
           console.error(err);
         }
       });

@@ -4,9 +4,9 @@ import { ProductService } from '../../services/product.service';
 import { CommonModule } from "@angular/common";
 import { FormsModule } from '@angular/forms';
 import { ProductFormComponent } from '../forms/product-form-component/product-form';
-import Swal from 'sweetalert2';
 import { BooleanToTextPipe } from '../../pipes/booelean-to-text-pipe';
 import { ProductRequestDto } from '../../models/product-request-dto';
+import { NotificationService } from '../../core/notification.service';
 
 declare var $: any;
 
@@ -35,7 +35,7 @@ export class ProductComponent implements OnInit {
   costWithoutTaxes: number = 0;
   showActiveProducts: boolean = true;
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService, private notify: NotificationService) {}
 
   ngOnInit(): void {
     this.getProducts();
@@ -120,20 +120,10 @@ export class ProductComponent implements OnInit {
       this.productService.updateProduct(productRequestDto.id, productRequestDto).subscribe({
         next: (res) => {
           this.getProducts()
-          Swal.fire({
-            icon: 'success',
-            title: 'Producto Actulizada',
-            text: res.message,
-            confirmButtonText: 'OK'
-          });
+          this.notify.toastSuccess(res?.message);
           $('#productModal').modal('hide');
         }, 
         error(err) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.message
-          });
           console.log(err);
         }
       });
@@ -142,20 +132,10 @@ export class ProductComponent implements OnInit {
       this.productService.createProduct(productRequestDto).subscribe({
         next: (res) => {
           this.getProducts();
-          Swal.fire({
-            icon: 'success',
-            title: 'Producto Guardado!',
-            text: res.message,
-            confirmButtonText: 'OK'
-          });
+          this.notify.toastSuccess(res?.message);
           $('#productModal').modal('hide');
         },
         error(err) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.message
-          });
           console.error(err);
         }
       });
@@ -164,34 +144,16 @@ export class ProductComponent implements OnInit {
 
   desactivateProdutc(product: Product): void {
 
-    Swal.fire({
-      title: 'Estás seguro?',
-      text: `Quieres desactivar el producto "${product.name}"`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, desactivar!',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
+    this.notify.confirm('Estás seguro?', `Quieres desactivar el producto "${product.name}"`)
+    .then((result) => {
       if (result.isConfirmed) {
         let id: number = product.id ?? 0;
         this.productService.desactivateProduct(id).subscribe({
           next: () => {
             this.getProducts();
-            Swal.fire({
-              icon: 'success',
-              title: 'Producto Desactivado!',
-              text: 'El producto fue desactivado con exito.',
-              confirmButtonText: 'OK'
-            });
+            this.notify.toastSuccess("Producto desactivado");
           },
           error(err) {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: err.error.message
-            });
             console.error(err);
           }
         });
@@ -201,34 +163,16 @@ export class ProductComponent implements OnInit {
 
   activateProdutc(product: Product): void {
 
-    Swal.fire({
-      title: 'Estás seguro?',
-      text: `Quieres activar el producto "${product.name}"`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, activar!',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
+    this.notify.confirm('Estás seguro?', `Quieres activar el producto "${product.name}"`)
+    .then((result) => {
       if (result.isConfirmed) {
         let id: number = product.id ?? 0;
         this.productService.activateProduct(id).subscribe({
           next: () => {
             this.getProducts();
-            Swal.fire({
-              icon: 'success',
-              title: 'Producto Activado!',
-              text: 'El producto fue activado con exito.',
-              confirmButtonText: 'OK'
-            });
+            this.notify.toastSuccess("Producto activado");
           },
           error(err) {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: err.error.message
-            });
             console.error(err);
           }
         });
@@ -237,34 +181,16 @@ export class ProductComponent implements OnInit {
   }
 
   deleteProduct(product: Product): void {
-    Swal.fire({
-      title: 'Estás seguro?',
-      text: `Quieres elimanr el producto "${product.name}" ?. Esta acción es irreversible.`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: ' Si, Eliminar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
+    this.notify.confirm('Estás seguro?', `Quieres eliminar el producto "${product.name}, esta accció es irreversible."`)
+    .then((result) => {
       if (result.isConfirmed) {
         let id: number = product.id ?? 0;
         this.productService.deleteProduct(id).subscribe({
           next: (res) => {
             this.getProducts();
-            Swal.fire({
-              icon: 'success',
-              title: 'Producto Eliminado!',
-              text: res.message,
-              confirmButtonText: 'OK'
-            });
+            this.notify.toastSuccess(res?.message); // ✅
           },
           error(err) {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: err.error.message
-            });
             console.error(err);
           }
         });

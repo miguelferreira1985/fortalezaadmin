@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { SupplierFormComponent } from '../forms/supplier-form-component/supplier-form-component';
 import { Supplier } from '../../models/supplier';
 import { SupplierService } from '../../services/supplier.service';
-import Swal from 'sweetalert2';
+import { NotificationService } from '../../core/notification.service';
 
 declare var $: any;
 
@@ -29,7 +29,7 @@ export class SupplierComponent {
   searchTerm: string = '';
   showActivateClients: boolean = true;
 
-  constructor(private supplierService: SupplierService) {}
+  constructor(private supplierService: SupplierService, private notify: NotificationService) {}
 
   ngOnInit(): void {
     this.getSuppliers();
@@ -92,21 +92,11 @@ export class SupplierComponent {
     if (supplier.id) {
       this.supplierService.updateSupplier(supplier.id, supplier).subscribe({
         next: (res) => {
-          this.getSuppliers()
-          Swal.fire({
-            icon: 'success',
-            title: 'Proveedor Actulizada',
-            text: res.message,
-            confirmButtonText: 'OK'
-          });
+          this.getSuppliers();
+          this.notify.toastSuccess(res?.message);
           $('#supplierModal').modal('hide');
         }, 
         error(err) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.message
-          });
           console.log(err);
         }
       });
@@ -115,20 +105,10 @@ export class SupplierComponent {
       this.supplierService.createSupplier(supplier).subscribe({
         next: (res) => {
           this.getSuppliers();
-          Swal.fire({
-            icon: 'success',
-            title: 'Proveedor Guardado!',
-            text: res.message,
-            confirmButtonText: 'OK'
-          });
+          this.notify.toastSuccess(res?.message);
           $('#supplierModal').modal('hide');
         },
         error(err) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.message
-          });
           console.error(err);
         }
       });
@@ -136,34 +116,16 @@ export class SupplierComponent {
   }
 
   deleteSupplier(supplier: Supplier): void {
-    Swal.fire({
-      title: 'Estás seguro?',
-      text: `Quieres elimanr el proveedror "${supplier.name}" ?. Esta acción es irreversible.`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: ' Si, Eliminar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
+    this.notify.confirm('Estás seguro?', `Quieres elimanr el proveedror "${supplier.name}" ?. Esta acción es irreversible.`)
+    .then((result) => {
       if (result.isConfirmed) {
         let id: number = supplier.id ?? 0;
         this.supplierService.deleteSupplier(id).subscribe({
           next: (res) => {
             this.getSuppliers();
-            Swal.fire({
-              icon: 'success',
-              title: 'Proveedor Eliminado!',
-              text: res.message,
-              confirmButtonText: 'OK'
-            });
+            this.notify.toastSuccess(res?.message);
           },
           error(err) {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: err.error.message
-            });
             console.error(err);
           }
         });
