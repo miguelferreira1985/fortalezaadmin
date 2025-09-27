@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { SupplierFormComponent } from '../forms/supplier-form-component/supplier-form-component';
 import { Supplier } from '../../models/supplier';
 import { SupplierService } from '../../services/supplier.service';
-import { NotificationService } from '../../core/notification.service';
+import { NotificationService } from '../../services/notification.service';
 
 declare var $: any;
 
@@ -93,7 +93,7 @@ export class SupplierComponent {
       this.supplierService.updateSupplier(supplier.id, supplier).subscribe({
         next: (res) => {
           this.getSuppliers();
-          this.notify.toastSuccess(res?.message);
+          this.notify.success('¡Proveedor actualizado!', res?.message);
           $('#supplierModal').modal('hide');
         }, 
         error(err) {
@@ -101,11 +101,10 @@ export class SupplierComponent {
         }
       });
     } else {
-      console.log("Proveedor para crear:" + supplier)
       this.supplierService.createSupplier(supplier).subscribe({
         next: (res) => {
           this.getSuppliers();
-          this.notify.toastSuccess(res?.message);
+          this.notify.success('¡Proveedor agregado!', res?.message);
           $('#supplierModal').modal('hide');
         },
         error(err) {
@@ -116,14 +115,14 @@ export class SupplierComponent {
   }
 
   deleteSupplier(supplier: Supplier): void {
-    this.notify.confirm('Estás seguro?', `Quieres elimanr el proveedror "${supplier.name}" ?. Esta acción es irreversible.`)
+    this.notify.confirm('¿Estás seguro?', `¿Quieres elimanr el proveedror "${supplier.name}"?. Esta acción es irreversible.`)
     .then((result) => {
       if (result.isConfirmed) {
         let id: number = supplier.id ?? 0;
         this.supplierService.deleteSupplier(id).subscribe({
           next: (res) => {
             this.getSuppliers();
-            this.notify.toastSuccess(res?.message);
+            this.notify.success('¡Proveedor eliminado!', res?.message);
           },
           error(err) {
             console.error(err);

@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { ProductFormComponent } from '../forms/product-form-component/product-form';
 import { BooleanToTextPipe } from '../../pipes/booelean-to-text-pipe';
 import { ProductRequestDto } from '../../models/product-request-dto';
-import { NotificationService } from '../../core/notification.service';
+import { NotificationService } from '../../services/notification.service';
 
 declare var $: any;
 
@@ -95,7 +95,6 @@ export class ProductComponent implements OnInit {
       next: (data) => {
         this.products = data;
         this.filteredProducts = [...this.products];
-        console.log('Productos obtenidos:', this.filteredProducts);
       },
       error: (error) => {
         console.error('Error al obtener los productos:', error);
@@ -120,7 +119,7 @@ export class ProductComponent implements OnInit {
       this.productService.updateProduct(productRequestDto.id, productRequestDto).subscribe({
         next: (res) => {
           this.getProducts()
-          this.notify.toastSuccess(res?.message);
+          this.notify.success('¡Producto actualizado!', res?.message);
           $('#productModal').modal('hide');
         }, 
         error(err) {
@@ -132,7 +131,7 @@ export class ProductComponent implements OnInit {
       this.productService.createProduct(productRequestDto).subscribe({
         next: (res) => {
           this.getProducts();
-          this.notify.toastSuccess(res?.message);
+          this.notify.success('¡Producto agregado!', res?.message);
           $('#productModal').modal('hide');
         },
         error(err) {
@@ -143,52 +142,50 @@ export class ProductComponent implements OnInit {
   }
 
   desactivateProdutc(product: Product): void {
-
-    this.notify.confirm('Estás seguro?', `Quieres desactivar el producto "${product.name}"`)
-    .then((result) => {
-      if (result.isConfirmed) {
-        let id: number = product.id ?? 0;
-        this.productService.desactivateProduct(id).subscribe({
-          next: () => {
-            this.getProducts();
-            this.notify.toastSuccess("Producto desactivado");
-          },
-          error(err) {
-            console.error(err);
-          }
-        });
-      }
-    });
+    this.notify.confirm('¿Estás seguro?', `¿Quieres desactivar el producto "${product.name}?"`)
+      .then((result) => {
+        if (result.isConfirmed) {
+          let id: number = product.id ?? 0;
+          this.productService.desactivateProduct(id).subscribe({
+            next: () => {
+              this.getProducts();
+              this.notify.success('¡Producto descativado!');
+            },
+            error(err) {
+              console.error(err);
+            }
+          });
+        }
+      });
   }
 
   activateProdutc(product: Product): void {
-
-    this.notify.confirm('Estás seguro?', `Quieres activar el producto "${product.name}"`)
-    .then((result) => {
-      if (result.isConfirmed) {
-        let id: number = product.id ?? 0;
-        this.productService.activateProduct(id).subscribe({
-          next: () => {
-            this.getProducts();
-            this.notify.toastSuccess("Producto activado");
-          },
-          error(err) {
-            console.error(err);
-          }
-        });
-      }
-    });
+    this.notify.confirm('¿Estás seguro?', `¿Quieres activar el producto "${product.name}?"`)
+      .then((result) => {
+        if (result.isConfirmed) {
+          let id: number = product.id ?? 0;
+          this.productService.activateProduct(id).subscribe({
+            next: () => {
+              this.getProducts();
+              this.notify.success('¡Producto activado!');
+            },
+            error(err) {
+              console.error(err);
+            }
+          });
+        }
+      });
   }
 
   deleteProduct(product: Product): void {
-    this.notify.confirm('Estás seguro?', `Quieres eliminar el producto "${product.name}, esta accció es irreversible."`)
+    this.notify.confirm('¿Estás seguro?', `¿Quieres eliminar el producto "${product.name}?. Esta acción es irreversible"`)
     .then((result) => {
       if (result.isConfirmed) {
         let id: number = product.id ?? 0;
         this.productService.deleteProduct(id).subscribe({
           next: (res) => {
             this.getProducts();
-            this.notify.toastSuccess(res?.message); // ✅
+            this.notify.success('¡Producto eliminado!', res?.message); // ✅
           },
           error(err) {
             console.error(err);

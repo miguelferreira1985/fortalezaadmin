@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ClientFormComponent } from '../forms/client-form-component/client-form-component';
 import { Client } from '../../models/client';
 import { ClientService } from '../../services/client.service';
-import { NotificationService } from '../../core/notification.service';
+import { NotificationService } from '../../services/notification.service';
 
 declare var $: any;
 
@@ -69,7 +69,6 @@ export class ClientComponent implements OnInit {
       next: (data) => {
         this.clients = data;
         this.filteredClients = [...this.clients];
-        console.log('Clientes obtenidos:', this.filteredClients);
       },
       error: (error) => {
         console.error('Error al obtener los clientes:', error);
@@ -95,7 +94,7 @@ export class ClientComponent implements OnInit {
       this.clientService.updateClient(client.id, client).subscribe({
         next: (res) => {
           this.getClients()
-          this.notify.toastSuccess(res?.message);
+          this.notify.success('¡Cliente actualizado!', res?.message);
           $('#clientModal').modal('hide');
         }, 
         error(err) {
@@ -107,7 +106,7 @@ export class ClientComponent implements OnInit {
       this.clientService.createClient(client).subscribe({
         next: (res) => {
           this.getClients();
-          this.notify.toastSuccess(res?.message)
+          this.notify.success('¡Cliente agregado!', res?.message)
           $('#clientModal').modal('hide');
         },
         error(err) {

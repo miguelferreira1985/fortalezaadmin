@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { PresentationFormComponent } from '../forms/presentation-form-component/presentation-form';
 import { Presentation } from '../../models/presentation';
 import { PresentationService } from '../../services/presentation.service';
-import { NotificationService } from '../../core/notification.service';
+import { NotificationService } from '../../services/notification.service';
 
 declare var $: any;
 
@@ -65,7 +65,6 @@ export class PresentationComponent {
       next: (data) => {
         this.presentations = data;
         this.filteredPresentations = [...this.presentations];
-        console.log('Presentaciones obtenidas:', this.filteredPresentations);
       },
       error: (error) => {
         console.error('Error al obtener las presentaciones:', error);
@@ -89,7 +88,7 @@ export class PresentationComponent {
       this.presentationService.updatePresentation(presentation.id, presentation).subscribe({
         next: (res) => {
           this.getPresentations();
-          this.notify.toastSuccess(res?.message);
+          this.notify.success('¡Presentación actualizada!', res?.message);
           $('#presentationModal').modal('hide');
         }, 
         error(err) {
@@ -100,7 +99,7 @@ export class PresentationComponent {
       this.presentationService.createPresentation(presentation).subscribe({
         next: (res) => {
           this.getPresentations();
-          this.notify.toastSuccess(res?.message);
+          this.notify.success('¡Presentación agregada!', res?.message);
           $('#presentationModal').modal('hide');
         },
         error(err) {

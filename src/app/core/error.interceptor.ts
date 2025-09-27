@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from "@angular/common/http";
 import { inject } from "@angular/core";
-import { NotificationService } from "./notification.service";
+import { NotificationService } from "../services/notification.service";
 import { catchError, throwError } from "rxjs";
 
 type ApiErrorResponse = {

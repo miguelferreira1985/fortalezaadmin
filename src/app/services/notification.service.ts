@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 export class NotificationService {
     private toast = Swal.mixin({
         toast: true,
-        position: 'center',
+        position: 'top-right',
         showConfirmButton: false,
         timer: 3500,
         timerProgressBar: true

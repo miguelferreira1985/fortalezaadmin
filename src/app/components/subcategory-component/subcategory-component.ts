@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { SubcategoryService } from '../../services/subcategory.service';
 import { SubcategoryFormComponent } from '../forms/subcategory-form-component/subcategory-form';
 import { SubcategoryRequestDto } from '../../models/subcategory-request-dto';
-import { NotificationService } from '../../core/notification.service';
+import { NotificationService } from '../../services/notification.service';
 
 declare var $: any;
 
@@ -89,7 +89,7 @@ export class SubcategoryComponent implements OnInit {
       this.subcategoryService.updateSubcategory(subcategoryRequestDto.id, subcategoryRequestDto).subscribe({
         next: (res) => {
           this.getSubcategories();
-          this.notify.toastSuccess(res?.message);
+          this.notify.success('¡Categoría actualizada!', res?.message);
           $('#subcategoryModal').modal('hide');
         }, 
         error(err) {
@@ -100,7 +100,7 @@ export class SubcategoryComponent implements OnInit {
       this.subcategoryService.createSubcategory(subcategoryRequestDto).subscribe({
         next: (res) => {
           this.getSubcategories();
-          this.notify.toastSuccess(res?.message);
+          this.notify.success('¡Categoría agregada!', res?.message);
           $('#subcategoryModal').modal('hide');
         },
         error(err) {

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Category } from '../../models/category';
 import { CategoryService } from '../../services/category.service';
 import { CategoryFormComponent } from '../forms/category-form-component/category-form';
-import { NotificationService } from '../../core/notification.service';
+import { NotificationService } from '../../services/notification.service';
 
 declare var $: any;
 
@@ -64,7 +64,6 @@ export class CategoryComponent {
       next: (data) => {
         this.categories = data;
         this.filteredCategories = [...this.categories];
-        console.log('Categorias obtenidas:', this.filteredCategories);
       },
       error: (error) => {
         console.error('Error al obtener las categorias:', error);
@@ -88,7 +87,7 @@ export class CategoryComponent {
       this.categoryService.updateCategory(category.id, category).subscribe({
         next: (res) => {
           this.getCategories()
-          this.notify.toastSuccess(res?.message);
+          this.notify.success('¡Categoría actualizada!', res?.message);
           $('#categoryModal').modal('hide');
         }, 
         error(err) {
@@ -99,7 +98,7 @@ export class CategoryComponent {
       this.categoryService.createCategory(category).subscribe({
         next: (res) => {
           this.getCategories();
-          this.notify.toastSuccess(res?.message);
+          this.notify.success('¡Categoría agregada!', res?.message);
           $('#categoryModal').modal('hide');
         },
         error(err) {
