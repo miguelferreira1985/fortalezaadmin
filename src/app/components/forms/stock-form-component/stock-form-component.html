@@ -23,8 +23,8 @@
                 name="quantity" 
                 formControlName="quantity">
 
-              <small class="text-danger" *ngIf="c('quantity').touched && c('quantity').invalid">
-                La cantidad es obligatoria.
+              <small class="text-danger" *ngIf="form.hasError('zeroQuantity') && c('quantity').touched">
+                La cantidad no puede ser 0.
                 </small>
 
                 <small class="text-danger" *ngIf="form.hasError('negativeStock')">

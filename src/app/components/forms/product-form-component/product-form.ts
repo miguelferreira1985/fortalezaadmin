@@ -11,15 +11,9 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { PresentationService } from '../../../services/presentation.service';
 import { Presentation } from '../../../models/presentation';
 import { ProductRequestDto } from '../../../models/product-request-dto';
+import { CustomValidators } from '../../../custom-validators';
 
 declare var $: any;
-
-function priceGteCost(group: AbstractControl): ValidationErrors | null {
-  const cost = group.get('cost')?.value;
-  const price = group.get('price')?.value;
-  if (cost == null || price == null) return null;
-  return Number(price) >= Number(cost) ? null : { priceLtCost: true };
-}
 
 @Component({
   selector: 'app-product-form',
@@ -67,7 +61,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       presentationId: [null],
       supplierIds: [[]] // array simple de IDs
     },
-    { validators: priceGteCost }
+    { validators: CustomValidators.priceGteCost }
   );
 
     this.getSubcategories();

@@ -8,7 +8,7 @@ import { BooleanToTextPipe } from '../../pipes/booelean-to-text-pipe';
 import { ProductRequestDto } from '../../models/product-request-dto';
 import { NotificationService } from '../../services/notification.service';
 import { StockFormComponent } from "../forms/stock-form-component/stock-form-component";
-import { StokcRequestDto } from '../../models/stokc-request-dto';
+import { StokcRequestDto } from '../../models/stock-request-dto';
 
 declare var $: any;
 

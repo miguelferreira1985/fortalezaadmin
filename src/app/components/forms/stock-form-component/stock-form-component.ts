@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Product } from '../../../models/product';
-import { StokcRequestDto } from '../../../models/stokc-request-dto';
+import { StokcRequestDto } from '../../../models/stock-request-dto';
+import { CustomValidators } from '../../../custom-validators';
 
 declare var $: any;
 
@@ -28,11 +29,11 @@ export class StockFormComponent implements OnInit, OnChanges {
     this.form = this.fb.group(
       {
         previousStock: [{ value: 0, disabled: true }],            
-        quantity: [0, [Validators.required]],                      
+        quantity: [0, [Validators.required, CustomValidators.nonZeroQuantity]],                      
         newStock: [{ value: 0, disabled: true }],
         description: ['', Validators.required]                   
       },
-      { validators: [this.nonNegativeNewStock] }                   
+      { validators: CustomValidators.nonNegativeStock }                   
     );
 
     // Actualiza newStock en vivo cuando se escribe quantity
@@ -59,17 +60,6 @@ export class StockFormComponent implements OnInit, OnChanges {
       this.form.updateValueAndValidity({ onlySelf: true, emitEvent: false });
     }
   }
-
-  // Validador: previousStock + quantity >= 0
-  private nonNegativeNewStock(group: AbstractControl): ValidationErrors | null {
-    const prev = Number(group.get('previousStock')?.value ?? 0);
-    const qty  = Number(group.get('quantity')?.value ?? 0);
-    if (isNaN(prev) || isNaN(qty)) return null;       // deja que 'required' actúe
-
-    const result = prev + qty;
-    return result >= 0 ? null : { negativeStock: { minAllowed: -prev, prev, qty, result } };
-  }
-
 
   onSubmit(): void {
     if (this.form.invalid) {

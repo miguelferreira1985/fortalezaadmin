@@ -6,7 +6,7 @@ import { Product } from '../models/product';
 import { map } from 'rxjs/operators';
 import { ProductRequestDto } from '../models/product-request-dto';
 import { ApiResponse } from '../models/api-response';
-import { StokcRequestDto } from '../models/stokc-request-dto';
+import { StokcRequestDto } from '../models/stock-request-dto';
 import { InventoryMovement } from '../models/inventory-movement';
 
 @Injectable({
