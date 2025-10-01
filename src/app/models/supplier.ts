@@ -1,10 +1,10 @@
 export interface Supplier {
     id?: number;
     name: string;
-    contact?: string;
-    address?: string;
+    contact: string;
+    location: string;
     email?: string;
-    contactPhone?: string;
+    contactPhone: string;
     officePhone?: string,
     isActivate?: boolean;
     createdDateTime?: Date;

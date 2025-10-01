@@ -46,10 +46,7 @@
                       <table class="table table-head-fixed text-nowrap">
                         <thead>
                           <tr>
-                            <th>Compañia</th>
                             <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>Email</th>
                             <th>Telefono</th>
                             <th>RFC</th>
                             <th></th>
@@ -57,10 +54,7 @@
                         </thead>
                         <tbody>
                           <tr *ngFor="let client of filteredClients">
-                            <td>{{ client.companyName | uppercase }}</td>
-                            <td>{{ client.firstName }}</td>
-                            <td>{{ client.lastName }}</td>
-                            <td>{{ client.email }}</td>
+                            <td>{{ client.name }}</td>
                             <td>{{ client.phone }}</td>
                             <td>{{ client.rfc | uppercase }}</td>
                             <td>
@@ -81,7 +75,7 @@
                 </div>
               </div> 
               <div class="modal fade" id="clientModal" tabindex="-1" role="dialog" aria-labelledby="clientModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog modal-sm" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title" id="clientModalLabel">
@@ -102,7 +96,7 @@
                 </div>
               </div>
               <div class="modal fade" id="clientDetailsModal" tabindex="-1" role="dialog" aria-labelledby="clientDetailsModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog modal-sm" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title" id="clientDetailsModalLabel">Detalles del Cliente</h5>
@@ -115,45 +109,20 @@
 
                       <div class="modal-body" *ngIf="clientForDetails">
                         <div class="form-group">
-                            <strong>Compaña:</strong>
-                            <p>{{ clientForDetails.companyName }}</p>
+                            <strong>Nombre:</strong>
+                            <p>{{ clientForDetails.name }}</p>
                         </div>
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <strong>Nombre:</strong>
-                              <p>{{ clientForDetails.firstName }}</p>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <strong>Apellido:</strong>
-                              <p>{{ clientForDetails.lastName }}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <strong>Telefono:</strong>
-                              <p>{{ clientForDetails.phone }}</p>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <strong>RFC:</strong>
-                              <p>{{ clientForDetails.rfc }}</p>
-                            </div>
-                          </div>
-                        </div>
+
                         <div class="form-group">
-                            <strong>Email:</strong>
-                            <p>{{ clientForDetails.email }}</p>
+                          <strong>RFC:</strong>
+                          <p>{{ clientForDetails.rfc | uppercase}}</p>
                         </div>
+
                         <div class="form-group">
-                            <strong>Dirección:</strong>
-                            <p>{{ clientForDetails.address }}</p>
+                          <strong>Telefono:</strong>
+                          <p>{{ clientForDetails.phone }}</p>
                         </div>
+
                       </div>
 
                       <div class="modal-footer">
@@ -162,7 +131,6 @@
                       </div>
 
                     }
-
 
                   </div>
                 </div>

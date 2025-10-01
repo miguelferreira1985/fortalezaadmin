@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Presentation } from '../../../models/presentation';
 
 declare var $: any;
@@ -9,7 +9,7 @@ declare var $: any;
   selector: 'app-presentation-form',
   imports: [
     CommonModule,
-    FormsModule
+    ReactiveFormsModule
   ],
   templateUrl: './presentation-form.html',
   styleUrl: './presentation-form.css'
@@ -18,43 +18,53 @@ export class PresentationFormComponent implements OnInit {
 
   @Input() presentation: Presentation | null = null;
   @Output() savePresentation = new EventEmitter<Presentation>();
-  @ViewChild('presentationForm') presentationForm!: NgForm;
 
-  formPresentation: Presentation = { name: '', abbreviation: '' };
+  form!: FormGroup;
 
-  constructor() {}
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
+    this.form = this.fb.group({
+      id: [null],
+      name: ['', Validators.required],
+      abbreviation: ['']
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['presentation'] && changes['presentation'].currentValue) {
-      // El valor del input `presentation` ha cambiado, es el momento de cargar los datos
-      this.formPresentation = { ...changes['presentation'].currentValue };
-      console.log('Presentation data loaded:', this.formPresentation);
-    } else if (changes['presentation'] && !changes['presentation'].currentValue) {
-      // El valor del input `product` es null, reseteamos el formulario
-      console.log('Form reset for new presentation.');
+      const p = changes['presentation'].currentValue as Presentation;
+      this.form.patchValue({
+        id: p.id,
+        name: p.name,
+        abbreviation: p.abbreviation
+      });
     }
   }
 
   onSubmit(): void {
-    this.savePresentation.emit(this.formPresentation);
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    const presentation: Presentation = this.form.value;
+    this.savePresentation.emit(presentation);
   }
 
   closePresentationForm(): void {
     $('#presentationModal').modal('hide');
   }
 
-  public resetFormAndModal(): void {
-    this.formPresentation = { name: '', abbreviation: '' };
-
-    setTimeout(() => {
-      if (this.presentationForm) {
-        this.presentationForm.resetForm(this.formPresentation);
-        console.log('Formulario Reseteado');
-      }
+  resetFormAndModal(): void {
+    this.form.reset({
+      id: null,
+      name: '',
+      abbreviation: ''
     });
+  }
+
+  c(name: string) {
+    return this.form.get(name)!;
   }
 
 }

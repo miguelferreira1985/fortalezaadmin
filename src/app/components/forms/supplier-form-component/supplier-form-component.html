@@ -1,42 +1,57 @@
-<form (ngSubmit)="onSubmit()" #supplierForm="ngForm">
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-    <div class="form-group">
-        <label for="name">Nombre</label>
-        <input type="text" class="form-control" id="name" name="name" [(ngModel)]="formSupplier.name">
-    </div>
-
-    <div class="form-group">
-        <label for="contact">Contacto</label>
-        <input type="text" class="form-control" id="contact" name="contact" [(ngModel)]="formSupplier.contact">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="name">Nombre*</label>
+                <input type="text" class="form-control" id="name" name="name" formControlName="name">
+                <small class="text-danger" *ngIf="c('name').touched && c('name').invalid">El nombre es obligatorio.</small>
+              </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="contact">Contacto*</label>
+                <input type="text" class="form-control" id="contact" name="contact" formControlName="contact">
+                <small class="text-danger" *ngIf="c('contact').touched && c('contact').invalid">El contacto es obligatorio.</small>
+              </div>
+        </div>
     </div>
 
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                <label for="contactPhone">Tel. Contacto</label>
-                <input type="text" class="form-control" id="contactPhone" name="contactPhone" [(ngModel)]="formSupplier.contactPhone" required>
+                <label for="contactPhone">Tel. Contacto*</label>
+                <input type="tel" class="form-control" id="contactPhone" name="contactPhone" formControlName="contactPhone">
+                <small class="text-danger" *ngIf="c('contactPhone').touched && c('contactPhone').invalid">El telefono del contacto es obligatoria.</small>
               </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
                 <label for="officePhone">Tel. Oficina</label>
-                <input type="text" class="form-control" id="officePhone" name="officePhone" [(ngModel)]="formSupplier.officePhone" required>
+                <input type="tel" class="form-control" id="officePhone" name="officePhone" formControlName="officePhone">
               </div>
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="email">Email</label>
-        <input type="text" class="form-control" id="email" name="email" [(ngModel)]="formSupplier.email" required>
-    </div>
-
-    <div class="form-group">
-        <label for="address">Dirección</label>
-        <textarea class="form-control" id="address" name="address" [(ngModel)]="formSupplier.address"></textarea>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input class="form-control" id="email" name="email" formControlName="email">
+                <small class="text-danger" *ngIf="c('name').touched && c('name').invalid">El formato no es correcto.</small>
+              </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="location">Ubicación*</label>
+                <input class="form-control" id="location" name="location" formControlName="location">
+                <small class="text-danger" *ngIf="c('location').touched && c('location').invalid">La ubicación es obligatoria.</small>
+              </div>
+        </div>
     </div>
     
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="closeSupplierForm()">Cancelar</button>
-      <button type="submit" class="btn btn-primary" [disabled]="!supplierForm.valid">Guardar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Guardar</button>
     </div>
   </form>

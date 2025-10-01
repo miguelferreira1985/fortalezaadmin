@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Category } from '../../../models/category';
 
 declare var $: any;
@@ -9,7 +9,7 @@ declare var $: any;
   selector: 'app-category-form',
   imports: [    
     CommonModule,
-    FormsModule
+    ReactiveFormsModule
   ],
   templateUrl: './category-form.html',
   styleUrl: './category-form.css'
@@ -18,43 +18,53 @@ export class CategoryFormComponent implements OnInit {
 
   @Input() category: Category | null = null;
   @Output() saveCategory = new EventEmitter<Category>();
-  @ViewChild('categoryForm') categoryForm!: NgForm;
 
-  formCategory: Category = { name: '', description: '' };
+  form!: FormGroup;
 
-  constructor() {}
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
+    this.form = this.fb.group({
+      id: [null],
+      name: ['', Validators.required],
+      description: ['']
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['category'] && changes['category'].currentValue) {
-      // El valor del input `subcategory` ha cambiado, es el momento de cargar los datos
-      this.formCategory = { ...changes['category'].currentValue };
-      console.log('Category data loaded:', this.formCategory);
-    } else if (changes['category'] && !changes['category'].currentValue) {
-      // El valor del input `product` es null, reseteamos el formulario
-      console.log('Form reset for new category.');
+      const c = changes['category'].currentValue as Category;
+      this.form.patchValue({
+        id: c.id,
+        name: c.name,
+        description: c.description
+      });
     }
   }
 
   onSubmit(): void {
-    this.saveCategory.emit(this.formCategory);
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    const category: Category = this.form.value;
+    this.saveCategory.emit(category);
   }
 
   closeCategoryForm(): void {
     $('#categoryModal').modal('hide');
   }
 
-  public resetFormAndModal(): void {
-    this.formCategory = { name: '', description: '' };
-
-    setTimeout(() => {
-      if (this.categoryForm) {
-        this.categoryForm.resetForm(this.formCategory);
-        console.log('Formulario Reseteado');
-      }
+  resetFormAndModal(): void {
+    this.form.reset({
+      id: null,
+      name: '',
+      description: ''
     });
+  }
+
+  c(name: string) {
+    return this.form.get(name)!;
   }
 
 }

@@ -82,8 +82,8 @@ export class ClientComponent implements OnInit {
     } else {
       const lowerCaseSearchItem = this.searchTerm.toLowerCase();
       this.filteredClients = this.clients.filter(client => 
-        client.firstName.toLowerCase().includes(lowerCaseSearchItem) ||
-        client.lastName.toLowerCase().includes(lowerCaseSearchItem) ||
+        client.name.toLowerCase().includes(lowerCaseSearchItem) ||
+        client.phone?.toLowerCase().includes(lowerCaseSearchItem) ||
         client.rfc.toLowerCase().includes(lowerCaseSearchItem)
       );
     }

@@ -1,125 +1,148 @@
-<form (ngSubmit)="onSubmit()" #productForm="ngForm">
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                <label for="name">Nombre</label>
-                <input type="text" class="form-control" id="name" name="name" [(ngModel)]="formProduct.name" required>
-              </div>
+                <label for="name">Nombre*</label>
+                <input type="text" class="form-control" id="name" name="name" formControlName="name">
+                <small class="text-danger" *ngIf="c('name').touched && c('name').invalid">El nombre es obligatorio.</small>
+            </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                <label for="name">Código</label>
-                <input type="text" class="form-control" id="code" name="code" [(ngModel)]="formProduct.code" required>
+                <label for="code">Código*</label>
+                <input type="text" class="form-control" id="code" name="code" formControlName="code">
+                <small class="text-danger" *ngIf="c('code').touched && c('code').invalid">El código es obligatorio.</small>
               </div>
         </div>
     </div>
 
     <div class="form-group">
       <label for="description">Descripción</label>
-      <textarea class="form-control" id="description" name="description" [(ngModel)]="formProduct.description"></textarea>
+      <textarea class="form-control" id="description" name="description" formControlName="description"></textarea>
     </div>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label for="price">Precio</label>
-                <input type="number" class="form-control" id="price" name="price" [(ngModel)]="formProduct.price" (ngModelChange)="onPriceChange()" required>
-              </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
-              <label for="price">Ganancia (%)</label>
-              <input type="number" class="form-control" id="profiy" name="profit" [(ngModel)]="profitPercentage" (ngModelChange)="onProfitChange()" required>
-            </div>
-        </div>
-    </div>
 
-    <div class="row">
-      <div class="col-md-6">
-        <div class="form-group">
-            <label for="cost">Costo con IVA</label>
-            <input type="number" class="form-control" id="cost" name="cost" [(ngModel)]="formProduct.cost" (ngModelChange)="onCostChange()" required>
-          </div>
-      </div>
-
-      <div class="col-md-6">
+      <div class="col-md-3">
         <div class="form-group">
             <label for="costWithoutTaxes">Costo sin IVA</label>
-            <input type="number" class="form-control" id="costWithoutTaxes" name="costWithoutTaxes" [(ngModel)]="costWithoutTaxes" (ngModelChange)="onCostWithoutTaxesChange()" required>
+            <input type="number"
+            class="form-control"
+            id="costWithoutTaxes"
+            [value]="costWithoutTaxes"
+            (input)="onCostWithoutTaxesChange($event)" />          
           </div>
       </div>
+
+      <div class="col-md-3">
+        <div class="form-group">
+            <label for="cost">Costo con IVA*</label>
+            <input type="number" class="form-control" formControlName="cost" (input)="onCostChange()" />
+            <small class="text-danger" *ngIf="c('cost').touched && c('cost').invalid">El costo con IVA es obligatorio.</small>
+          </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="form-group">
+            <label for="price">Ganancia (%)</label>
+            <input type="number"
+            class="form-control"
+            id="profit"
+            [value]="profitPercentage"
+            (input)="profitPercentage = $any($event.target).value; onProfitChange()" />
+          </div>
+      </div>
+
+      <div class="col-md-3">
+          <div class="form-group">
+              <label for="price">Precio*</label>
+              <input type="number" class="form-control" id="price" name="price" formControlName="price">
+               <small class="text-danger" *ngIf="c('price').touched && c('price').invalid">El precio es obligatorio.</small>
+              <small class="text-danger" *ngIf="form.hasError('priceLtCost')">El precio no puede ser menor al costo.</small>
+          </div>
+     </div>
+
+    </div>
+
+    <div class="row">
     </div>
 
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-                <label for="price">Stock</label>
-                <input type="number" class="form-control" id="stock" name="stock" [(ngModel)]="formProduct.stock" required>
-              </div>
+                <label for="price">Stock*</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  formControlName="stock"
+                  [readOnly]="form.get('id')?.value"
+                  [attr.data-bs-toggle]="form.get('id')?.value ? 'tooltip' : null"
+                  [attr.data-bs-placement]="form.get('id')?.value ? 'top' : null"
+                  [attr.title]="form.get('id')?.value ? 'El Stock no puede ser editado en este formulario.' : null" />
+                <small class="text-danger" *ngIf="c('stock').touched && c('stock').invalid">El stock es obligatorio.</small>
+            </div>
         </div>
         <div class="col-md-4">
             <div class="form-group">
-                <label for="price">Stock Minimo</label>
-                <input type="number" class="form-control" id="minimunStock" name="minimumStock" [(ngModel)]="formProduct.minimumStock" required>
+                <label for="price">Stock Minimo*</label>
+                <input type="number" class="form-control" formControlName="minimumStock" />
+                <small class="text-danger" *ngIf="c('minimumStock').touched && c('minimumStock').invalid">El stock minimo es obligatorio.</small>
               </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-              <label for="price">Stock Maximo</label>
-              <input type="number" class="form-control" id="recommendedStock" name="recommendedStock" [(ngModel)]="formProduct.recommendedStock" required>
+              <label for="price">Stock Maximo*</label>
+              <input type="number" class="form-control" formControlName="recommendedStock" />
+              <small class="text-danger" *ngIf="c('recommendedStock').touched && c('recommendedStock').invalid">El stock recomendado es obligarotio.</small>
             </div>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-6">
-        <div class="form-group">
-          <label for="subcategory">Subcategoría</label>
-          <select 
-            class="form-control" 
-            id="subcategory" 
-            name="subcategory" 
-            [(ngModel)]="formProduct.subcategory.id" 
-            required>
-            <option [ngValue]="null" disabled selected>Seleccione una subcategoría</option>
-            <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory.id">
-              {{ subcategory.name }}
-            </option>
-          </select>
-        </div>
+        <label>Subcategoría</label>
+        <ng-select
+          [items]="subcategories"
+          [multiple]="false"
+          bindLabel="name"
+          bindValue="id"
+          appendTo="body"
+          dropdownPosition="bottom"
+          formControlName="subcategoryId"
+          placeholder="Seleccione una subcategoría">
+        </ng-select>
       </div>
       <div class="col-md-6">
-        <div class="form-group">
-          <label for="presentation">Presentación</label>
-          <select 
-            class="form-control" 
-            id="presentation" 
-            name="presentation" 
-            [(ngModel)]="formProduct.presentation.id" 
-            required>
-            <option [ngValue]="null" disabled selected>Seleccione una subcategoría</option>
-            <option *ngFor="let presentation of presentations" [ngValue]="presentation.id">
-              {{ presentation.name }}
-            </option>
-          </select>
-        </div>
+        <label>Presentación</label>
+        <ng-select
+          [items]="presentations"
+          [multiple]="false"
+          bindLabel="name"
+          bindValue="id"
+          appendTo="body"
+          dropdownPosition="bottom"
+          formControlName="presentationId"
+          placeholder="Seleccione una presentación">
+        </ng-select>
       </div>
     </div>
 
     <div class="form-group">
-      <label for="suppliers">Proveedores</label>
+      <label>Proveedores</label>
       <ng-select
         [items]="suppliers"
         [multiple]="true"
         bindLabel="name"
         bindValue="id"
-        [(ngModel)]="selectedSupplierIds"
-        name="selectedSuppliers">
+        appendTo="body"
+        dropdownPosition="bottom"
+        formControlName="supplierIds"
+        placeholder="Seleccione uno o más proveedores">
       </ng-select>
     </div>
     
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="closeProductForm()">Cancelar</button>
-      <button type="submit" class="btn btn-primary" [disabled]="!productForm.valid">Guardar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Guardar</button>
     </div>
   </form>

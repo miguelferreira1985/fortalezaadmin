@@ -7,6 +7,8 @@ import { ProductFormComponent } from '../forms/product-form-component/product-fo
 import { BooleanToTextPipe } from '../../pipes/booelean-to-text-pipe';
 import { ProductRequestDto } from '../../models/product-request-dto';
 import { NotificationService } from '../../services/notification.service';
+import { StockFormComponent } from "../forms/stock-form-component/stock-form-component";
+import { StokcRequestDto } from '../../models/stokc-request-dto';
 
 declare var $: any;
 
@@ -14,16 +16,18 @@ declare var $: any;
   selector: 'app-product',
   imports: [
     CommonModule,
-    FormsModule, 
-    ProductFormComponent, 
-    BooleanToTextPipe
-  ],
+    FormsModule,
+    ProductFormComponent,
+    BooleanToTextPipe,
+    StockFormComponent
+],
   templateUrl: './product-component.html',
   styleUrl: './product-component.css'
 })
 export class ProductComponent implements OnInit {
 
   @ViewChild('productFormModal') productFormModal!: ProductFormComponent;
+  @ViewChild('updateStockFormModal') updateStockFormModal!: StockFormComponent;
 
   private readonly IVA_RATE = 0.16; // 16%
   products: Product[] = [];
@@ -55,6 +59,16 @@ export class ProductComponent implements OnInit {
     this.selectedProduct = product;
     this.closeProductDetails();
     $('#productModal').modal('show');
+  }
+
+  openUpdateStockModal(product: Product) {
+    this.selectedProduct = product;
+    this.updateStockFormModal.resetFormAndModal();
+    $('#updateStockModal').modal('show');
+  }
+
+  closeUpdateStockModal(): void {
+    $('#updateStockModal').modal('hide');
   }
 
   closeProductForm(): void {
@@ -120,7 +134,7 @@ export class ProductComponent implements OnInit {
         next: (res) => {
           this.getProducts()
           this.notify.success('¡Producto actualizado!', res?.message);
-          $('#productModal').modal('hide');
+          this.closeProductForm();
         }, 
         error(err) {
           console.log(err);
@@ -132,12 +146,27 @@ export class ProductComponent implements OnInit {
         next: (res) => {
           this.getProducts();
           this.notify.success('¡Producto agregado!', res?.message);
-          $('#productModal').modal('hide');
+          this.closeProductForm()
         },
         error(err) {
           console.error(err);
         }
       });
+    }
+  }
+
+  updateStock(product: Product, stockRequestDto: StokcRequestDto): void {
+    if (product.id) {
+      this.productService.updateStock(product.id, stockRequestDto).subscribe({
+        next: (res) => {
+          this.getProducts();
+          this.notify.success("¡Stock actulizado!", res?.message);
+          this.closeUpdateStockModal()
+        },
+        error(err) {
+          console.error(err);
+        }
+      })
     }
   }
 
@@ -175,24 +204,6 @@ export class ProductComponent implements OnInit {
           });
         }
       });
-  }
-
-  deleteProduct(product: Product): void {
-    this.notify.confirm('¿Estás seguro?', `¿Quieres eliminar el producto "${product.name}?. Esta acción es irreversible"`)
-    .then((result) => {
-      if (result.isConfirmed) {
-        let id: number = product.id ?? 0;
-        this.productService.deleteProduct(id).subscribe({
-          next: (res) => {
-            this.getProducts();
-            this.notify.success('¡Producto eliminado!', res?.message); // ✅
-          },
-          error(err) {
-            console.error(err);
-          }
-        });
-      }
-    });
   }
 
 }

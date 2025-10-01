@@ -6,6 +6,8 @@ import { Product } from '../models/product';
 import { map } from 'rxjs/operators';
 import { ProductRequestDto } from '../models/product-request-dto';
 import { ApiResponse } from '../models/api-response';
+import { StokcRequestDto } from '../models/stokc-request-dto';
+import { InventoryMovement } from '../models/inventory-movement';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +27,10 @@ export class ProductService {
       return this.http
         .get<ApiResponse<Product[]>>(`${this.apiUrl}${this.apiPath}`, { params })
         .pipe(map(res => res.data));
+    }
+
+    getInventoryMovementByProdcut(id: number): Observable<ApiResponse<InventoryMovement[]>> {
+      return this.http.get<ApiResponse<InventoryMovement[]>>(`${this.apiUrl}${this.apiPath}/${id}/inventory-movement`);
     }
 
     getInventoryValue(): Observable<number> {
@@ -51,8 +57,8 @@ export class ProductService {
       return this.http.patch<Product>(`${this.apiUrl}${this.apiPath}/${id}/desactivate`, null);
     }
 
-    deleteProduct(id: number): Observable<ApiResponse<any>> {
-      return this.http.delete<ApiResponse<any>>(`${this.apiUrl}${this.apiPath}/${id}`);
+    updateStock(id: number, stockRequestDto: StokcRequestDto): Observable<ApiResponse<Product>> {
+      return this.http.patch<ApiResponse<Product>>(`${this.apiUrl}${this.apiPath}/${id}/stock`, stockRequestDto);
     }
   
 }

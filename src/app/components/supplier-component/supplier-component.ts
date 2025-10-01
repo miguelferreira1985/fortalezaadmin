@@ -83,7 +83,9 @@ export class SupplierComponent {
     } else {
       const lowerCaseSearchItem = this.searchTerm.toLowerCase();
       this.filteredSuppliers = this.suppliers.filter(supplier => 
-        supplier.name.toLowerCase().includes(lowerCaseSearchItem)
+        supplier.name.toLowerCase().includes(lowerCaseSearchItem) ||
+        supplier.contact.toLowerCase().includes(lowerCaseSearchItem) ||
+        supplier.location.toLocaleLowerCase().includes(lowerCaseSearchItem)
       );
     }
   }

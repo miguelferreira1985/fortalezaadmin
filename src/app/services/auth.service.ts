@@ -59,7 +59,7 @@ export class AuthService {
 
   private storeTokens(tokens: AuthTokens): void {
     localStorage.setItem('accessToken', tokens.token);
-    localStorage.setItem('refreshToken', tokens.refreshtoken);
+    localStorage.setItem('refreshToken', tokens.refreshToken);
   }
   
   
