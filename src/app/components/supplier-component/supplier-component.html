@@ -25,8 +25,7 @@
                           name="table_search" 
                           class="form-control" 
                           placeholder="Buscar proveedor..."
-                          [(ngModel)]="searchTerm"
-                          (input)="filterSuppliers()">
+                          [(ngModel)]="searchTerm">
                         <div class="input-group-append">
                           <button type="submit" class="btn btn-default">
                             <i class="fas fa-search"></i>
@@ -56,7 +55,7 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr *ngFor="let supplier of filteredSuppliers">
+                          <tr *ngFor="let supplier of suppliers | filterBy:searchTerm:['name','contact','location']">
                             <td>{{ supplier.name }}</td>
                             <td>{{ supplier.contact }}</td>
                             <td>{{ supplier.contactPhone }}</td>

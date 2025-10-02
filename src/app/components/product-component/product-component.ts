@@ -4,11 +4,12 @@ import { ProductService } from '../../services/product.service';
 import { CommonModule } from "@angular/common";
 import { FormsModule } from '@angular/forms';
 import { ProductFormComponent } from '../forms/product-form-component/product-form';
-import { BooleanToTextPipe } from '../../pipes/booelean-to-text-pipe';
+import { BooleanToTextPipe } from '../../shared/pipes/booelean-to-text-pipe';
 import { ProductRequestDto } from '../../models/product-request-dto';
 import { NotificationService } from '../../services/notification.service';
 import { StockFormComponent } from "../forms/stock-form-component/stock-form-component";
 import { StokcRequestDto } from '../../models/stock-request-dto';
+import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
 
 declare var $: any;
 
@@ -19,7 +20,8 @@ declare var $: any;
     FormsModule,
     ProductFormComponent,
     BooleanToTextPipe,
-    StockFormComponent
+    StockFormComponent,
+    FilterByPipe
 ],
   templateUrl: './product-component.html',
   styleUrl: './product-component.css'
@@ -31,7 +33,6 @@ export class ProductComponent implements OnInit {
 
   private readonly IVA_RATE = 0.16; // 16%
   products: Product[] = [];
-  filteredProducts: Product[] = [];
   selectedProduct: Product | null = null;
   productForDetails: Product | null = null;
   searchTerm: string = '';
@@ -108,24 +109,11 @@ export class ProductComponent implements OnInit {
     this.productService.getProducts(this.showActiveProducts).subscribe({
       next: (data) => {
         this.products = data;
-        this.filteredProducts = [...this.products];
       },
       error: (error) => {
         console.error('Error al obtener los productos:', error);
       }
     });
-  }
-
-  filterProducts(): void {
-    if (!this.searchTerm) {
-      this.filteredProducts = [...this.products];
-    } else {
-      const lowerCaseSearchItem = this.searchTerm.toLowerCase();
-      this.filteredProducts = this.products.filter(product => 
-        product.code.toLowerCase().includes(lowerCaseSearchItem) ||
-        product.name.toLowerCase().includes(lowerCaseSearchItem) 
-      );
-    }
   }
 
   onProductSaved(productRequestDto: ProductRequestDto): void {

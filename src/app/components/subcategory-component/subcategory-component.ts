@@ -6,6 +6,7 @@ import { SubcategoryService } from '../../services/subcategory.service';
 import { SubcategoryFormComponent } from '../forms/subcategory-form-component/subcategory-form';
 import { SubcategoryRequestDto } from '../../models/subcategory-request-dto';
 import { NotificationService } from '../../services/notification.service';
+import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
 
 declare var $: any;
 
@@ -14,7 +15,8 @@ declare var $: any;
   imports: [
     CommonModule,
     FormsModule,
-    SubcategoryFormComponent
+    SubcategoryFormComponent,
+    FilterByPipe
   ],
   templateUrl: './subcategory-component.html',
   styleUrl: './subcategory-component.css'
@@ -24,7 +26,6 @@ export class SubcategoryComponent implements OnInit {
   @ViewChild('subcategoryFormModal') subcategoryFormModal!: SubcategoryFormComponent;
 
   subcategories: Subcategory[] = [];
-  filteredSubcategories: Subcategory[] = [];
   selectedSubcategory: Subcategory | null = null;
   subcategoryForDetails: Subcategory | null = null;
   searchTerm: string = '';
@@ -64,24 +65,11 @@ export class SubcategoryComponent implements OnInit {
     this.subcategoryService.getSubcategories().subscribe({
       next: (data) => {
         this.subcategories = data;
-        this.filteredSubcategories = [...this.subcategories];
-        console.log('Subcategorias obtenidas:', this.filteredSubcategories);
       },
       error: (error) => {
         console.error('Error al obtener las subcategorias:', error);
       }
     });
-  }
-
-  filterSubcategories(): void {
-    if (!this.searchTerm) {
-      this.filteredSubcategories = [...this.subcategories];
-    } else {
-      const lowerCaseSearchItem = this.searchTerm.toLowerCase();
-      this.filteredSubcategories = this.subcategories.filter(subcategory => 
-        subcategory.name.toLowerCase().includes(lowerCaseSearchItem) 
-      );
-    }
   }
 
   onSubcategorySaved(subcategoryRequestDto: SubcategoryRequestDto): void {

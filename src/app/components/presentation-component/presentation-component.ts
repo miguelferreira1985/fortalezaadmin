@@ -5,6 +5,7 @@ import { PresentationFormComponent } from '../forms/presentation-form-component/
 import { Presentation } from '../../models/presentation';
 import { PresentationService } from '../../services/presentation.service';
 import { NotificationService } from '../../services/notification.service';
+import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
 
 declare var $: any;
 
@@ -13,7 +14,8 @@ declare var $: any;
   imports: [
     CommonModule,
     FormsModule,
-    PresentationFormComponent
+    PresentationFormComponent,
+    FilterByPipe
   ],
   templateUrl: './presentation-component.html',
   styleUrl: './presentation-component.css'
@@ -24,7 +26,6 @@ export class PresentationComponent {
 
 
   presentations: Presentation[] = [];
-  filteredPresentations: Presentation[] = [];
   selectedPresentation: Presentation | null = null;
   presentationForDetails: Presentation | null = null;
   searchTerm: string = '';
@@ -64,23 +65,11 @@ export class PresentationComponent {
     this.presentationService.getAllPresentations().subscribe({
       next: (data) => {
         this.presentations = data;
-        this.filteredPresentations = [...this.presentations];
       },
       error: (error) => {
         console.error('Error al obtener las presentaciones:', error);
       }
     });
-  }
-
-  filterPresentations(): void {
-    if (!this.searchTerm) {
-      this.filteredPresentations = [...this.presentations];
-    } else {
-      const lowerCaseSearchItem = this.searchTerm.toLowerCase();
-      this.filteredPresentations = this.presentations.filter(presentation => 
-        presentation.name.toLowerCase().includes(lowerCaseSearchItem) 
-      );
-    }
   }
 
   onPresentationSaved(presentation: Presentation): void {

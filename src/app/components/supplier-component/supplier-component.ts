@@ -5,6 +5,7 @@ import { SupplierFormComponent } from '../forms/supplier-form-component/supplier
 import { Supplier } from '../../models/supplier';
 import { SupplierService } from '../../services/supplier.service';
 import { NotificationService } from '../../services/notification.service';
+import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
 
 declare var $: any;
 
@@ -13,7 +14,8 @@ declare var $: any;
   imports: [
     CommonModule,
     FormsModule,
-    SupplierFormComponent
+    SupplierFormComponent,
+    FilterByPipe
   ],
   templateUrl: './supplier-component.html',
   styleUrl: './supplier-component.css'
@@ -23,7 +25,6 @@ export class SupplierComponent {
   @ViewChild('supplierFormModal') supplierFormModal!: SupplierFormComponent;
 
   suppliers: Supplier[] = [];
-  filteredSuppliers: Supplier[] = [];
   selectedSupplier: Supplier | null = null;
   supplierForDetails: Supplier | null = null;
   searchTerm: string = '';
@@ -68,26 +69,11 @@ export class SupplierComponent {
     this.supplierService.getSuppliers(this.showActivateClients).subscribe({
       next: (data) => {
         this.suppliers = data;
-        this.filteredSuppliers = [...this.suppliers];
-        console.log('Proveedores obtenidos:', this.filteredSuppliers);
       },
       error: (error) => {
         console.error('Error al obtener los proveedores:', error);
       }
     });
-  }
-
-  filterSuppliers(): void {
-    if (!this.searchTerm) {
-      this.filteredSuppliers = [...this.suppliers];
-    } else {
-      const lowerCaseSearchItem = this.searchTerm.toLowerCase();
-      this.filteredSuppliers = this.suppliers.filter(supplier => 
-        supplier.name.toLowerCase().includes(lowerCaseSearchItem) ||
-        supplier.contact.toLowerCase().includes(lowerCaseSearchItem) ||
-        supplier.location.toLocaleLowerCase().includes(lowerCaseSearchItem)
-      );
-    }
   }
 
   onSupplierSaved(supplier: Supplier): void {

@@ -25,8 +25,7 @@
                           name="table_search" 
                           class="form-control" 
                           placeholder="Buscar cliente..."
-                          [(ngModel)]="searchTerm"
-                          (input)="filterClients()">
+                          [(ngModel)]="searchTerm">
                         <div class="input-group-append">
                           <button type="submit" class="btn btn-default">
                             <i class="fas fa-search"></i>
@@ -53,7 +52,7 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr *ngFor="let client of filteredClients">
+                          <tr *ngFor="let client of clients | filterBy:searchTerm:['name','rfc']">
                             <td>{{ client.name }}</td>
                             <td>{{ client.phone }}</td>
                             <td>{{ client.rfc | uppercase }}</td>

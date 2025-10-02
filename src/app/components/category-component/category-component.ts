@@ -5,6 +5,7 @@ import { Category } from '../../models/category';
 import { CategoryService } from '../../services/category.service';
 import { CategoryFormComponent } from '../forms/category-form-component/category-form';
 import { NotificationService } from '../../services/notification.service';
+import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
 
 declare var $: any;
 
@@ -13,7 +14,8 @@ declare var $: any;
   imports: [
     CommonModule,
     FormsModule, 
-    CategoryFormComponent
+    CategoryFormComponent,
+    FilterByPipe
   ],
   templateUrl: './category-component.html',
   styleUrl: './category-component.css'
@@ -23,7 +25,6 @@ export class CategoryComponent {
   @ViewChild('categoryFormModal') categoryFormModal!: CategoryFormComponent;
 
   categories: Category[] = [];
-  filteredCategories: Category[] = [];
   selectedCategory: Category | null = null;
   categoryForDetails: Category | null = null;
   searchTerm: string = '';
@@ -63,23 +64,11 @@ export class CategoryComponent {
     this.categoryService.getAllCategories().subscribe({
       next: (data) => {
         this.categories = data;
-        this.filteredCategories = [...this.categories];
       },
       error: (error) => {
         console.error('Error al obtener las categorias:', error);
       }
     });
-  }
-
-  filterCategories(): void {
-    if (!this.searchTerm) {
-      this.filteredCategories = [...this.categories];
-    } else {
-      const lowerCaseSearchItem = this.searchTerm.toLowerCase();
-      this.filteredCategories = this.categories.filter(category => 
-        category.name.toLowerCase().includes(lowerCaseSearchItem) 
-      );
-    }
   }
 
   onCategorySaved(category: Category): void {

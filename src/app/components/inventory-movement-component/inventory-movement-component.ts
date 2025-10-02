@@ -6,13 +6,15 @@ import { InventoryMovement } from '../../models/inventory-movement';
 import { ProductService } from '../../services/product.service';
 import { error } from 'jquery';
 import { FormsModule } from '@angular/forms';
+import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
 
 @Component({
   selector: 'app-inventory-movement-component',
   imports: [
     CommonModule,
     NgSelectComponent,
-    FormsModule
+    FormsModule,
+    FilterByPipe
   ],
   templateUrl: './inventory-movement-component.html',
   styleUrl: './inventory-movement-component.css'
@@ -22,7 +24,6 @@ export class InventoryMovementComponent implements OnInit {
   products: Product[] = [];
   selectedProductId: number | null = null;
   movements: InventoryMovement[] =[];
-  filteredMovements: InventoryMovement[] = [];
   searchItem: string = '';
 
   constructor(
@@ -45,24 +46,11 @@ export class InventoryMovementComponent implements OnInit {
     this.productService.getInventoryMovementByProdcut(productId).subscribe({
       next: (res) => {
         this.movements = res.data;
-        this.filteredMovements = [...this.movements];
       },
       error(err) {
         console.error(err);
       }
     });
-  }
-
-  filterMovements(): void {
-    if (!this.searchItem) {
-      this.filteredMovements = [...this.movements];
-    } else {
-      const lowerCaseSearchItem = this.searchItem.toLowerCase();
-      this.filteredMovements = this.movements.filter(movment =>
-        movment.createdBy.toLowerCase().includes(lowerCaseSearchItem) ||
-        movment.movementType.toLowerCase().includes(lowerCaseSearchItem)
-      );
-    }
   }
 
 }
