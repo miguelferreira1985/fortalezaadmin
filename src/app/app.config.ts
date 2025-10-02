@@ -6,13 +6,18 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/auth.interceptor';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { errorInterceptor } from './core/error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(
+      withInterceptors([
+        authInterceptor,
+        errorInterceptor
+      ])),
     provideAnimations()
   ]
 };

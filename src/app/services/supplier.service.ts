@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Supplier } from '../models/supplier';
+import { ApiResponse } from '../models/api-response';
 
 @Injectable({
   providedIn: 'root'
@@ -19,19 +21,21 @@ export class SupplierService {
     if (isActivate !== undefined) {
       params = params.set('isActivate', isActivate.toString());
     }
-    return this.http.get<Supplier[]>(`${this.apiUrl}${this.apiPath}`, { params });
+    return this.http
+      .get<ApiResponse<Supplier[]>>(`${this.apiUrl}${this.apiPath}`, { params })
+      .pipe(map(res => res.data));
   }
 
-  createSupplier(supplier: Supplier): Observable<Supplier> {
-    return this.http.post<Supplier>(`${this.apiUrl}${this.apiPath}`, supplier);
+  createSupplier(supplier: Supplier): Observable<ApiResponse<Supplier>> {
+    return this.http.post<ApiResponse<Supplier>>(`${this.apiUrl}${this.apiPath}`, supplier);
   }
 
-  updateSupplier(id: number, supplier: Supplier): Observable<Supplier> {
-    return this.http.put<Supplier>(`${this.apiUrl}${this.apiPath}/${id}`, supplier);
+  updateSupplier(id: number, supplier: Supplier): Observable<ApiResponse<Supplier>> {
+    return this.http.put<ApiResponse<Supplier>>(`${this.apiUrl}${this.apiPath}/${id}`, supplier);
   }
 
-  deleteSupplier(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}${this.apiPath}/${id}`);
+  deleteSupplier(id: number): Observable<ApiResponse<any>> {
+    return this.http.delete<ApiResponse<any>>(`${this.apiUrl}${this.apiPath}/${id}`);
   }
   
 }

@@ -25,8 +25,7 @@
                           name="table_search" 
                           class="form-control" 
                           placeholder="Buscar proveedor..."
-                          [(ngModel)]="searchTerm"
-                          (input)="filterSuppliers()">
+                          [(ngModel)]="searchTerm">
                         <div class="input-group-append">
                           <button type="submit" class="btn btn-default">
                             <i class="fas fa-search"></i>
@@ -51,28 +50,35 @@
                             <th>Tel. Contacto</th>
                             <th>Tel. Oficina</th>
                             <th>Email</th>
-                            <th>Dirección</th>
+                            <th>Ubicación</th>
                             <th></th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr *ngFor="let supplier of filteredSuppliers">
+                          <tr *ngFor="let supplier of suppliers | filterBy:searchTerm:['name','contact','location']">
                             <td>{{ supplier.name }}</td>
                             <td>{{ supplier.contact }}</td>
                             <td>{{ supplier.contactPhone }}</td>
                             <td>{{ supplier.officePhone }}</td>
                             <td>{{ supplier.email }}</td>
-                            <td>{{ supplier.address }}</td>
+                            <td>{{ supplier.location }}</td>
                             <td>
-                              <button class="btn btn-info btn-sm mr-2" (click)="viewSupplierDetails(supplier)">
+                              <button 
+                                class="btn btn-info btn-sm mr-2" 
+                                (click)="viewSupplierDetails(supplier)"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Ver detalles">
                                 <i class="fas fa-eye"></i>
                               </button>
-                              <button class="btn btn-warning btn-sm mr-2" (click)="openEditModal(supplier)">
+                              <button 
+                                class="btn btn-warning btn-sm mr-2" 
+                                (click)="openEditModal(supplier)"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Editar">
                                     <i class="fas fa-edit"></i>
                               </button>
-                              <button class="btn btn-danger btn-sm mr-2" (click)="deleteSupplier(supplier)">
-                                <i class="fas fa-trash"></i>
-                          </button>
                             </td>
                           </tr>
                         </tbody>
@@ -83,8 +89,10 @@
                   <!-- /.card -->
                 </div>
               </div> 
+
+              <!-- Form Modal -->
               <div class="modal fade" id="supplierModal" tabindex="-1" role="dialog" aria-labelledby="supplierModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog modal-lg" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title" id="supplierModalLabel">
@@ -104,6 +112,8 @@
                   </div>
                 </div>
               </div>
+              <!-- From Modal -->
+
               <div class="modal fade" id="supplierDetailsModal" tabindex="-1" role="dialog" aria-labelledby="supplierDetailsModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
@@ -145,7 +155,7 @@
                         </div>
                         <div class="form-group">
                             <strong>Dirección:</strong>
-                            <p>{{ supplierForDetails.address }}</p>
+                            <p>{{ supplierForDetails.location }}</p>
                         </div>
                       </div>
 

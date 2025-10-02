@@ -1,0 +1,64 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="previousStock">Stock Actual</label>
+                <input 
+                    type="number" 
+                    class="form-control" 
+                    id="previousStock" 
+                    name="previousStock" 
+                    formControlName="previousStock"
+                    readonly>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+              <label for="quantity">Cantidad</label>
+              <input 
+                type="number" 
+                class="form-control" 
+                id="quantity" 
+                name="quantity" 
+                formControlName="quantity">
+
+              <small class="text-danger" *ngIf="form.hasError('zeroQuantity') && c('quantity').touched">
+                La cantidad no puede ser 0.
+                </small>
+
+                <small class="text-danger" *ngIf="form.hasError('negativeStock')">
+                  El stock nuevo no puede ser menor a 0.
+                  (Máximo a restar: {{ c('previousStock').value }})
+                </small>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="newStock">Stock Nuevo</label>
+                <input 
+                    type="number" 
+                    class="form-control" 
+                    id="newStock" 
+                    name="newStock" 
+                    formControlName="newStock"
+                    readonly>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-group">
+      <label for="description">Justificación del movimiento*</label>
+      <input type="text" class="form-control" id="description" name="description" formControlName="description">
+      <small class="text-danger" *ngIf="c('description').touched && c('description').invalid">
+        La justificación del movimiento es obligatoria.
+      </small>
+  </div>
+    
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeUpdateStockModal()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Guardar</button>
+    </div>
+  </form>

@@ -1,52 +1,24 @@
-<form (ngSubmit)="onSubmit()" #clientForm="ngForm">
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
 
     <div class="form-group">
-        <label for="companyName">Compañia</label>
-        <input type="text" class="form-control" id="companyName" name="companyName" [(ngModel)]="formClient.companyName">
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label for="firstName">Nombre</label>
-                <input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="formClient.firstName" required>
-              </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label for="lastName">Apellido</label>
-                <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="formClient.lastName" required>
-              </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" name="email" [(ngModel)]="formClient.email">
-              </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
-              <label for="phone">Telefono</label>
-              <input type="tel" class="form-control" id="phone" name="phone" [(ngModel)]="formClient.phone">
-            </div>
-        </div>
+        <label for="name">Nombre*</label>
+        <input class="form-control" id="name" name="name" formControlName="name">
+        <small class="text-danger" *ngIf="c('name').touched && c('name').invalid">El nombre es obligatorio.</small>
     </div>
 
     <div class="form-group">
-        <label for="rfc">RFC</label>
-        <input type="text" class="form-control" id="rfc" name="rfc" [(ngModel)]="formClient.rfc" required>
+        <label for="rfc">RFC*</label>
+        <input class="form-control" id="rfc" name="rfc" formControlName="rfc">
+        <small class="text-danger" *ngIf="c('rfc').touched && c('rfc').invalid">El RFC es obligatorio.</small>
     </div>
 
     <div class="form-group">
-        <label for="address">Dirección</label>
-        <textarea class="form-control" id="address" name="address" [(ngModel)]="formClient.address"></textarea>
+        <label for="phone">Telefono</label>
+        <input type="text" class="form-control" id="phone" name="phone" formControlName="phone">
     </div>
     
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="closeClientForm()">Cancelar</button>
-      <button type="submit" class="btn btn-primary" [disabled]="!clientForm.valid">Guardar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Guardar</button>
     </div>
   </form>

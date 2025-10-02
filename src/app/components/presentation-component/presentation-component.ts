@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { PresentationFormComponent } from '../forms/presentation-form-component/presentation-form';
 import { Presentation } from '../../models/presentation';
 import { PresentationService } from '../../services/presentation.service';
-import Swal from 'sweetalert2';
+import { NotificationService } from '../../services/notification.service';
+import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
 
 declare var $: any;
 
@@ -13,7 +14,8 @@ declare var $: any;
   imports: [
     CommonModule,
     FormsModule,
-    PresentationFormComponent
+    PresentationFormComponent,
+    FilterByPipe
   ],
   templateUrl: './presentation-component.html',
   styleUrl: './presentation-component.css'
@@ -24,12 +26,11 @@ export class PresentationComponent {
 
 
   presentations: Presentation[] = [];
-  filteredPresentations: Presentation[] = [];
   selectedPresentation: Presentation | null = null;
   presentationForDetails: Presentation | null = null;
   searchTerm: string = '';
 
-  constructor(private presentationService: PresentationService) {}
+  constructor(private presentationService: PresentationService, private notify: NotificationService) {}
 
   ngOnInit(): void {
     this.getPresentations();
@@ -64,8 +65,6 @@ export class PresentationComponent {
     this.presentationService.getAllPresentations().subscribe({
       next: (data) => {
         this.presentations = data;
-        this.filteredPresentations = [...this.presentations];
-        console.log('Presentaciones obtenidas:', this.filteredPresentations);
       },
       error: (error) => {
         console.error('Error al obtener las presentaciones:', error);
@@ -73,57 +72,26 @@ export class PresentationComponent {
     });
   }
 
-  filterPresentations(): void {
-    if (!this.searchTerm) {
-      this.filteredPresentations = [...this.presentations];
-    } else {
-      const lowerCaseSearchItem = this.searchTerm.toLowerCase();
-      this.filteredPresentations = this.presentations.filter(presentation => 
-        presentation.name.toLowerCase().includes(lowerCaseSearchItem) 
-      );
-    }
-  }
-
   onPresentationSaved(presentation: Presentation): void {
     if (presentation.id) {
       this.presentationService.updatePresentation(presentation.id, presentation).subscribe({
-        next: () => {
-          this.getPresentations()
-          Swal.fire({
-            icon: 'success',
-            title: 'Presentación Actualizada!',
-            text: 'La presentación fue actualizada con exito.',
-            confirmButtonText: 'OK'
-          });
+        next: (res) => {
+          this.getPresentations();
+          this.notify.success('¡Presentación actualizada!', res?.message);
           $('#presentationModal').modal('hide');
         }, 
         error(err) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.message
-          });
           console.log(err);
         }
       });
     } else {
       this.presentationService.createPresentation(presentation).subscribe({
-        next: () => {
+        next: (res) => {
           this.getPresentations();
-          Swal.fire({
-            icon: 'success',
-            title: 'Presentación Guardada!',
-            text: 'La presentación fue guardada con exito.',
-            confirmButtonText: 'OK'
-          });
+          this.notify.success('¡Presentación agregada!', res?.message);
           $('#presentationModal').modal('hide');
         },
         error(err) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.message
-          });
           console.error(err);
         }
       });

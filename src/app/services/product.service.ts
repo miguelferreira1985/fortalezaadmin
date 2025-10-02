@@ -3,8 +3,11 @@ import { environment } from '../../environment/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Product } from '../models/product';
-import { param } from 'jquery';
+import { map } from 'rxjs/operators';
 import { ProductRequestDto } from '../models/product-request-dto';
+import { ApiResponse } from '../models/api-response';
+import { StokcRequestDto } from '../models/stock-request-dto';
+import { InventoryMovement } from '../models/inventory-movement';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +24,13 @@ export class ProductService {
       if (isActivate !== undefined) {
         params = params.set('isActivate', isActivate.toString());
       }
-      return this.http.get<Product[]>(`${this.apiUrl}${this.apiPath}`, { params });
+      return this.http
+        .get<ApiResponse<Product[]>>(`${this.apiUrl}${this.apiPath}`, { params })
+        .pipe(map(res => res.data));
+    }
+
+    getInventoryMovementByProdcut(id: number): Observable<ApiResponse<InventoryMovement[]>> {
+      return this.http.get<ApiResponse<InventoryMovement[]>>(`${this.apiUrl}${this.apiPath}/${id}/inventory-movement`);
     }
 
     getInventoryValue(): Observable<number> {
@@ -32,12 +41,12 @@ export class ProductService {
       return this.http.get<Product[]>(`${this.apiUrl}${this.apiPath}/low-stock`);
     }
 
-    createProduct(productRequestDto: ProductRequestDto): Observable<Product> {
-      return this.http.post<Product>(`${this.apiUrl}${this.apiPath}`, productRequestDto);
+    createProduct(productRequestDto: ProductRequestDto): Observable<ApiResponse<Product>> {
+      return this.http.post<ApiResponse<Product>>(`${this.apiUrl}${this.apiPath}`, productRequestDto);
     }
 
-    updateProduct(id: number, productRequestDto: ProductRequestDto): Observable<Product> {
-      return this.http.put<Product>(`${this.apiUrl}${this.apiPath}/${id}`, productRequestDto);
+    updateProduct(id: number, productRequestDto: ProductRequestDto): Observable<ApiResponse<Product>> {
+      return this.http.put<ApiResponse<Product>>(`${this.apiUrl}${this.apiPath}/${id}`, productRequestDto);
     }
 
     activateProduct(id: number): Observable<Product> {
@@ -48,8 +57,8 @@ export class ProductService {
       return this.http.patch<Product>(`${this.apiUrl}${this.apiPath}/${id}/desactivate`, null);
     }
 
-    deleteProduct(id: number): Observable<any> {
-      return this.http.delete(`${this.apiUrl}${this.apiPath}/${id}`);
+    updateStock(id: number, stockRequestDto: StokcRequestDto): Observable<ApiResponse<Product>> {
+      return this.http.patch<ApiResponse<Product>>(`${this.apiUrl}${this.apiPath}/${id}/stock`, stockRequestDto);
     }
   
 }
