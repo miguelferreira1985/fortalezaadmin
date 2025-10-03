@@ -64,14 +64,14 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr *ngFor="let movement of movements | filterBy:searchItem:['createdBy','movementType']">
+                          <tr *ngFor="let movement of movements | filterBy:searchItem:['createdBy','movementType','movementDate']">
                             <td>{{ movement.previousStock }}</td>
                             <td>{{ movement.quantity }}</td>
                             <td>{{ movement.newStock }}</td>
                             <td>{{ movement.description }}</td>
                             <td>{{ movement.movementType | uppercase }}</td>
                             <td>{{ movement.createdBy }}</td>
-                            <td>{{ movement.movementDate | date: 'dd/MM/yyyy' }}</td>
+                            <td>{{ movement.movementDate | date:'dd/MM/yyyy HH:mm' }}</td>
                           </tr>
                         </tbody>
                       </table>
