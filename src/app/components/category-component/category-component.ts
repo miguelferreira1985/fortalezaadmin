@@ -26,7 +26,6 @@ export class CategoryComponent {
 
   categories: Category[] = [];
   selectedCategory: Category | null = null;
-  categoryForDetails: Category | null = null;
   searchTerm: string = '';
 
   constructor(private categoryService: CategoryService, private notify: NotificationService) {}
@@ -43,21 +42,11 @@ export class CategoryComponent {
 
   openEditModal(category: Category) {
     this.selectedCategory = category;
-    this.closeCategoryDetails();
     $('#categoryModal').modal('show');
   }
 
   closeCategoryForm(): void {
     $('#categoryModal').modal('hide');
-  }
-
-  viewCategoryDetails(category: Category): void {
-    this.categoryForDetails = category;
-    $('#categoryDetailsModal').modal('show');
-  }
-
-  closeCategoryDetails(): void {
-    $('#categoryDetailsModal').modal('hide');
   }
 
   getCategories(): void {

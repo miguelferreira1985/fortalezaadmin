@@ -27,7 +27,6 @@ export class PresentationComponent {
 
   presentations: Presentation[] = [];
   selectedPresentation: Presentation | null = null;
-  presentationForDetails: Presentation | null = null;
   searchTerm: string = '';
 
   constructor(private presentationService: PresentationService, private notify: NotificationService) {}
@@ -44,21 +43,11 @@ export class PresentationComponent {
 
   openEditModal(presentation: Presentation) {
     this.selectedPresentation = presentation;
-    this.closePresentationDetails();
     $('#presentationModal').modal('show');
   }
 
   closePresentationForm(): void {
     $('#presentationModal').modal('hide');
-  }
-
-  viewPresentationDetails(presentation: Presentation): void {
-    this.presentationForDetails = presentation;
-    $('#presentationDetailsModal').modal('show');
-  }
-
-  closePresentationDetails(): void {
-    $('#presentationDetailsModal').modal('hide');
   }
 
   getPresentations(): void {
