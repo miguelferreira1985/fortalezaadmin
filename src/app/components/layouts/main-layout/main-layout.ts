@@ -2,10 +2,16 @@ import { Component } from '@angular/core';
 import { RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { RouterLink } from "@angular/router";
+import { HasRoleDirective } from '../../../core/has-role.directive';
 
 @Component({
   selector: 'app-main-layout',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [
+    RouterOutlet, 
+    RouterLink, 
+    RouterLinkActive,
+    HasRoleDirective
+  ],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css'
 })

@@ -26,47 +26,65 @@ export const routes: Routes = [
       { 
         path: 'dashboard',
         loadComponent: () =>
-          import('./components/dashboard/dashboard').then(m => m.DashboardComponent)
+          import('./components/dashboard/dashboard').then(m => m.DashboardComponent),
+        canActivate: [authGuard]
       },
       { 
         path: 'product',
         loadComponent: () =>
-          import('./components/product-component/product-component').then(m => m.ProductComponent)
+          import('./components/product-component/product-component').then(m => m.ProductComponent),
+        canActivate: [authGuard]
       },
       { 
         path: 'presentation',
         loadComponent: () =>
-          import('./components/presentation-component/presentation-component').then(m => m.PresentationComponent)
+          import('./components/presentation-component/presentation-component').then(m => m.PresentationComponent),
+        canActivate: [authGuard]
       },
       { 
         path: 'subcategory',
         loadComponent: () =>
-          import('./components/subcategory-component/subcategory-component').then(m => m.SubcategoryComponent)
+          import('./components/subcategory-component/subcategory-component').then(m => m.SubcategoryComponent),
+        canActivate: [authGuard]
       },
       { 
         path: 'category',
         loadComponent: () =>
-          import('./components/category-component/category-component').then(m => m.CategoryComponent)
+          import('./components/category-component/category-component').then(m => m.CategoryComponent),
+        canActivate: [authGuard]
       },
       { 
         path: 'client',
         loadComponent: () =>
-          import('./components/client-component/client-component').then(m => m.ClientComponent)
+          import('./components/client-component/client-component').then(m => m.ClientComponent),
+        canActivate: [authGuard]
       },
       { 
         path: 'supplier',
         loadComponent: () =>
-          import('./components/supplier-component/supplier-component').then(m => m.SupplierComponent)
+          import('./components/supplier-component/supplier-component').then(m => m.SupplierComponent),
+        canActivate: [authGuard]
       },
       { 
         path: 'employee',
         loadComponent: () =>
-          import('./components/employee-component/employee-component').then(m => m.EmployeeComponent)
+          import('./components/employee-component/employee-component').then(m => m.EmployeeComponent),
+        canActivate: [authGuard],
+        data: { roles: ['ROLE_ADMIN', 'ROLE_MANAGER'] }
       },
       { 
         path: 'inventory-movement',
         loadComponent: () =>
-          import('./components/inventory-movement-component/inventory-movement-component').then(m => m.InventoryMovementComponent)
+          import('./components/inventory-movement-component/inventory-movement-component').then(m => m.InventoryMovementComponent),
+        canActivate: [authGuard],
+        data: { roles: ['ROLE_ADMIN', 'ROLE_MANAGER'] }
+      },
+      { 
+        path: 'user',
+        loadComponent: () =>
+          import('./components/user-component/user-component').then(m => m.UserComponent),
+        canActivate: [authGuard],
+        data: { roles: ['ROLE_ADMIN', 'ROLE_MANAGER'] }
       }
     ]
   }

@@ -30,5 +30,9 @@ export class SubcategoryService {
   updateSubcategory(id: number, subcategoryRequestDto: SubcategoryRequestDto): Observable<ApiResponse<Subcategory>> {
     return this.http.put<ApiResponse<Subcategory>>(`${this.apiUrl}${this.apiPath}/${id}`, subcategoryRequestDto);
   }
+
+  deleteSubcategory(id: number): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}${this.apiPath}/${id}`);
+  }
   
 }

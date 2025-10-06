@@ -57,7 +57,9 @@
                     <p>Productos</p>
                   </a>
                 </li>
-                <li class="nav-item">
+                <li
+                  *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']" 
+                  class="nav-item">
                   <a routerLink="/inventory-movement" routerLinkActive="active-link" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Movimientos de Stock</p>
@@ -104,10 +106,20 @@
                     <p>Proveedores</p>
                   </a>
                 </li>
-                <li class="nav-item">
+                <li 
+                  *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
+                  class="nav-item">
                   <a routerLink="/employee" routerLinkActive="active-link" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Empleados</p>
+                  </a>
+                </li>
+                <li 
+                  *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
+                  class="nav-item">
+                  <a routerLink="/user" routerLinkActive="active-link" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Usuarios</p>
                   </a>
                 </li>
               </ul>
