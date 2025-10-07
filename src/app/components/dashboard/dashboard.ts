@@ -2,10 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { CommonModule } from '@angular/common';
 import { Product } from '../../models/product';
+import { HasRoleDirective } from '../../core/has-role.directive';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [ CommonModule ],
+  imports: [ 
+    CommonModule,
+    HasRoleDirective 
+  ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })

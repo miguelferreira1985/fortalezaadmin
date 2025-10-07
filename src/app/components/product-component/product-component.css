@@ -1,4 +1,28 @@
 .low-stock {
-    background-color: #f8d7da;
-    color: #721c24;
+    background-color: #f8d7da !important; /* rojo claro tipo Bootstrap danger */
+  }
+
+.table tfoot {
+    position: sticky;
+    bottom: 0;
+    background-color: #fff;
+    z-index: 2;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.table tfoot td {
+    font-weight: bold;
+    text-align: right;
+    padding: 10px;
+}
+
+.table thead th {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* sombra cuando haces scroll */
+  }
+  
+  .table td, 
+  .table th {
+    vertical-align: middle;
+    white-space: nowrap; /* evita que se corte texto raro */
+  }
+  

@@ -1,8 +1,46 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environment/environment';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Employee } from '../models/employee';
+import { ApiResponse } from '../models/api-response';
+import { map } from 'rxjs/operators';
+import { EmployeeRequestDto } from '../models/employee-request-dto';
 
 @Injectable({
   providedIn: 'root'
 })
-export class Employee {
+export class EmployeeService {
+
+  private apiUrl = environment.apiUrl;
+  private apiPath = '/employees';
+
+  constructor(private http: HttpClient) {}
+
+  getProducts(isActivate?: boolean): Observable<Employee[]> {
+    let params = new HttpParams();
+    if (isActivate !== undefined) {
+      params = params.set('isActivate', isActivate.toString());
+    }
+    return this.http
+      .get<ApiResponse<Employee[]>>(`${this.apiUrl}${this.apiPath}`, { params })
+      .pipe(map(res => res.data));
+  }
+
+  createEmployee(employeeRequestDto: EmployeeRequestDto): Observable<ApiResponse<Employee>> {
+    return this.http.post<ApiResponse<Employee>>(`${this.apiUrl}${this.apiPath}`, employeeRequestDto);
+  }
+
+  updateEmployee(id: number, employeeRequestDto: EmployeeRequestDto): Observable<ApiResponse<Employee>> {
+    return this.http.put<ApiResponse<Employee>>(`${this.apiUrl}${this.apiPath}/${id}`, employeeRequestDto);
+  }
+
+  activateEmployee(id: number): Observable<Employee> {
+    return this.http.patch<Employee>(`${this.apiUrl}${this.apiPath}/${id}/activate`, null);
+  }
+
+  desactivateEmployee(id: number): Observable<Employee> {
+    return this.http.patch<Employee>(`${this.apiUrl}${this.apiPath}/${id}/desactivate`, null);
+  }
   
 }

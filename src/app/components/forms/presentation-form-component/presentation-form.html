@@ -6,8 +6,9 @@
       </div>
 
     <div class="form-group">
-      <label for="abbreviation">Abreviación</label>
+      <label for="abbreviation">Abreviación*</label>
       <input class="form-control" id="abbreviation" name="abbreviation" formControlName="abbreviation">
+      <small class="text-danger" *ngIf="c('abbreviation').touched && c('abbreviation').invalid">La abreviación es obligatoria.</small>
     </div>
     
     <div class="modal-footer">

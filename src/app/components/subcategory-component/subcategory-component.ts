@@ -98,4 +98,22 @@ export class SubcategoryComponent implements OnInit {
     }
   }
 
+  deleteSubcategory(subcategory: Subcategory): void {
+    this.notify.confirm('¿Estás seguro?', `¿Quieres eliminar la subcategoría "${subcategory.name}? Esta acción es irreversible."`)
+      .then((result) => {
+        if (result.isConfirmed) {
+          let id: number = subcategory.id ?? 0;
+          this.subcategoryService.deleteSubcategory(id).subscribe({
+            next: () => {
+              this.getSubcategories();
+              this.notify.success('¡Subcategoría eliminada!');
+            },
+            error(err) {
+              console.error(err);
+            }
+          });
+        }
+      });
+  }
+
 }

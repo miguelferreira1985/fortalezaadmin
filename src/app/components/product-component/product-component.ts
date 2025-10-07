@@ -11,6 +11,7 @@ import { NotificationService } from '../../services/notification.service';
 import { StockFormComponent } from "../forms/stock-form-component/stock-form-component";
 import { StokcRequestDto } from '../../models/stock-request-dto';
 import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
+import { HasRoleDirective } from '../../core/has-role.directive';
 import { Subject } from 'rxjs';
 
 declare var $: any;
@@ -23,7 +24,8 @@ declare var $: any;
     ProductFormComponent,
     BooleanToTextPipe,
     StockFormComponent,
-    FilterByPipe
+    FilterByPipe, 
+    HasRoleDirective
 ],
   templateUrl: './product-component.html',
   styleUrl: './product-component.css'
@@ -183,7 +185,7 @@ export class ProductComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  desactivateProdutc(product: Product): void {
+  desactivateProduct(product: Product): void {
     this.notify.confirm('¿Estás seguro?', `¿Quieres desactivar el producto "${product.name}?"`)
       .then((result) => {
         if (result.isConfirmed) {
@@ -201,7 +203,7 @@ export class ProductComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  activateProdutc(product: Product): void {
+  activateProduct(product: Product): void {
     this.notify.confirm('¿Estás seguro?', `¿Quieres activar el producto "${product.name}?"`)
       .then((result) => {
         if (result.isConfirmed) {
@@ -217,6 +219,10 @@ export class ProductComponent implements OnInit, AfterViewInit, OnDestroy {
           });
         }
       });
+  }
+
+  trackByProduct(index: number, item: Product): number {
+    return item.id ?? index;
   }
 
   onToggleChange(): void {

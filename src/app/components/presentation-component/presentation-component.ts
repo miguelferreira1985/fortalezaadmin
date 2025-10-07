@@ -27,7 +27,6 @@ export class PresentationComponent {
 
   presentations: Presentation[] = [];
   selectedPresentation: Presentation | null = null;
-  presentationForDetails: Presentation | null = null;
   searchTerm: string = '';
 
   constructor(private presentationService: PresentationService, private notify: NotificationService) {}
@@ -44,21 +43,11 @@ export class PresentationComponent {
 
   openEditModal(presentation: Presentation) {
     this.selectedPresentation = presentation;
-    this.closePresentationDetails();
     $('#presentationModal').modal('show');
   }
 
   closePresentationForm(): void {
     $('#presentationModal').modal('hide');
-  }
-
-  viewPresentationDetails(presentation: Presentation): void {
-    this.presentationForDetails = presentation;
-    $('#presentationDetailsModal').modal('show');
-  }
-
-  closePresentationDetails(): void {
-    $('#presentationDetailsModal').modal('hide');
   }
 
   getPresentations(): void {
@@ -96,6 +85,24 @@ export class PresentationComponent {
         }
       });
     }
+  }
+
+  deletePresentation(presentation: Presentation): void {
+    this.notify.confirm('¿Estás seguro?', `¿Quieres eliminar la presentación "${presentation.name}? Esta acción es irreversible."`)
+      .then((result) => {
+        if (result.isConfirmed) {
+          let id: number = presentation.id ?? 0;
+          this.presentationService.deletePresentation(id).subscribe({
+            next: () => {
+              this.getPresentations();
+              this.notify.success('¡Presentación eliminada!');
+            },
+            error(err) {
+              console.error(err);
+            }
+          });
+        }
+      });
   }
 
 }

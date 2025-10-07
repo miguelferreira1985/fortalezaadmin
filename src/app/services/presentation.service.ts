@@ -29,5 +29,9 @@ export class PresentationService {
   updatePresentation(id: number, presentation: Presentation): Observable<ApiResponse<Presentation>> {
     return this.http.put<ApiResponse<Presentation>>(`${this.apiUrl}${this.apiPath}/${id}`, presentation);
   }
+
+  deletePresentation(id: number): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}${this.apiPath}/${id}`);
+  }
   
 }

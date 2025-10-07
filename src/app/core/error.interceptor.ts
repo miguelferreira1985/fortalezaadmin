@@ -63,9 +63,10 @@ export const errorInterceptor: HttpInterceptorFn = ((req, next) => {
         catchError((err: HttpErrorResponse) => {
             const friendlyMessage = toFriendlyMessage(err);
 
+
             // Opcional: evita duplicar mensajes de 401 si tu auth.interceptor ya maneja refresh
             if (err.status !== 401) {
-                notify.toastError(friendlyMessage);
+                notify.error(err.error.message, err.error.errors);
             }
 
             // Reinyecta el error con un campo friendlyMessge para que el componente lo pueda usar

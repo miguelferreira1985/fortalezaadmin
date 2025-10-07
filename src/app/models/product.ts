@@ -12,9 +12,9 @@ export interface Product {
     stock: number;
     minimumStock: number;
     recommendedStock: number;
-    subcategory: Subcategory;
-    presentation: Presentation
-    suppliers: Supplier[];
+    subcategory?: Subcategory;
+    presentation?: Presentation
+    suppliers?: Supplier[];
     isActivate?: boolean;
     createdDateTime?: Date;
     updatedDateTime?: Date;

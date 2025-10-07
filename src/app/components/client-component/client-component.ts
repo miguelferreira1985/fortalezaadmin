@@ -26,7 +26,6 @@ export class ClientComponent implements OnInit {
 
   clients: Client[] = [];
   selectedClient: Client | null = null;
-  clientForDetails: Client | null = null;
   searchTerm: string = '';
   showActivateClients: boolean = true;
 
@@ -48,21 +47,11 @@ export class ClientComponent implements OnInit {
 
   openEditModal(client: Client) {
     this.selectedClient = client;
-    this.closeClientDetails();
     $('#clientModal').modal('show');
   }
 
   closeClientForm(): void {
     $('#clientModal').modal('hide');
-  }
-
-  viewClientDetails(client: Client): void {
-    this.clientForDetails = client;
-    $('#clientDetailsModal').modal('show');
-  }
-
-  closeClientDetails(): void {
-    $('#clientDetailsModal').modal('hide');
   }
 
   getClients(): void {
