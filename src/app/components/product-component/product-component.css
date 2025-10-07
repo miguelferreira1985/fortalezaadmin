@@ -25,4 +25,11 @@
     vertical-align: middle;
     white-space: nowrap; /* evita que se corte texto raro */
   }
+
+  #productTable_wrapper .dataTables_filter {
+    float: right;
+  }
+  #productTable_wrapper .dataTables_length {
+    float: left;
+  }
   

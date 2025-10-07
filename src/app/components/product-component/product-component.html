@@ -61,17 +61,63 @@
                           <button 
                             *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
                             class="btn btn-success" 
-                            (click)="openCreateModal()" 
-                            data-toggle="modal" data-target="#productForm">
-
+                            (click)="openCreateModal()">
                               <i class="fas fa-plus-circle"></i> Agregar Producto
-
                           </button> 
                       </div>
           
                     </div>
                     <!-- /.card-header -->
-                    <div class="card-body p-0">
+
+                    <div class="card-body table-responsive">
+                      
+                      <table id="productTable" class="table table-hover table-striped w-100">
+
+                        <thead>
+                          <tr>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Costo</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Subcategoría</th>
+                            <th>Presentación</th>
+                            <th>Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let product of products | filterBy:searchTerm:['code', 'name'];" [ngClass]="{'low-stock': product.isBelowOrEqualMinimumStock}">
+                            <td>{{ product.code | uppercase }}</td>
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.cost | currency }}</td>
+                            <td>{{ product.price | currency }}</td>
+                            <td>{{ product.stock }}</td>
+                            <td>{{ product.subcategory?.name }}</td>
+                            <td>{{ product.presentation?.name }}</td>
+                            <td>
+                              <button class="btn btn-info btn-sm" (click)="viewProductDetails(product)" title="Ver detalles">
+                                <i class="fas fa-eye"></i>
+                              </button>
+                              <button *hasRole="['ROLE_ADMIN','ROLE_MANAGER']" class="btn btn-warning btn-sm"
+                                      (click)="openEditModal(product)" title="Editar">
+                                <i class="fas fa-edit"></i>
+                              </button>
+                              <button *hasRole="['ROLE_ADMIN','ROLE_MANAGER']"
+                                      [ngClass]="product.isActivate ? 'btn btn-danger btn-sm' : 'btn btn-success btn-sm'"
+                                      (click)="product.isActivate ? desactivateProduct(product) : activateProduct(product)"
+                                      [title]="product.isActivate ? 'Desactivar' : 'Activar'">
+                                <i [ngClass]="product.isActivate ? 'fas fa-ban' : 'fas fa-check-square'"></i>
+                              </button>
+                              <button *hasRole="['ROLE_ADMIN','ROLE_MANAGER']" class="btn btn-primary btn-sm"
+                                      (click)="openUpdateStockModal(product)" title="Ajustar inventario">
+                                <i class="fa-regular fa-file-lines"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+<!--                     <div class="card-body p-0">
 
                       <div class="table-responsive w-100" style="max-height: 72vh; overflow: auto;">
 
@@ -164,7 +210,7 @@
                         </table>
                       </div>
 
-                    </div>
+                    </div> -->
                     <!-- /.card-body -->
                   </div>
                   <!-- /.card -->

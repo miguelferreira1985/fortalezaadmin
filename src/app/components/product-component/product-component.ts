@@ -45,6 +45,7 @@ export class ProductComponent implements OnInit, AfterViewInit, OnDestroy {
   // DataTables config
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject<any>();
+  dataTable: any;
 
   // Helpers para calculos
   profitPercentage: number = 0;
@@ -72,7 +73,7 @@ export class ProductComponent implements OnInit, AfterViewInit, OnDestroy {
     this.productService.getProducts(this.showActiveProducts).subscribe({
       next: (data) => {
         this.products = data;
-        this.refreshDataTable();
+        setTimeout(() => this.initDataTable(), 300);
       },
       error: (error) => {
         console.error('Error al obtener los productos:', error);
@@ -81,11 +82,15 @@ export class ProductComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.dtTrigger.next(null);
+    setTimeout(() => {
+      this.initDataTable();
+    }, 500);
   }
 
   ngOnDestroy(): void {
-    this.dtTrigger.unsubscribe();
+    if (this.dataTable) {
+      this.dataTable.destroy(true);
+    }
   }
 
   openCreateModal(): void {
@@ -230,13 +235,20 @@ export class ProductComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private refreshDataTable(): void {
-    const table = $('#productTanle').DataTable();
+    const table = $('#productTable').DataTable();
     table.clear();
     table.destroy();
 
     setTimeout(() => {
       $('#productTable').DataTable(this.dtOptions);
     }, 0);
+  }
+
+  private initDataTable(): void {
+    if (this.dataTable) {
+      this.dataTable.destroy();
+    }
+    this.dataTable = $('#productTable').DataTable(this.dtOptions);
   }
 
 }
