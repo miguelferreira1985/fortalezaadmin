@@ -10,7 +10,6 @@ import { NotificationService } from '../../services/notification.service';
 import { StockFormComponent } from "../forms/stock-form-component/stock-form-component";
 import { StokcRequestDto } from '../../models/stock-request-dto';
 import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 import { HasRoleDirective } from '../../core/has-role.directive';
 
 declare var $: any;
@@ -23,8 +22,7 @@ declare var $: any;
     ProductFormComponent,
     BooleanToTextPipe,
     StockFormComponent,
-    FilterByPipe,
-    ScrollingModule, 
+    FilterByPipe, 
     HasRoleDirective
 ],
   templateUrl: './product-component.html',
