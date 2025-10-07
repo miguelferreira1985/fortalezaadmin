@@ -1,6 +1,7 @@
 import { User } from "./user";
+import { UserRequestDto } from "./user-request-dto";
 
-export interface Employee {
+export interface EmployeeRequestDto {
     id?: number;
     firstName: string;
     lastName: string;
@@ -8,7 +9,7 @@ export interface Employee {
     phone: string;
     address?: string;
     ssn?: string;
-    user?: User;
+    userRequestDTO?: UserRequestDto;
     isActivate?: boolean;
     createdDateTime?: Date;
     updatedDateTime?: Date;

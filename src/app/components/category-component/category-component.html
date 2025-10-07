@@ -57,20 +57,20 @@
                             <td>{{ category.description }}</td>
                             <td>
                               <button 
-                                class="btn btn-info btn-sm mr-2" 
-                                (click)="viewCategoryDetails(category)"
-                                data-bs-toggle="tooltip"
-                                data-placement="top"
-                                title="Ver detalles">
-                                <i class="fas fa-eye"></i>
-                              </button>
+                              class="btn btn-warning btn-sm mr-2" 
+                              (click)="openEditModal(category)"
+                              data-bs-toggle="tooltip"
+                              data-placement="top"
+                              title="Editar">
+                                  <i class="fas fa-edit"></i>
+                            </button>
                               <button 
-                                class="btn btn-warning btn-sm mr-2" 
-                                (click)="openEditModal(category)"
+                                class="btn btn-danger btn-sm mr-2" 
+                                (click)="deleteCategory(category)"
                                 data-bs-toggle="tooltip"
                                 data-placement="top"
-                                title="Editar">
-                                    <i class="fas fa-edit"></i>
+                                title="Eliminar">
+                                <i class="fas fa-trash"></i>
                               </button>
                             </td>
                           </tr>
@@ -106,47 +106,6 @@
                 </div>
               </div>
               <!-- Form Modal -->
-
-              <div class="modal fade" id="categoryDetailsModal" tabindex="-1" role="dialog" aria-labelledby="categoryDetailsModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="categoryDetailsModalLabel">Detalles de la Categoría</h5>
-                      <button type="button" class="close" (click)="closeCategoryDetails()">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-
-                    @if (categoryForDetails) {
-
-                      <div class="modal-body" *ngIf="categoryForDetails">
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <strong>Nombre:</strong>
-                              <p>{{ categoryForDetails.name | uppercase}}</p>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <strong>Descripción:</strong>
-                              <p>{{ categoryForDetails.description }}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" (click)="openEditModal(categoryForDetails)">Editar</button>
-                        <button type="button" class="btn btn-secondary" (click)="closeCategoryDetails()">Cerrar</button>
-                      </div>
-
-                    }
-
-
-                  </div>
-                </div>
-              </div>
         </div>
         <!-- /.container-fluid-->
       </div>

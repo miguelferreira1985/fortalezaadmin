@@ -19,7 +19,7 @@
                     <div class="card-header d-flex w-100 align-items-center">
                       <h3 class="card-title my-auto">Lista de Proveedores</h3>
 
-                      <div class="input-group input-group-sm mx-auto" style="width: 600px;">
+                      <div class="input-group input-group-sm mx-auto" style="width: 800px;">
                         <input 
                           type="text" 
                           name="table_search" 
@@ -64,20 +64,19 @@
                             <td>{{ supplier.location }}</td>
                             <td>
                               <button 
-                                class="btn btn-info btn-sm mr-2" 
-                                (click)="viewSupplierDetails(supplier)"
+                              class="btn btn-warning btn-sm mr-2" 
+                              (click)="openEditModal(supplier)"
+                              data-bs-toggle="tooltip"
+                              data-placement="top"
+                              title="Editar">
+                                  <i class="fas fa-edit"></i>
+                            </button>
+                              <button 
+                                class="btn btn-danger btn-sm mr-2" 
                                 data-bs-toggle="tooltip"
                                 data-placement="top"
                                 title="Ver detalles">
-                                <i class="fas fa-eye"></i>
-                              </button>
-                              <button 
-                                class="btn btn-warning btn-sm mr-2" 
-                                (click)="openEditModal(supplier)"
-                                data-bs-toggle="tooltip"
-                                data-placement="top"
-                                title="Editar">
-                                    <i class="fas fa-edit"></i>
+                                <i class="fas fa-ban"></i>
                               </button>
                             </td>
                           </tr>
@@ -113,63 +112,6 @@
                 </div>
               </div>
               <!-- From Modal -->
-
-              <div class="modal fade" id="supplierDetailsModal" tabindex="-1" role="dialog" aria-labelledby="supplierDetailsModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="supplierDetailsModalLabel">Detalles del Proveedor</h5>
-                      <button type="button" class="close" (click)="closeSupplierDetails()">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-
-                    @if (supplierForDetails) {
-
-                      <div class="modal-body" *ngIf="supplierForDetails">
-                        <div class="form-group">
-                            <strong>Nombre:</strong>
-                            <p>{{ supplierForDetails.name }}</p>
-                        </div>
-                        <div class="form-group">
-                            <strong>Contacto:</strong>
-                            <p>{{ supplierForDetails.contact }}</p>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <strong>Tel. Contacto:</strong>
-                              <p>{{ supplierForDetails.contactPhone }}</p>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <strong>Tel. Oficina:</strong>
-                              <p>{{ supplierForDetails.officePhone }}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                            <strong>Email:</strong>
-                            <p>{{ supplierForDetails.email }}</p>
-                        </div>
-                        <div class="form-group">
-                            <strong>Dirección:</strong>
-                            <p>{{ supplierForDetails.location }}</p>
-                        </div>
-                      </div>
-
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" (click)="openEditModal(supplierForDetails)">Editar</button>
-                        <button type="button" class="btn btn-secondary" (click)="closeSupplierDetails()">Cerrar</button>
-                      </div>
-
-                    }
-
-
-                  </div>
-                </div>
-              </div>
         </div>
         <!-- /.container-fluid-->
       </div>

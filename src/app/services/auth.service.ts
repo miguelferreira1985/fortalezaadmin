@@ -6,6 +6,13 @@ import { environment } from '../../environment/environment';
 import { AuthTokens } from '../models/auth-tokens';
 import { ApiResponse } from '../models/api-response';
 import { map, tap } from 'rxjs/operators';
+import { jwtDecode } from 'jwt-decode';
+
+interface JwtPayload {
+  sub: string;
+  role: string[];
+  exp: number;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +53,23 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return this.getAccessToken() != null;
+  }
+
+  getUserRoles(): string[] {
+    const token = this.getAccessToken();
+    if (!token) return [];
+
+    try {
+      const decode = jwtDecode<JwtPayload>(token);
+      return decode.role || [];
+    } catch (e) {
+      console.error('Error decoding JWT', e);
+      return [];
+    }
+  }
+
+  hasRole(role: string): boolean {
+    return this.getUserRoles().includes(role);
   }
 
   public logout(): void {

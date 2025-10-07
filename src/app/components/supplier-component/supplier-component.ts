@@ -26,7 +26,6 @@ export class SupplierComponent {
 
   suppliers: Supplier[] = [];
   selectedSupplier: Supplier | null = null;
-  supplierForDetails: Supplier | null = null;
   searchTerm: string = '';
   showActivateClients: boolean = true;
 
@@ -48,21 +47,11 @@ export class SupplierComponent {
 
   openEditModal(supplier: Supplier) {
     this.selectedSupplier = supplier;
-    this.closeSupplierDetails();
     $('#supplierModal').modal('show');
   }
 
   closeSupplierForm(): void {
     $('#supplierModal').modal('hide');
-  }
-
-  viewSupplierDetails(supplier: Supplier): void {
-    this.supplierForDetails = supplier;
-    $('#supplierDetailsModal').modal('show');
-  }
-
-  closeSupplierDetails(): void {
-    $('#supplierDetailsModal').modal('hide');
   }
 
   getSuppliers(): void {

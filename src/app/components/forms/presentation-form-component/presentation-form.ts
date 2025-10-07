@@ -27,7 +27,7 @@ export class PresentationFormComponent implements OnInit {
     this.form = this.fb.group({
       id: [null],
       name: ['', Validators.required],
-      abbreviation: ['']
+      abbreviation: ['', Validators.required]
     });
   }
 
