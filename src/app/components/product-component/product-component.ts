@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+/// <reference types="datatables.net" />
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Product } from '../../models/product';
 import { ProductService } from '../../services/product.service';
 import { CommonModule } from "@angular/common";
@@ -10,6 +11,7 @@ import { NotificationService } from '../../services/notification.service';
 import { StockFormComponent } from "../forms/stock-form-component/stock-form-component";
 import { StokcRequestDto } from '../../models/stock-request-dto';
 import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
+import { Subject } from 'rxjs';
 
 declare var $: any;
 
@@ -26,7 +28,7 @@ declare var $: any;
   templateUrl: './product-component.html',
   styleUrl: './product-component.css'
 })
-export class ProductComponent implements OnInit {
+export class ProductComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('productFormModal') productFormModal!: ProductFormComponent;
   @ViewChild('updateStockFormModal') updateStockFormModal!: StockFormComponent;
@@ -36,18 +38,52 @@ export class ProductComponent implements OnInit {
   selectedProduct: Product | null = null;
   productForDetails: Product | null = null;
   searchTerm: string = '';
+  showActiveProducts: boolean = true;
+
+  // DataTables config
+  dtOptions: DataTables.Settings = {};
+  dtTrigger: Subject<any> = new Subject<any>();
+
+  // Helpers para calculos
   profitPercentage: number = 0;
   costWithoutTaxes: number = 0;
-  showActiveProducts: boolean = true;
 
   constructor(private productService: ProductService, private notify: NotificationService) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
+        this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      responsive: true,
+      autoWidth: false,
+      ordering: true,
+      searching: true,
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-MX.json'
+      }
+    };
+
     this.getProducts();
   }
 
-  onToggleChange(): void {
-    this.getProducts();
+  getProducts(): void {
+    this.productService.getProducts(this.showActiveProducts).subscribe({
+      next: (data) => {
+        this.products = data;
+        this.refreshDataTable();
+      },
+      error: (error) => {
+        console.error('Error al obtener los productos:', error);
+      }
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next(null);
+  }
+
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
   }
 
   openCreateModal(): void {
@@ -103,17 +139,6 @@ export class ProductComponent implements OnInit {
     } else {
       this.costWithoutTaxes = 0;
     }
-  }
-
-  getProducts(): void {
-    this.productService.getProducts(this.showActiveProducts).subscribe({
-      next: (data) => {
-        this.products = data;
-      },
-      error: (error) => {
-        console.error('Error al obtener los productos:', error);
-      }
-    });
   }
 
   onProductSaved(productRequestDto: ProductRequestDto): void {
@@ -192,6 +217,20 @@ export class ProductComponent implements OnInit {
           });
         }
       });
+  }
+
+  onToggleChange(): void {
+    this.getProducts();
+  }
+
+  private refreshDataTable(): void {
+    const table = $('#productTanle').DataTable();
+    table.clear();
+    table.destroy();
+
+    setTimeout(() => {
+      $('#productTable').DataTable(this.dtOptions);
+    }, 0);
   }
 
 }

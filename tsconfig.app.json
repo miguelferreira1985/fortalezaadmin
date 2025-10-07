@@ -4,7 +4,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": ["jquery", "datatables.net"],
+    "typeRoots": ["node_modules/@types", "src/types"]
   },
   "include": [
     "src/**/*.ts"
