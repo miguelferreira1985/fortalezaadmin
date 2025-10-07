@@ -37,6 +37,9 @@
               "node_modules/admin-lte/dist/js/adminlte.min.js",
               "node_modules/datatables.net/js/dataTables.min.js",
               "node_modules/datatables.net-bs5/js/dataTables.bootstrap5.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "sweetalert2"
             ]
           },
           "configurations": {
@@ -44,7 +47,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2MB",
+                  "maximumWarning": "3MB",
                   "maximumError": "5MB"
                 },
                 {

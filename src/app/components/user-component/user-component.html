@@ -70,7 +70,7 @@
                           <tr *ngFor="let user of users | filterBy:searchTerm:['username']">
                             <td>{{ user.username }}</td>
                             <td>{{ user.isActivate ?? false | booleanToText }}</td>
-                            <td>{{ user.isBlocked ?? false | booleanToText }}</td>
+                            <td>{{ user.isBlocked | booleanToText }}</td>
                             <td>{{ user.roles | roleName}}</td>
                             <td>
                               <button 
