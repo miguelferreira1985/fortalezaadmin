@@ -3,6 +3,8 @@ import { environment } from '../../environment/environment';
 import { HttpClient } from '@angular/common/http';
 import { Category } from '../models/category';
 import { Observable } from 'rxjs';
+import { ApiResponse } from '../models/api-response';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -15,15 +17,17 @@ export class CategoryService {
   constructor(private http: HttpClient) {}
 
   getAllCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(`${this.apiUrl}${this.apiPath}`);
+    return this.http
+      .get<ApiResponse<Category[]>>(`${this.apiUrl}${this.apiPath}`)
+      .pipe(map(res => res.data));
   }
 
-  createCategory(category: Category): Observable<Category> {
-    return this.http.post<Category>(`${this.apiUrl}${this.apiPath}`, category);
+  createCategory(category: Category): Observable<ApiResponse<Category>> {
+    return this.http.post<ApiResponse<Category>>(`${this.apiUrl}${this.apiPath}`, category);
   }
 
-  updateCategory(id: number, category: Category): Observable<Category> {
-    return this.http.put<Category>(`${this.apiUrl}${this.apiPath}/${id}`, category);
+  updateCategory(id: number, category: Category): Observable<ApiResponse<Category>> {
+    return this.http.put<ApiResponse<Category>>(`${this.apiUrl}${this.apiPath}/${id}`, category);
   }
   
 }

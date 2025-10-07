@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Comment } from '@angular/compiler';
-import { Component, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Supplier } from '../../../models/supplier';
 
 declare var $: any;
@@ -10,7 +9,7 @@ declare var $: any;
   selector: 'app-supplier-form-component',
   imports: [
     CommonModule,
-    FormsModule
+    ReactiveFormsModule
   ],
   templateUrl: './supplier-form-component.html',
   styleUrl: './supplier-form-component.css'
@@ -19,56 +18,65 @@ export class SupplierFormComponent {
 
   @Input() supplier: Supplier | null = null;
   @Output() saveSupplier = new EventEmitter<Supplier>();
-  @ViewChild('supplierForm') supplierForm!: NgForm;
 
-  formSupplier: Supplier = { 
-    name: '', 
-    contact: '', 
-    contactPhone: '', 
-    officePhone: '', 
-    email: '', 
-    address: ''
-  };
+form!: FormGroup;
 
-  constructor() {}
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
+    this.form = this.fb.group({
+      id: [null],
+      name: ['', Validators.required],
+      contact: ['', Validators.required],
+      location: ['', Validators.required],
+      email: ['', Validators.email],
+      contactPhone: ['', Validators.required],
+      officePhone: ['']
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['supplier'] && changes['supplier'].currentValue) {
-      // El valor del input `product` ha cambiado, es el momento de cargar los datos
-      this.formSupplier = { ...changes['supplier'].currentValue };
-      console.log('Supplier data loaded:', this.formSupplier);
-    } else if (changes['supplier'] && !changes['supplier'].currentValue) {
-      console.log('Form reset for new supplier.');
+      const s = changes['supplier'].currentValue as Supplier;
+      this.form.patchValue({
+        id: s.id,
+        name: s.name,
+        contact: s.contact,
+        location: s.location,
+        email: s.email,
+        contactPhone: s.contactPhone,
+        officePhone: s.officePhone
+      });
     }
   }
 
   onSubmit(): void {
-    this.saveSupplier.emit(this.formSupplier);
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    const supplier: Supplier = this.form.value;
+    this.saveSupplier.emit(supplier);
   }
 
   closeSupplierForm(): void {
     $('#supplierModal').modal('hide');
   }
 
-  public resetFormAndModal(): void {
-    this.formSupplier = { 
-      name: '', 
-      contact: '', 
-      contactPhone: '', 
-      officePhone: '', 
-      email: '', 
-      address: ''
-    };
-
-    setTimeout(() => {
-      if (this.supplierForm) {
-        this.supplierForm.resetForm(this.formSupplier);
-        console.log('Formulario Reseteado');
-      }
+  resetFormAndModal(): void {
+    this.form.reset({
+      id: null,
+      name: '',
+      contact: '',
+      location: '',
+      email: '',
+      contactPhone: '',
+      officePhone: ''
     });
+  }
+
+  c(name: string) {
+    return this.form.get(name)!;
   }
 
 }

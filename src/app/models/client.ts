@@ -1,10 +1,6 @@
 export interface Client {
     id?: number;
-    companyName?: string;
-    firstName: string;
-    lastName: string;
-    address?: string;
-    email?: string;
+    name: string;
     phone?: string;
     rfc: string;
     isActivate?: boolean;

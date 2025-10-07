@@ -3,9 +3,10 @@ import { Subcategory } from '../../models/subcategory';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SubcategoryService } from '../../services/subcategory.service';
-import Swal from 'sweetalert2';
 import { SubcategoryFormComponent } from '../forms/subcategory-form-component/subcategory-form';
 import { SubcategoryRequestDto } from '../../models/subcategory-request-dto';
+import { NotificationService } from '../../services/notification.service';
+import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
 
 declare var $: any;
 
@@ -14,7 +15,8 @@ declare var $: any;
   imports: [
     CommonModule,
     FormsModule,
-    SubcategoryFormComponent
+    SubcategoryFormComponent,
+    FilterByPipe
   ],
   templateUrl: './subcategory-component.html',
   styleUrl: './subcategory-component.css'
@@ -24,12 +26,11 @@ export class SubcategoryComponent implements OnInit {
   @ViewChild('subcategoryFormModal') subcategoryFormModal!: SubcategoryFormComponent;
 
   subcategories: Subcategory[] = [];
-  filteredSubcategories: Subcategory[] = [];
   selectedSubcategory: Subcategory | null = null;
   subcategoryForDetails: Subcategory | null = null;
   searchTerm: string = '';
 
-  constructor(private subcategoryService: SubcategoryService) {}
+  constructor(private subcategoryService: SubcategoryService, private notify: NotificationService) {}
 
   ngOnInit(): void {
     this.getSubcategories();
@@ -64,8 +65,6 @@ export class SubcategoryComponent implements OnInit {
     this.subcategoryService.getSubcategories().subscribe({
       next: (data) => {
         this.subcategories = data;
-        this.filteredSubcategories = [...this.subcategories];
-        console.log('Subcategorias obtenidas:', this.filteredSubcategories);
       },
       error: (error) => {
         console.error('Error al obtener las subcategorias:', error);
@@ -73,57 +72,26 @@ export class SubcategoryComponent implements OnInit {
     });
   }
 
-  filterSubcategories(): void {
-    if (!this.searchTerm) {
-      this.filteredSubcategories = [...this.subcategories];
-    } else {
-      const lowerCaseSearchItem = this.searchTerm.toLowerCase();
-      this.filteredSubcategories = this.subcategories.filter(subcategory => 
-        subcategory.name.toLowerCase().includes(lowerCaseSearchItem) 
-      );
-    }
-  }
-
   onSubcategorySaved(subcategoryRequestDto: SubcategoryRequestDto): void {
     if (subcategoryRequestDto.id) {
       this.subcategoryService.updateSubcategory(subcategoryRequestDto.id, subcategoryRequestDto).subscribe({
-        next: () => {
-          this.getSubcategories()
-          Swal.fire({
-            icon: 'success',
-            title: '¡Subcategoría Actualizada!',
-            text: 'La subcategoría fue actualizada con exito.',
-            confirmButtonText: 'OK'
-          });
+        next: (res) => {
+          this.getSubcategories();
+          this.notify.success('¡Categoría actualizada!', res?.message);
           $('#subcategoryModal').modal('hide');
         }, 
         error(err) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.message
-          });
           console.log(err);
         }
       });
     } else {
       this.subcategoryService.createSubcategory(subcategoryRequestDto).subscribe({
-        next: () => {
+        next: (res) => {
           this.getSubcategories();
-          Swal.fire({
-            icon: 'success',
-            title: '¡Subcategoría Guardada!',
-            text: 'La subcategoría fue guardada con exito.',
-            confirmButtonText: 'OK'
-          });
+          this.notify.success('¡Categoría agregada!', res?.message);
           $('#subcategoryModal').modal('hide');
         },
         error(err) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.message
-          });
           console.error(err);
         }
       });

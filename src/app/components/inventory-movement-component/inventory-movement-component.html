@@ -1,0 +1,87 @@
+      <!-- Content Header (Page header) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0">Movimiento de Inventario</h1>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+
+          <div class="row">
+            <div class="col-md-6">
+                <label>Seleccionar Producto</label>
+                <ng-select
+                    [items]="products"
+                    bindLabel="name"
+                    bindValue="id"
+                    placeholder="Seleccione un producto"
+                    [(ngModel)]="selectedProductId"
+                    (change)="loadMovements(selectedProductId)">
+                </ng-select>
+            </div>
+          </div>
+
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+  
+      <!-- Main content -->
+      <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-header d-flex w-100 align-items-center">
+                      <h3 class="card-title my-auto">Movimientos</h3>
+
+                      <div class="input-group input-group-sm mx-auto" style="width: 600px;">
+                        <input 
+                          type="text" 
+                          name="table_search" 
+                          class="form-control" 
+                          placeholder="Buscar movimiento..."
+                          [(ngModel)]="searchItem">
+                        <div class="input-group-append">
+                          <button type="submit" class="btn btn-default">
+                            <i class="fas fa-search"></i>
+                          </button>
+                        </div>
+                      </div>
+          
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body table-responsive p-0" style="height: 600px;">
+                      <table class="table table-head-fixed text-nowrap">
+                        <thead>
+                          <tr>
+                            <th>Stock Previo</th>
+                            <th>Cantidad</th>
+                            <th>Stock Nuevo</th>
+                            <th>Justificación</th>
+                            <th>Tipo de Movimiento</th>
+                            <th>Hecho por</th>
+                            <th>Fecha</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let movement of movements | filterBy:searchItem:['createdBy','movementType']">
+                            <td>{{ movement.previousStock }}</td>
+                            <td>{{ movement.quantity }}</td>
+                            <td>{{ movement.newStock }}</td>
+                            <td>{{ movement.description }}</td>
+                            <td>{{ movement.movementType | uppercase }}</td>
+                            <td>{{ movement.createdBy }}</td>
+                            <td>{{ movement.movementDate | date: 'dd/MM/yyyy' }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <!-- /.card-body -->
+                  </div>
+                  <!-- /.card -->
+                </div>
+              </div> 
+        </div>
+        <!-- /.container-fluid-->
+      </div>
+      <!-- /.content -->

@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ClientFormComponent } from '../forms/client-form-component/client-form-component';
 import { Client } from '../../models/client';
 import { ClientService } from '../../services/client.service';
-import Swal from 'sweetalert2';
+import { NotificationService } from '../../services/notification.service';
+import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
 
 declare var $: any;
 
@@ -13,7 +14,8 @@ declare var $: any;
   imports: [
     CommonModule,
     FormsModule,
-    ClientFormComponent
+    ClientFormComponent,
+    FilterByPipe
   ],
   templateUrl: './client-component.html',
   styleUrl: './client-component.css'
@@ -23,13 +25,12 @@ export class ClientComponent implements OnInit {
   @ViewChild('clientFormModal') clientFormModal!: ClientFormComponent;
 
   clients: Client[] = [];
-  filteredClients: Client[] = [];
   selectedClient: Client | null = null;
   clientForDetails: Client | null = null;
   searchTerm: string = '';
   showActivateClients: boolean = true;
 
-  constructor(private clientService: ClientService) {}
+  constructor(private clientService: ClientService, private notify: NotificationService) {}
 
   ngOnInit(): void {
     this.getClients();
@@ -68,8 +69,6 @@ export class ClientComponent implements OnInit {
     this.clientService.getClients(this.showActivateClients).subscribe({
       next: (data) => {
         this.clients = data;
-        this.filteredClients = [...this.clients];
-        console.log('Clientes obtenidos:', this.filteredClients);
       },
       error: (error) => {
         console.error('Error al obtener los clientes:', error);
@@ -77,60 +76,27 @@ export class ClientComponent implements OnInit {
     });
   }
 
-  filterClients(): void {
-    if (!this.searchTerm) {
-      this.filteredClients = [...this.clients];
-    } else {
-      const lowerCaseSearchItem = this.searchTerm.toLowerCase();
-      this.filteredClients = this.clients.filter(client => 
-        client.firstName.toLowerCase().includes(lowerCaseSearchItem) ||
-        client.lastName.toLowerCase().includes(lowerCaseSearchItem) ||
-        client.rfc.toLowerCase().includes(lowerCaseSearchItem)
-      );
-    }
-  }
-
   onClientSaved(client: Client): void {
     if (client.id) {
       this.clientService.updateClient(client.id, client).subscribe({
-        next: () => {
+        next: (res) => {
           this.getClients()
-          Swal.fire({
-            icon: 'success',
-            title: 'Cliente Actulizada',
-            text: 'El cliente fue actualizado con exito.',
-            confirmButtonText: 'OK'
-          });
+          this.notify.success('¡Cliente actualizado!', res?.message);
           $('#clientModal').modal('hide');
         }, 
         error(err) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.message
-          });
           console.log(err);
         }
       });
     } else {
       console.log("Cliente para crear:" + client)
       this.clientService.createClient(client).subscribe({
-        next: () => {
+        next: (res) => {
           this.getClients();
-          Swal.fire({
-            icon: 'success',
-            title: 'Cliente Guardado!',
-            text: 'El cliente fue guardado con exito.',
-            confirmButtonText: 'OK'
-          });
+          this.notify.success('¡Cliente agregado!', res?.message)
           $('#clientModal').modal('hide');
         },
         error(err) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.message
-          });
           console.error(err);
         }
       });

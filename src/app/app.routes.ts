@@ -1,16 +1,7 @@
 import { Routes } from '@angular/router';
-import { DashboardComponent } from './components/dashboard/dashboard';
-import { LoginComponent } from './components/auth/login/login';
 import { authGuard } from './components/auth/auth.guard';
 import { BlankComponent } from './components/layouts/blank/blank';
 import { MainLayoutComponent } from './components/layouts/main-layout/main-layout';
-import { ProductComponent } from './components/product-component/product-component';
-import { SubcategoryComponent } from './components/subcategory-component/subcategory-component';
-import { PresentationComponent } from './components/presentation-component/presentation-component';
-import { CategoryComponent } from './components/category-component/category-component';
-import { ClientComponent } from './components/client-component/client-component';
-import { SupplierComponent } from './components/supplier-component/supplier-component';
-import { EmployeeComponent } from './components/employee-component/employee-component';
 
 export const routes: Routes = [
       // Routes without a layout (Login, etc.)
@@ -19,7 +10,11 @@ export const routes: Routes = [
     component: BlankComponent,
     children: [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
-      { path: 'login', component: LoginComponent }
+      { 
+        path: 'login', 
+        loadComponent: () =>
+          import('./components/auth/login/login').then(m => m.LoginComponent)
+      }
     ]
   },
   // Routes with the AdminLTE layout, protected by the guard
@@ -28,14 +23,51 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     canActivate: [authGuard],
     children: [
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'product', component: ProductComponent},
-      { path: 'presentation', component: PresentationComponent},
-      { path: 'subcategory', component: SubcategoryComponent },
-      { path: 'category', component: CategoryComponent},
-      { path: 'client', component: ClientComponent},
-      { path: 'supplier', component: SupplierComponent},
-      { path: 'employee', component: EmployeeComponent}
+      { 
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./components/dashboard/dashboard').then(m => m.DashboardComponent)
+      },
+      { 
+        path: 'product',
+        loadComponent: () =>
+          import('./components/product-component/product-component').then(m => m.ProductComponent)
+      },
+      { 
+        path: 'presentation',
+        loadComponent: () =>
+          import('./components/presentation-component/presentation-component').then(m => m.PresentationComponent)
+      },
+      { 
+        path: 'subcategory',
+        loadComponent: () =>
+          import('./components/subcategory-component/subcategory-component').then(m => m.SubcategoryComponent)
+      },
+      { 
+        path: 'category',
+        loadComponent: () =>
+          import('./components/category-component/category-component').then(m => m.CategoryComponent)
+      },
+      { 
+        path: 'client',
+        loadComponent: () =>
+          import('./components/client-component/client-component').then(m => m.ClientComponent)
+      },
+      { 
+        path: 'supplier',
+        loadComponent: () =>
+          import('./components/supplier-component/supplier-component').then(m => m.SupplierComponent)
+      },
+      { 
+        path: 'employee',
+        loadComponent: () =>
+          import('./components/employee-component/employee-component').then(m => m.EmployeeComponent)
+      },
+      { 
+        path: 'inventory-movement',
+        loadComponent: () =>
+          import('./components/inventory-movement-component/inventory-movement-component').then(m => m.InventoryMovementComponent)
+      }
     ]
   }
 ];

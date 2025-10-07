@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { Subcategory } from '../../../models/subcategory';
 import { Category } from '../../../models/category';
 import { CategoryService } from '../../../services/category.service';
 import { SubcategoryRequestDto } from '../../../models/subcategory-request-dto';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 declare var $: any;
 
@@ -13,8 +14,9 @@ declare var $: any;
   selector: 'app-subcategory-form',
   imports: [
     CommonModule,
-    FormsModule,
-    BsDropdownModule
+    ReactiveFormsModule,
+    BsDropdownModule,
+    NgSelectModule
   ],
   templateUrl: './subcategory-form.html',
   styleUrl: './subcategory-form.css'
@@ -23,25 +25,33 @@ export class SubcategoryFormComponent implements OnInit {
 
   @Input() subcategory: Subcategory | null = null;
   @Output() saveSubcategory = new EventEmitter<SubcategoryRequestDto>();
-  @ViewChild('subcategoryForm') subcategoryForm!: NgForm;
 
-  formSubcategory: Subcategory = { name: '', description: '', category: { id: 0, name: '' } };
+  form!: FormGroup;
   catgories: Category[] = [];
 
-  constructor(private categoryService: CategoryService) {}
+  constructor(
+    private fb: FormBuilder,
+    private categoryService: CategoryService) {}
 
   ngOnInit(): void {
+    this.form = this.fb.group({
+      id: [null],
+      name: ['', Validators.required],
+      description: [''],
+      categoryId: [null]
+    });
     this.getCategories();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['subcategory'] && changes['subcategory'].currentValue) {
-      // El valor del input `subcategory` ha cambiado, es el momento de cargar los datos
-      this.formSubcategory = { ...changes['subcategory'].currentValue };
-      console.log('Subcategory data loaded:', this.formSubcategory);
-    } else if (changes['subcategory'] && !changes['subcategory'].currentValue) {
-      // El valor del input `product` es null, reseteamos el formulario
-      console.log('Form reset for new subcategory.');
+      const s = changes['subcategory'].currentValue as Subcategory;
+      this.form.patchValue({
+        id: s.id,
+        name: s.name,
+        description: s.description,
+        categoryId: s.category?.id
+      });
     }
   }
 
@@ -52,29 +62,29 @@ export class SubcategoryFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const subcategoryToSave: SubcategoryRequestDto = {
-      id: this.formSubcategory.id,
-      name: this.formSubcategory.name,
-      description: this.formSubcategory.description,
-      categoryId: this.formSubcategory.category.id
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
     }
-    console.log("Subcategorìa dede form:" + subcategoryToSave)
-    this.saveSubcategory.emit(subcategoryToSave);
+    const dto: SubcategoryRequestDto = this.form.value;
+    this.saveSubcategory.emit(dto);
   }
 
   closeSubcategoryForm(): void {
     $('#subcategoryModal').modal('hide');
   }
 
-  public resetFormAndModal(): void {
-    this.formSubcategory = { name: '', description: '', category: { id: 0, name: '' } };
-
-    setTimeout(() => {
-      if (this.subcategoryForm) {
-        this.subcategoryForm.resetForm(this.formSubcategory);
-        console.log('Formulario Reseteado');
-      }
+  resetFormAndModal(): void {
+    this.form.reset({
+      id: null,
+      name: '',
+      description: '',
+      categoryId: null
     });
+  }
+
+  c(name: string) {
+    return this.form.get(name)!;
   }
 
 }
