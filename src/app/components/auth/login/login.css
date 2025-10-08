@@ -1,4 +1,25 @@
-.login-box {
-    min-height: 400px;
-    width: 450px;
-}
+.login-section {
+    background-color: #f4f6f9;
+    min-height: 100vh;
+  }
+  
+  .login-image {
+    max-width: 80%;
+    height: auto;
+    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.2));
+  }
+  
+  form {
+    border-radius: 8px;
+  }
+  
+  .btn-primary {
+    background-color: #0069d9;
+    border: none;
+    font-weight: 600;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+  
