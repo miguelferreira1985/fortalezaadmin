@@ -44,11 +44,11 @@ export class AuthService {
   }
 
   getAccessToken(): string | null {
-    return localStorage.getItem('accessToken');
+    return sessionStorage.getItem('accessToken');
   }
 
   getRefreshToken(): string | null {
-    return localStorage.getItem('refreshToken');
+    return sessionStorage.getItem('refreshToken');
   }
 
   isAuthenticated(): boolean {
@@ -74,16 +74,16 @@ export class AuthService {
 
   public logout(): void {
     // 1. Remove the token from local storage
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('refreshToken');
 
     // 2. Navigate the user back to the login page
     this.router.navigate(['/login']);
   }
 
   private storeTokens(tokens: AuthTokens): void {
-    localStorage.setItem('accessToken', tokens.token);
-    localStorage.setItem('refreshToken', tokens.refreshToken);
+    sessionStorage.setItem('accessToken', tokens.token);
+    sessionStorage.setItem('refreshToken', tokens.refreshToken);
   }
   
   

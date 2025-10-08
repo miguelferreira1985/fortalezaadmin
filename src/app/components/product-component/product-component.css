@@ -1,7 +1,3 @@
-.low-stock {
-    background-color: #f8d7da !important; /* rojo claro tipo Bootstrap danger */
-  }
-
 .table tfoot {
     position: sticky;
     bottom: 0;
@@ -24,5 +20,14 @@
   .table th {
     vertical-align: middle;
     white-space: nowrap; /* evita que se corte texto raro */
-  }
+}
+
+:host ::ng-deep .low-stock {
+  background-color: #fff3cd !important;
+  color: #856404 !important;
+}
+
+.ng-dropdown-panel {
+  z-index: 1056 !important; /* Bootstrap modals usan 1050 */
+}
   

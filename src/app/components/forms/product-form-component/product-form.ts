@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Output, Input, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product } from '../../../models/product';
 import { Supplier } from '../../../models/supplier';
 import { SupplierService } from '../../../services/supplier.service';
@@ -12,6 +12,7 @@ import { PresentationService } from '../../../services/presentation.service';
 import { Presentation } from '../../../models/presentation';
 import { ProductRequestDto } from '../../../models/product-request-dto';
 import { CustomValidators } from '../../../custom-validators';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 declare var $: any;
 
@@ -37,6 +38,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
   presentations: Presentation[] = [];
 
   private readonly IVA_RATE = 0.16; // 16%
+  private updating = false;
   profitPercentage: number = 0;
   costWithoutTaxes: number = 0;
 
@@ -68,14 +70,26 @@ export class ProductFormComponent implements OnInit, OnChanges {
     this.getPresentations();
     this.getSuppliers();
 
-    // Observadores reactivos
-    this.form.get('price')?.valueChanges.subscribe(() => this.onPriceChange());
-    this.form.get('cost')?.valueChanges.subscribe(() => this.onCostChange());
+  this.form.get('cost')?.valueChanges
+    .pipe(debounceTime(500), distinctUntilChanged())
+    .subscribe(() => {
+      if (!this.updating) this.syncFromCostWithTaxes();
+    });
+
+  this.form.get('price')?.valueChanges
+    .pipe(debounceTime(500), distinctUntilChanged())
+    .subscribe(() => {
+      if (!this.updating) this.syncFromPrice();
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['product'] && changes['product'].currentValue) {
+      console.log('🔄 Cargando producto en formulario:', changes['product'].currentValue);
       const p = changes['product'].currentValue as Product;
+  
+      this.updating = true;
+  
       this.form.patchValue({
         id: p.id,
         name: p.name,
@@ -89,9 +103,20 @@ export class ProductFormComponent implements OnInit, OnChanges {
         subcategoryId: p.subcategory?.id,
         presentationId: p.presentation?.id,
         supplierIds: p.suppliers?.map(s => s.id) ?? []
-      });
-      this.onCostChange();
-      this.calculateProfitPercentage();
+      }, { emitEvent: false });
+  
+      this.costWithoutTaxes = p.cost
+        ? parseFloat((p.cost / (1 + this.IVA_RATE)).toFixed(2))
+        : 0;
+  
+      if (p.price && p.cost) {
+        const profit = ((p.price - p.cost) / p.cost) * 100;
+        this.profitPercentage = parseFloat(profit.toFixed(2));
+      } else {
+        this.profitPercentage = 0;
+      }
+  
+      this.updating = false;
     }
   }
 
@@ -118,65 +143,14 @@ export class ProductFormComponent implements OnInit, OnChanges {
       this.form.markAllAsTouched();
       return;
     }
-    const dto: ProductRequestDto = this.form.value;
+    const dto: ProductRequestDto = { ...this.form.value }
+    console.log("Form para guardar: ", this.form.value); 
+    console.log("Producto para guardar: ", dto); 
     this.saveProduct.emit(dto)
   }
 
   closeProductForm(): void {
     $('#productModal').modal('hide');
-  }
-
-  onPriceChange(): void {
-    this.calculateProfitPercentage();
-  }
-
-  onProfitChange(): void {
-    const cost = this.form.get('cost')?.value;
-  
-    if (cost && this.profitPercentage) {
-      let price = cost + cost * (this.profitPercentage / 100);
-      price = parseFloat(price.toFixed(2));
-      this.form.get('price')?.setValue(price, { emitEvent: false });
-    }
-  }
-
-  onCostWithoutTaxesChange(event: Event): void {
-    const value = parseFloat((event.target as HTMLInputElement).value);
-    this.costWithoutTaxes = value || 0;
-    if (this.costWithoutTaxes) {
-      const cost = this.costWithoutTaxes * (1 + this.IVA_RATE);
-      this.form.get('cost')?.setValue(parseFloat(cost.toFixed(2)), { emitEvent: true });
-    }
-  }
-
-  onCostChange(): void {
-    const cost = this.form.get('cost')?.value;
-
-    if (cost) {
-      this.costWithoutTaxes = parseFloat((cost / (1 + this.IVA_RATE)).toFixed(2));
-      this.calculateProfitPercentage();
-    } else {
-      this.costWithoutTaxes = 0;
-      this.form.get('price')?.setValue(0, { emitEvent: false });
-      this.profitPercentage = 0;
-    }
-  }
-
-  calculateProfitPercentage(): void {
-    const cost = this.form.get('cost')?.value;
-    const price = this.form.get('price')?.value;
-
-    if (cost && price) {
-      const profitAmount = price - cost;
-      this.profitPercentage = parseFloat(((profitAmount / cost) * 100).toFixed(2));
-    } else {
-      this.profitPercentage = 0;
-    }
-  }
-
-  calculateCostWitoutTaxes(): void {
-    const cost = this.form.get('cost')?.value;
-    this.costWithoutTaxes = cost ? parseFloat((cost / (1 + this.IVA_RATE)).toFixed(2)) : 0;
   }
 
   resetFormAndModal(): void {
@@ -200,6 +174,103 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
   c(name: string) {
     return this.form.get(name)!;
+  }
+
+
+  onCostWithoutTaxesChange(event: Event): void {
+    if (this.updating) return;
+    this.updating = true;
+
+    const value = parseFloat((event.target as HTMLInputElement).value) || 0;
+    this.costWithoutTaxes = value;
+
+    const costWithIva = this.costWithoutTaxes * (1 + this.IVA_RATE);
+    this.form.get('cost')?.setValue(+costWithIva.toFixed(2), { emitEvent: false });
+
+    let newPrice = costWithIva;
+    if (this.profitPercentage > 0) {
+      newPrice = costWithIva * (1 + this.profitPercentage / 100);
+    }
+
+    this.form.get('price')?.setValue(+newPrice.toFixed(2), { emitEvent: false });
+    this.calculateProfitPercentage();
+
+    this.updating = false;
+  }
+
+  onProfitChange(): void {
+    if (this.updating) return;
+    this.updating = true;
+  
+    const cost = Number(this.form.get('cost')?.value) || 0;
+    const profit = Number(this.profitPercentage) || 0;
+  
+    if (cost > 0) {
+      const newPrice = cost * (1 + profit / 100);
+      this.form.get('price')?.setValue(+newPrice.toFixed(2), { emitEvent: false });
+    }
+  
+    this.calculateProfitPercentage();
+    this.updating = false;
+  }
+  
+  syncFromCostWithTaxes(): void {
+    if (this.updating) return;
+    this.updating = true;
+  
+    const cost = Number(this.form.get('cost')?.value) || 0;
+    this.costWithoutTaxes = cost > 0 ? +(cost / (1 + this.IVA_RATE)).toFixed(2) : 0;
+  
+    const profit = Number(this.profitPercentage) || 0;
+    const newPrice =
+      profit > 0 ? cost * (1 + profit / 100) : cost;
+  
+    this.form.get('price')?.setValue(+newPrice.toFixed(2), { emitEvent: false });
+    this.calculateProfitPercentage();
+  
+    this.updating = false;
+  }
+  
+  syncFromPrice(): void {
+    if (this.updating) return;
+    this.updating = true;
+  
+    const price = Number(this.form.get('price')?.value) || 0;
+    let cost = Number(this.form.get('cost')?.value) || 0;
+    const profit = Number(this.profitPercentage) || 0;
+  
+    if (price > 0 && cost === 0) {
+      if (profit > 0) {
+        cost = price / (1 + profit / 100);
+      } else {
+        cost = price; 
+      }
+      this.form.get('cost')?.setValue(+cost.toFixed(2), { emitEvent: false });
+    }
+  
+    this.costWithoutTaxes = cost > 0 ? +(cost / (1 + this.IVA_RATE)).toFixed(2) : 0;
+  
+    if (cost > 0 && price > 0) {
+      const profitCalc = ((price - cost) / cost) * 100;
+      this.profitPercentage = +profitCalc.toFixed(2);
+    } else {
+      this.profitPercentage = 0;
+    }
+  
+    console.log(`[syncFromPrice] Precio: ${price}, Costo calculado: ${cost}, Ganancia: ${this.profitPercentage}`);
+  
+    this.updating = false;
+  }
+
+  calculateProfitPercentage(): void {
+    const cost = Number(this.form.get('cost')?.value) || 0;
+    const price = Number(this.form.get('price')?.value) || 0;
+
+    if (cost > 0 && price > 0) {
+      this.profitPercentage = +(((price - cost) / cost) * 100).toFixed(2);
+    } else {
+      this.profitPercentage = 0;
+    }
   }
 
 }

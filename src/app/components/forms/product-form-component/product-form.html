@@ -37,28 +37,58 @@
       <div class="col-md-3">
         <div class="form-group">
             <label for="cost">Costo con IVA*</label>
-            <input type="number" class="form-control" formControlName="cost" (input)="onCostChange()" />
+            <input 
+            type="number" 
+            class="form-control" 
+            formControlName="cost"
+            min="0"
+            step="0.10"/>
             <small class="text-danger" *ngIf="c('cost').touched && c('cost').invalid">El costo con IVA es obligatorio.</small>
           </div>
       </div>
 
-      <div class="col-md-3">
+      <div class="col-md-2">
+        <div class="form-group">
+            <label for="supplierDiscount">Desc (%)</label>
+            <input 
+            type="number" 
+            class="form-control" 
+            min="0"
+            step="0.10"/>
+          </div>
+      </div>
+
+      <div class="col-md-2">
         <div class="form-group">
             <label for="price">Ganancia (%)</label>
             <input type="number"
             class="form-control"
             id="profit"
+            min="0"
+            step="0.01"
             [value]="profitPercentage"
             (input)="profitPercentage = $any($event.target).value; onProfitChange()" />
+
+                    <!-- Mostrar ganancia en pesos -->
+        <small class="text-muted" *ngIf="form.get('cost')?.value && profitPercentage > 0">
+          (+{{ (form.get('price')?.value - form.get('cost')?.value) | currency:'MXN':'symbol' }})
+        </small>
           </div>
       </div>
 
-      <div class="col-md-3">
+      <div class="col-md-2">
           <div class="form-group">
               <label for="price">Precio*</label>
-              <input type="number" class="form-control" id="price" name="price" formControlName="price">
-               <small class="text-danger" *ngIf="c('price').touched && c('price').invalid">El precio es obligatorio.</small>
-              <small class="text-danger" *ngIf="form.hasError('priceLtCost')">El precio no puede ser menor al costo.</small>
+              <input 
+                type="number" 
+                class="form-control" i
+                d="price" 
+                name="price" 
+                formControlName="price"
+                min="0"
+                step="0.10">
+                <small class="text-danger" *ngIf="c('price').touched && c('price').invalid">El precio es obligatorio.</small>
+                <small class="text-danger" *ngIf="form.hasError('priceLtCost')">El precio no puede ser menor al costo.</small>
           </div>
      </div>
 
@@ -106,7 +136,6 @@
           [multiple]="false"
           bindLabel="name"
           bindValue="id"
-          appendTo="body"
           dropdownPosition="bottom"
           formControlName="subcategoryId"
           placeholder="Seleccione una subcategoría">
@@ -119,7 +148,6 @@
           [multiple]="false"
           bindLabel="name"
           bindValue="id"
-          appendTo="body"
           dropdownPosition="bottom"
           formControlName="presentationId"
           placeholder="Seleccione una presentación">
@@ -134,7 +162,6 @@
         [multiple]="true"
         bindLabel="name"
         bindValue="id"
-        appendTo="body"
         dropdownPosition="bottom"
         formControlName="supplierIds"
         placeholder="Seleccione uno o más proveedores">
