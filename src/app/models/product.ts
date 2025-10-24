@@ -1,6 +1,6 @@
 import { Presentation } from "./presentation";
 import { Subcategory } from "./subcategory";
-import { Supplier } from "./supplier";
+import { SupplierCost } from "./supplier-cost";
 
 export interface Product {
     id?: number;
@@ -14,7 +14,7 @@ export interface Product {
     recommendedStock: number;
     subcategory?: Subcategory;
     presentation?: Presentation
-    suppliers?: Supplier[];
+    supplierCosts?: SupplierCost[];
     isActivate?: boolean;
     createdDateTime?: Date;
     updatedDateTime?: Date;

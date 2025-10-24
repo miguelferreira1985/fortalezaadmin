@@ -337,7 +337,7 @@
                           </div>
                         </div>
                         <div class="row">
-                          @if (!productForDetails.suppliers || productForDetails.suppliers.length === 0) {
+                          @if (!productForDetails.supplierCosts || productForDetails.supplierCosts.length === 0) {
                             <div class="col-md-12">
                               <strong>Proveedores:</strong>
                                 <p>Sin Proveedores</p>
@@ -345,8 +345,8 @@
                           } @else {
                             <div class="col-md-12">
                               <strong>Proveedores:</strong>
-                              <div *ngFor="let supplier of productForDetails.suppliers">
-                                <p>{{ supplier.name }}</p>
+                              <div *ngFor="let supplier of productForDetails.supplierCosts">
+                                <p>{{ supplier.supplierName }}</p>
                               </div>
                             </div>
                           }

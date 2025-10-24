@@ -1,175 +1,210 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label for="name">Nombre*</label>
-                <input type="text" class="form-control" id="name" name="name" formControlName="name">
-                <small class="text-danger" *ngIf="c('name').touched && c('name').invalid">El nombre es obligatorio.</small>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label for="code">Código*</label>
-                <input type="text" class="form-control" id="code" name="code" formControlName="code">
-                <small class="text-danger" *ngIf="c('code').touched && c('code').invalid">El código es obligatorio.</small>
-              </div>
-        </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="name">Nombre*</label>
+        <input type="text" class="form-control" id="name" name="name" formControlName="name">
+        <small class="text-danger" *ngIf="c('name').touched && c('name').invalid">El nombre es obligatorio.</small>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="code">Código*</label>
+        <input type="text" class="form-control" id="code" name="code" formControlName="code">
+        <small class="text-danger" *ngIf="c('code').touched && c('code').invalid">El código es obligatorio.</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="description">Descripción</label>
+    <textarea class="form-control" id="description" name="description" formControlName="description"></textarea>
+  </div>
+
+  <div class="row">
+
+    <div class="col-md-2">
+      <div class="form-group">
+        <label for="costWithoutTaxes">Costo sin IVA</label>
+        <input
+          type="number"
+          class="form-control"
+          id="costWithoutTaxes"
+          [value]="costWithoutTaxes"
+          (input)="onCostWithoutTaxesChange($event)" />
+      </div>
     </div>
 
-    <div class="form-group">
-      <label for="description">Descripción</label>
-      <textarea class="form-control" id="description" name="description" formControlName="description"></textarea>
+    <div class="col-md-3">
+      <div class="form-group">
+        <label for="cost">Costo Sugerido</label>
+        <input
+          type="number"
+          class="form-control"
+          formControlName="cost"
+          min="0"
+          step="0.10"/>
+        <small class="text-danger" *ngIf="c('cost').touched && c('cost').invalid">El costo con IVA es obligatorio.</small>
+      </div>
     </div>
 
-    <div class="row">
-
-      <div class="col-md-3">
-        <div class="form-group">
-            <label for="costWithoutTaxes">Costo sin IVA</label>
-            <input type="number"
-            class="form-control"
-            id="costWithoutTaxes"
-            [value]="costWithoutTaxes"
-            (input)="onCostWithoutTaxesChange($event)" />          
-          </div>
+    <div class="col-md-3">
+      <div class="form-group">
+        <label for="cost">Costo con IVA*</label>
+        <input
+          type="number"
+          class="form-control"
+          formControlName="cost"
+          min="0"
+          step="0.10"/>
+        <small class="text-danger" *ngIf="c('cost').touched && c('cost').invalid">El costo con IVA es obligatorio.</small>
       </div>
+    </div>
 
-      <div class="col-md-3">
-        <div class="form-group">
-            <label for="cost">Costo con IVA*</label>
-            <input 
-            type="number" 
-            class="form-control" 
-            formControlName="cost"
-            min="0"
-            step="0.10"/>
-            <small class="text-danger" *ngIf="c('cost').touched && c('cost').invalid">El costo con IVA es obligatorio.</small>
-          </div>
-      </div>
-
-      <div class="col-md-2">
-        <div class="form-group">
-            <label for="supplierDiscount">Desc (%)</label>
-            <input 
-            type="number" 
-            class="form-control" 
-            min="0"
-            step="0.10"/>
-          </div>
-      </div>
-
-      <div class="col-md-2">
-        <div class="form-group">
-            <label for="price">Ganancia (%)</label>
-            <input type="number"
-            class="form-control"
-            id="profit"
-            min="0"
-            step="0.01"
-            [value]="profitPercentage"
-            (input)="profitPercentage = $any($event.target).value; onProfitChange()" />
-
-                    <!-- Mostrar ganancia en pesos -->
+    <div class="col-md-2">
+      <div class="form-group">
+        <label for="price">Ganancia (%)</label>
+        <input
+          type="number"
+          class="form-control"
+          id="profit"
+          min="0"
+          step="0.01"
+          [value]="profitPercentage"
+          (input)="profitPercentage = $any($event.target).value; onProfitChange()" />
         <small class="text-muted" *ngIf="form.get('cost')?.value && profitPercentage > 0">
           (+{{ (form.get('price')?.value - form.get('cost')?.value) | currency:'MXN':'symbol' }})
         </small>
-          </div>
-      </div>
-
-      <div class="col-md-2">
-          <div class="form-group">
-              <label for="price">Precio*</label>
-              <input 
-                type="number" 
-                class="form-control" i
-                d="price" 
-                name="price" 
-                formControlName="price"
-                min="0"
-                step="0.10">
-                <small class="text-danger" *ngIf="c('price').touched && c('price').invalid">El precio es obligatorio.</small>
-                <small class="text-danger" *ngIf="form.hasError('priceLtCost')">El precio no puede ser menor al costo.</small>
-          </div>
-     </div>
-
-    </div>
-
-    <div class="row">
-    </div>
-
-    <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="price">Stock*</label>
-                <input 
-                  type="number" 
-                  class="form-control" 
-                  formControlName="stock"
-                  [readOnly]="form.get('id')?.value"
-                  [attr.data-bs-toggle]="form.get('id')?.value ? 'tooltip' : null"
-                  [attr.data-bs-placement]="form.get('id')?.value ? 'top' : null"
-                  [attr.title]="form.get('id')?.value ? 'El Stock no puede ser editado en este formulario.' : null" />
-                <small class="text-danger" *ngIf="c('stock').touched && c('stock').invalid">El stock es obligatorio.</small>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="price">Stock Minimo*</label>
-                <input type="number" class="form-control" formControlName="minimumStock" />
-                <small class="text-danger" *ngIf="c('minimumStock').touched && c('minimumStock').invalid">El stock minimo es obligatorio.</small>
-              </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-              <label for="price">Stock Maximo*</label>
-              <input type="number" class="form-control" formControlName="recommendedStock" />
-              <small class="text-danger" *ngIf="c('recommendedStock').touched && c('recommendedStock').invalid">El stock recomendado es obligarotio.</small>
-            </div>
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-6">
-        <label>Subcategoría</label>
-        <ng-select
-          [items]="subcategories"
-          [multiple]="false"
-          bindLabel="name"
-          bindValue="id"
-          dropdownPosition="bottom"
-          formControlName="subcategoryId"
-          placeholder="Seleccione una subcategoría">
-        </ng-select>
-      </div>
-      <div class="col-md-6">
-        <label>Presentación</label>
-        <ng-select
-          [items]="presentations"
-          [multiple]="false"
-          bindLabel="name"
-          bindValue="id"
-          dropdownPosition="bottom"
-          formControlName="presentationId"
-          placeholder="Seleccione una presentación">
-        </ng-select>
+    <div class="col-md-2">
+      <div class="form-group">
+        <label for="price">Precio*</label>
+        <input
+          type="number"
+          class="form-control"
+          id="price"
+          name="price"
+          formControlName="price"
+          min="0"
+          step="0.10">
+        <small class="text-danger" *ngIf="c('price').touched && c('price').invalid">El precio es obligatorio.</small>
+        <small class="text-danger" *ngIf="form.hasError('priceLtCost')">El precio no puede ser menor al costo.</small>
       </div>
     </div>
 
-    <div class="form-group">
-      <label>Proveedores</label>
+  </div>
+
+  <div class="row"></div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="price">Stock*</label>
+        <input
+          type="number"
+          class="form-control"
+          formControlName="stock"
+          [readOnly]="form.get('id')?.value"
+          [attr.data-bs-toggle]="form.get('id')?.value ? 'tooltip' : null"
+          [attr.data-bs-placement]="form.get('id')?.value ? 'top' : null"
+          [attr.title]="form.get('id')?.value ? 'El Stock no puede ser editado en este formulario.' : null" />
+        <small class="text-danger" *ngIf="c('stock').touched && c('stock').invalid">El stock es obligatorio.</small>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="price">Stock Minimo*</label>
+        <input type="number" class="form-control" formControlName="minimumStock" />
+        <small class="text-danger" *ngIf="c('minimumStock').touched && c('minimumStock').invalid">El stock minimo es obligatorio.</small>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="price">Stock Maximo*</label>
+        <input type="number" class="form-control" formControlName="recommendedStock" />
+        <small class="text-danger" *ngIf="c('recommendedStock').touched && c('recommendedStock').invalid">El stock recomendado es obligarotio.</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <label>Subcategoría</label>
       <ng-select
-        [items]="suppliers"
-        [multiple]="true"
+        [items]="subcategories"
+        [multiple]="false"
         bindLabel="name"
         bindValue="id"
         dropdownPosition="bottom"
-        formControlName="supplierIds"
-        placeholder="Seleccione uno o más proveedores">
+        formControlName="subcategoryId"
+        placeholder="Seleccione una subcategoría">
       </ng-select>
     </div>
-    
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="closeProductForm()">Cancelar</button>
-      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Guardar</button>
+    <div class="col-md-6">
+      <label>Presentación</label>
+      <ng-select
+        [items]="presentations"
+        [multiple]="false"
+        bindLabel="name"
+        bindValue="id"
+        dropdownPosition="bottom"
+        formControlName="presentationId"
+        placeholder="Seleccione una presentación">
+      </ng-select>
     </div>
-  </form>
+  </div>
+
+  <div class="mt-4">
+    <label>Costos por proveedor</label>
+    <table class="table table-bordered table-sm mt-2">
+      <thead class="table-light">
+        <tr>
+          <th>Proveedor</th>
+          <th>Costo sin IVA</th>
+          <th>Costo con IVA</th>
+          <th>Descuento (%)</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody formArrayName="supplierCosts">
+        <tr *ngFor="let group of supplierCosts.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i">
+          <td style="width: 30%">
+            <ng-select
+              [items]="suppliers"
+              bindLabel="name"
+              bindValue="id"
+              formControlName="supplierId"
+              placeholder="Seleccionar proveedor">
+            </ng-select>
+          </td>
+          <td style="width: 20%">
+            <input type="number" class="form-control" formControlName="supplierCostWithoutTaxes" min="0" step="0.01">
+          </td>
+          <td style="width: 20%">
+            <input type="number" class="form-control" formControlName="supplierCostWithTaxes" min="0" step="0.01">
+          </td>
+          <td style="width: 20%">
+            <input type="number" class="form-control" formControlName="discount" min="0" step="0.01">
+          </td>
+          <td style="width: 10%" class="text-center">
+            <button type="button" class="btn btn-sm btn-danger" (click)="removeSupplierRow(i)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button type="button" class="btn btn-outline-primary btn-sm" (click)="addSupplierRow()">
+      <i class="fas fa-plus"></i> Agregar proveedor
+    </button>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="closeProductForm()">Cancelar</button>
+    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Guardar</button>
+  </div>
+</form>
+

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../environment/environment';
 import { AuthTokens } from '../models/auth-tokens';
@@ -24,6 +24,7 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
 
   login(username: string, password: string): Observable<AuthTokens> {
+    this.clearIfExpired();
     return this.http
       .post<ApiResponse<AuthTokens>>(`${this.apiUrl}/login`, { username, password })
       .pipe(
@@ -34,6 +35,10 @@ export class AuthService {
 
   refresh(): Observable<string> {
     const refreshToken = this.getRefreshToken();
+    if (!refreshToken || this.isTokenExpired(refreshToken)) {
+      this.logout();
+      return throwError(() => new Error("Refresh token missing or expired"));
+    }
     return this.http
       .post<ApiResponse<AuthTokens>>(`${this.apiUrl}/refresh`, { refreshToken })
       .pipe(
@@ -52,7 +57,8 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return this.getAccessToken() != null;
+    const token = this.getAccessToken();
+    return !!token && !this.isTokenExpired(token);
   }
 
   getUserRoles(): string[] {
@@ -72,19 +78,32 @@ export class AuthService {
     return this.getUserRoles().includes(role);
   }
 
-  public logout(): void {
-    // 1. Remove the token from local storage
+ logout(): void {
     sessionStorage.removeItem('accessToken');
     sessionStorage.removeItem('refreshToken');
-
-    // 2. Navigate the user back to the login page
     this.router.navigate(['/login']);
+  }
+  clearIfExpired(): void {
+    const accessToken = this.getAccessToken();
+    const refreshToken = this.getRefreshToken();
+    if ((accessToken && this.isTokenExpired(accessToken)) || (refreshToken && this.isTokenExpired(refreshToken))) {
+      this.logout();
+    }
   }
 
   private storeTokens(tokens: AuthTokens): void {
     sessionStorage.setItem('accessToken', tokens.token);
     sessionStorage.setItem('refreshToken', tokens.refreshToken);
   }
-  
-  
+
+  private isTokenExpired(token: string): boolean {
+    try {
+      const { exp } = jwtDecode<JwtPayload>(token);
+      if (!exp) return true;
+      const nowSec = Math.floor(Date.now() / 1000);
+      return exp <= nowSec;
+    } catch {
+      return true;
+    }
+  }
 }
