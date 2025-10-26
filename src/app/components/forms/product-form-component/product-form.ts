@@ -42,6 +42,8 @@ export class ProductFormComponent implements OnInit, OnChanges {
   private updating = false;
   private suppliersLoaded = false;
   private pendingProduct: Product | null = null;
+  private costLockedToSuggested = true;
+  private priceEditedByUser = false;
 
   profitPercentage: number = 0;
   costWithoutTaxes: number = 0;
@@ -52,6 +54,10 @@ export class ProductFormComponent implements OnInit, OnChanges {
     private subcategoryService: SubcategoryService,
     private presentationService: PresentationService) {}
 
+    get isCreateMode(): boolean {
+      return !this.form.get('id')?.value;
+    }
+
   ngOnInit(): void {
     this.form = this.fb.group({
       id: [null],
@@ -60,6 +66,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       description: [''],
       price: [0, [Validators.required, Validators.min(0)]],
       cost: [0, [Validators.required, Validators.min(0)]],
+      suggestedCost: [({ value: 0, disable: true})],
       stock: [0, [Validators.required, Validators.min(0)]],
       minimumStock: [0, [Validators.required, Validators.min(0)]],
       recommendedStock: [0, [Validators.min(0)]],
@@ -74,11 +81,25 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
     this.form.get('cost')?.valueChanges
       .pipe(debounceTime(300), distinctUntilChanged())
-      .subscribe(() => { if (!this.updating) this.syncFromCostWithTaxes(); });
+      .subscribe(() => { 
+        if (!this.updating) {
+          this.syncFromCostWithTaxes();
+          return;
+        }
+        if (this.isCreateMode) this.costLockedToSuggested = false;
+        this.syncFromCostWithTaxes(); 
+      });
 
     this.form.get('price')?.valueChanges
       .pipe(debounceTime(300), distinctUntilChanged())
-      .subscribe(() => { if (!this.updating) this.syncFromPrice(); });
+      .subscribe(() => { 
+        if (!this.updating) {
+          this.syncFromPrice();
+          return;
+        } 
+        this.priceEditedByUser = true;
+        this.syncFromPrice();
+      });
 
     this.supplierCosts.valueChanges.subscribe(() => this.calculateAverageCost());
   }
@@ -120,6 +141,8 @@ export class ProductFormComponent implements OnInit, OnChanges {
     this.supplierCosts.clear();
     this.profitPercentage = 0;
     this.costWithoutTaxes = 0;
+    this.priceEditedByUser = false;
+    this.costLockedToSuggested = true;
   }
 
   addSupplierRow(): void { this.supplierCosts.push(this.createSupplierRow()); }
@@ -266,27 +289,27 @@ export class ProductFormComponent implements OnInit, OnChanges {
         return eff > 0 ? eff : 0;
       });
 
-    if (effectiveCosts.length === 0) return;
-
-    const avg = effectiveCosts.reduce((a, b) => a + b, 0) / effectiveCosts.length;
-    const avg2 = this.round2(avg);
+    const suggested = effectiveCosts.length > 0 ? this.round2(effectiveCosts.reduce((a, b) => a + b, 0) / effectiveCosts.length) : 0;
 
     this.updating = true;
-    this.form.get('cost')?.setValue(avg2, { emitEvent: false });
-    this.costWithoutTaxes = this.round2(avg2 / (1 + this.IVA_RATE));
-    const profit = Number(this.profitPercentage) || 0;
 
-    if (profit <= 0) {
-      this.form.get('price')?.setValue(avg2, { emitEvent: false });
-      this.profitPercentage = 0;
-    } else {
-      const newPrice = this.round2(avg2 * (1 + profit / 100));
-      this.form.get('price')?.setValue(newPrice, { emitEvent: false });
+    this.form.get('suggestedCost')?.setValue(suggested, { emitEvent: false });
+
+    if (this.isCreateMode && this.costLockedToSuggested) {
+      this.form.get('cost')?.setValue(suggested, { emitEvent: false });
+      this.costWithoutTaxes = suggested > 0 ? this.round2(suggested / (1 + this.IVA_RATE)) : 0;
+  
+      const currentPrice = Number(this.form.get('price')?.value ?? 0);
+
+      if (!this.priceEditedByUser) {
+        this.form.get('price')?.setValue(suggested, { emitEvent: false });
+      }
+  
+      this.calculateProfitPercentage();
     }
 
-    this.calculateProfitPercentage();
-
     this.updating = false;
+
   }
 
   private applyProduct(p: Product) {
@@ -306,7 +329,10 @@ export class ProductFormComponent implements OnInit, OnChanges {
       presentationId: p.presentation?.id
     }, { emitEvent: false });
 
-    const rows = (p.supplierCosts ?? []).map((sc: any) => {
+    const raw = (p as any).supplierCosts;
+    const list: any[] = Array.isArray(raw) ? raw : Object.values(raw ?? {});
+
+    const rows = list.map((sc: any) => {
       const supplierId = Number(sc.supplierId ?? sc.supplier?.id ?? null);
       const withTaxes = Number(sc.cost) || 0;
       const withoutTaxes = withTaxes > 0 ? this.round2(withTaxes / (1 + this.IVA_RATE)) : 0;
@@ -318,8 +344,12 @@ export class ProductFormComponent implements OnInit, OnChanges {
     this.form.setControl('supplierCosts', fa);
     fa.updateValueAndValidity({ emitEvent: false });
 
-    this.costWithoutTaxes = p.cost ? this.round2(Number(p.cost) / (1 + this.IVA_RATE)) : 0;
+    const cost = Number(p.cost) || 0;
+    this.costWithoutTaxes = cost ? this.round2(cost / (1 + this.IVA_RATE)) : 0;
     this.profitPercentage = (p.price && p.cost) ? this.round2(((Number(p.price) - Number(p.cost)) / Number(p.cost)) * 100) : 0;
+
+    this.costLockedToSuggested = false;
+    this.priceEditedByUser = true;
     
     this.updating = false;
     this.calculateAverageCost();
@@ -415,51 +445,5 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
   private round2(n: number) {
     return Math.round((n + Number.EPSILON) * 100) / 100;
-  }
-
-  trackByIndex = (_: number, __: any) => _;
-
-  compareById = (a: number | string | null, b: number | string | null) =>
-    a != null && b != null && Number(a) === Number(b);
-
-  availableSuppliers(rowIndex: number): SupplierOption[] {
-    const taken = new Set(
-      (this.supplierCosts.controls || [])
-        .map((g, idx) => idx === rowIndex ? null : g.get('supplierId')?.value)
-        .filter((v): v is number | string => v != null)
-        .map(v => Number(v))
-    );
-    const currentId = Number(this.supplierCosts.at(rowIndex).get('supplierId')?.value ?? NaN);
-
-    return this.suppliers.filter(s => {
-      const id = Number(s.id);
-      return id === currentId || !taken.has(id);
-    });
-  }
-
-  onSupplierPicked(row: number): void {
-    const rowGroup = this.supplierCosts.at(row) as FormGroup | undefined;
-    if (!rowGroup) return;
-  
-    const ctrl = rowGroup.get('supplierId');
-    const picked = Number(ctrl?.value ?? 0);
-    if (!picked) return;
-  
-    if (this.selectedSupplierIds(row).includes(picked)) {
-      if (ctrl) ctrl.setValue(null, { emitEvent: false });
-      return;
-    }
-  
-    const fieldNames = ['supplierCostWithoutTaxes', 'supplierCostWithTaxes', 'discount'] as const;
-    for (const name of fieldNames) {
-      rowGroup.get(name)?.enable({ emitEvent: false });
-    }
-  }
-  
-  private selectedSupplierIds(excludeIndex: number = -1): number[] {
-    return (this.supplierCosts.controls || [])
-      .map((g, idx) => idx === excludeIndex ? null : Number(g.get('supplierId')?.value ?? 0))
-      .filter((v): v is number => !!v);
-  }
-  
+  }  
 }
