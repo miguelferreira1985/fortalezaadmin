@@ -2,32 +2,61 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { environment } from '../../environment/environment';
-import { catchError, switchMap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, filter, switchMap, throwError, take } from 'rxjs';
 
-const LOGIN_URL = `${environment.apiUrl}/auth/login`;
+const AUTH_BASE = `${environment.apiUrl}/auth`;
+const LOGIN_URL = `${AUTH_BASE}/login`;
+const REFRESH_URL = `${AUTH_BASE}/refresh`;
 
+let isRefreshing = false;
+const refreshToken$ = new BehaviorSubject<string | null>(null);
+
+const isAuthEndpoint = (url: string) => url.startsWith(AUTH_BASE);
+
+const withAuth = (req: any, token: string) =>
+  req.clone({ setHeaders: { Authorization: `Bearer ${token}`} });
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
   const token = auth.getAccessToken();
 
-  const authReq = token
-    ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
-    : req;
+  const reqToSend = token && !isAuthEndpoint(req.url) ? withAuth(req, token): req;
 
-  return next(authReq).pipe(
+  return next(reqToSend).pipe(
     catchError((err: HttpErrorResponse) => {
-      if (err.status === 401 && auth.getRefreshToken()) {
-        return auth.refresh().pipe(
-          switchMap((newToken) => {
-            const retried = req.clone({
-              setHeaders: { Auhtorization: `Bearer ${newToken}` }
-            });
-            return next(retried);
-          })
+      if (isAuthEndpoint(req.url) || err.status !== 401) {
+        return throwError(() => err);
+      }
+
+      const refresh = auth.getRefreshToken();
+      if (!refresh) {
+        auth.logout()
+        return throwError(() => err);
+      }
+
+      if (isRefreshing) {
+        return refreshToken$.pipe(
+          filter((t): t is string => t !== null),
+          take(1),
+          switchMap((newAccess) => next(withAuth(req, newAccess)))
         );
       }
-      return throwError(() => err);
+
+      isRefreshing = true;
+      refreshToken$.next(null);
+
+      return auth.refresh().pipe(
+        switchMap((newAccess) => {
+          isRefreshing = false;
+          refreshToken$.next(newAccess);
+          return next(withAuth(req, newAccess));
+        }),
+        catchError((refreshErr) => {
+          isRefreshing = false;
+          auth.logout();
+          return throwError(() => refreshErr);
+        })
+      )
     })
-  );
+  )
 };

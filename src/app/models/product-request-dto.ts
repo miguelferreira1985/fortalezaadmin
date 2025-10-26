@@ -1,3 +1,5 @@
+import { SupplierCost } from "./supplier-cost";
+
 export interface ProductRequestDto {
     id?: number;
     name: string;
@@ -10,5 +12,5 @@ export interface ProductRequestDto {
     recommendedStock: number;
     subcategoryId?: number;
     presentationId?: number;
-    supplierIds?: number[];
+    supplierCosts?: SupplierCost[];
 }
