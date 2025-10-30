@@ -18,8 +18,7 @@ declare var $: any;
     SubcategoryFormComponent,
     FilterByPipe
   ],
-  templateUrl: './subcategory-component.html',
-  styleUrl: './subcategory-component.css'
+  templateUrl: './subcategory-component.html'
 })
 export class SubcategoryComponent implements OnInit {
 

@@ -10,8 +10,7 @@ import { HasRoleDirective } from '../../core/has-role.directive';
     CommonModule,
     HasRoleDirective 
   ],
-  templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css'
+  templateUrl: './dashboard.html'
 })
 export class DashboardComponent implements OnInit {
 

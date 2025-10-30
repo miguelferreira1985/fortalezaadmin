@@ -48,8 +48,8 @@
 
 
                       <div class="ml-auto">
-                          <button class="btn btn-success" (click)="openCreateModal()" data-toggle="modal" data-target="#userForm">
-                              <i class="fas fa-plus-circle"></i> Agregar Usuario
+                          <button class="btn btn-success" data-toggle="modal" data-target="#userForm">
+                              <i class="fa fa-user-plus"></i> Agregar Usuario
                           </button> 
                       </div>
           
@@ -73,13 +73,49 @@
                             <td>{{ user.isBlocked | booleanToText }}</td>
                             <td>{{ user.roles | roleName}}</td>
                             <td>
+                            @if (user.isActivate) {
                               <button 
-                              class="btn btn-warning btn-sm mr-2" 
-                              data-bs-toggle="tooltip"
-                              data-placement="top"
-                              title="Editar">
-                                  <i class="fas fa-edit"></i>
-                            </button>
+                                class="btn btn-danger btn-sm mr-2" 
+                                (click)="desactivateUser(user)"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Desactivar">
+                                <i class="fa fa-user-times"></i>
+                              </button>
+                              <button 
+                                class="btn btn-primary btn-sm mr-2" 
+                                (click)="openChangePasswordModal(user)"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Cambiar Contraseña">
+                                <i class="fa fa-key"></i>
+                              </button>
+                              <button 
+                                class="btn btn-primary btn-sm mr-2" 
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Editar Roles">
+                                <i class="fa fa-users"></i>
+                              </button>
+                              @if (user.isBlocked) {
+                                <button 
+                                  class="btn btn-success btn-sm mr-2" 
+                                  (click)="unblockUser(user)"
+                                  data-bs-toggle="tooltip"
+                                  data-placement="top"
+                                  title="Desbloquear">
+                                  <i class="fa fa-unlock"></i>
+                                </button>
+                              }
+                            } @else {
+                              <button 
+                                class="btn btn-success btn-sm mr-2" 
+                                (click)="activateUser(user)"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Activar">
+                                <i class="fa fa-user"></i>
+                              </button>
                               <button 
                                 class="btn btn-danger btn-sm mr-2" 
                                 data-bs-toggle="tooltip"
@@ -87,6 +123,7 @@
                                 title="Eliminar">
                                 <i class="fas fa-trash"></i>
                               </button>
+                            }
                             </td>
                           </tr>
                         </tbody>
@@ -97,6 +134,27 @@
                   <!-- /.card -->
                 </div>
               </div> 
+              <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="changePasswordModalLabel">
+                        Cambiar Contraseña de {{ selectedUser?.username }}
+                      </h5>
+                      <button type="button" class="close" (click)="closeChangePasswordModal()">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <app-change-password-form 
+                        #changePasswordModal
+                        [user]="selectedUser" 
+                        (changePassword)="onChangePassword(selectedUser!, $event)">
+                      </app-change-password-form>
+                    </div>
+                  </div>
+                </div>
+              </div>
         </div>
         <!-- /.container-fluid-->
       </div>

@@ -18,8 +18,7 @@ declare var $: any;
     BsDropdownModule,
     NgSelectModule
   ],
-  templateUrl: './subcategory-form.html',
-  styleUrl: './subcategory-form.css'
+  templateUrl: './subcategory-form.html'
 })
 export class SubcategoryFormComponent implements OnInit {
 

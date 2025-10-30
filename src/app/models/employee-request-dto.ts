@@ -9,7 +9,7 @@ export interface EmployeeRequestDto {
     phone: string;
     address?: string;
     ssn?: string;
-    userRequestDTO?: UserRequestDto;
+    userRequestDTO?: UserRequestDto | null;
     isActivate?: boolean;
     createdDateTime?: Date;
     updatedDateTime?: Date;

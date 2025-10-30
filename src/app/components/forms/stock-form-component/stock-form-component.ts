@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product } from '../../../models/product';
 import { StokcRequestDto } from '../../../models/stock-request-dto';
 import { CustomValidators } from '../../../custom-validators';
@@ -13,8 +13,7 @@ declare var $: any;
     CommonModule,
     ReactiveFormsModule
   ],
-  templateUrl: './stock-form-component.html',
-  styleUrl: './stock-form-component.css'
+  templateUrl: './stock-form-component.html'
 })
 export class StockFormComponent implements OnInit, OnChanges {
 

@@ -17,8 +17,7 @@ declare var $: any;
     CategoryFormComponent,
     FilterByPipe
   ],
-  templateUrl: './category-component.html',
-  styleUrl: './category-component.css'
+  templateUrl: './category-component.html'
 })
 export class CategoryComponent {
 
