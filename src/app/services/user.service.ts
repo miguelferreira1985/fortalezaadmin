@@ -6,7 +6,7 @@ import { ApiResponse } from '../models/api-response';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { ChangePasswordRequestDto } from '../models/change-password-request-dto';
-import { UpdateRolesRequestDto } from '../models/update-roles-request-dt0';
+import { UpdateRolesRequestDto } from '../models/update-roles-requets-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +47,10 @@ export class UserService {
 
   updateRoles(id: number, updateRolesRequestDto: UpdateRolesRequestDto): Observable<User> {
     return this.http.patch<User>(`${this.apiUrl}${this.apiPath}/${id}/roles`, updateRolesRequestDto);
+  }
+
+  deleteUser(id: number): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}${this.apiPath}/${id}`);
   }
   
 }

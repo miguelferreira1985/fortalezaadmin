@@ -45,7 +45,6 @@ export class ChangePasswordFormComponent implements OnInit {
     const dto: ChangePasswordRequestDto = {
       newPassword: this.form.get('newPassword')?.value
     };
-    console.log(dto); 
     this.changePassword.emit(dto);
     this.resetFormAndModal();
   }
