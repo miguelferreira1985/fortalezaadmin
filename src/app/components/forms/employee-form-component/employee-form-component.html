@@ -80,29 +80,46 @@
                           id="username" 
                           name="username"
                           formControlName="username" />
-                        <small class="text-danger" *ngIf="c('username').touched && c('username').invalid">El nombre de usuario es obligatorio.</small>
                     </div>
+                    <small class="text-danger" *ngIf="c('username').touched && c('username').hasError('required')">
+                      El nombre de usuario es obligatorio.
+                    </small>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="password">Contraseña*</label>
-                        <input type="password" class="form-control" id="password" name="password" formControlName="password" />
-                        <small class="text-danger" *ngIf="c('password').touched && c('password').invalid">El password es obligatorio.</small>
+                        <input 
+                          type="password" 
+                          class="form-control" 
+                          id="password" 
+                          name="password" 
+                          formControlName="password"
+                          autocomplete="new-password"
+                          autocorrect="off"
+                          autocapitalize="off"
+                          spellcheck="false" />
                       </div>
+                      <small class="text-danger" *ngIf="c('password').touched && (c('password').hasError('required') || c('password').hasError('minlength'))">
+                        El constraseña es obligatoria (mín. 8 caracteres)
+                      </small>
+
                 </div>
         
                 <div class="col-md-4">
-                    <label>Permisos</label>
+                    <label>Permisos*</label>
                     <ng-select
                       [items]="roles"
                       [multiple]="true"
                       bindLabel="name"
                       bindValue="id"
-                      appendTo="body"
                       dropdownPosition="bottom"
                       formControlName="roles"
                       placeholder="Seleccione uno o más permisos">
                     </ng-select>
+                    <small class="text-danger"
+                      *ngIf="c('roles').touched && c('roles').hasError('required')">
+                      Selecciona al menos un permiso.
+                    </small>
                 </div>
             </div>
 

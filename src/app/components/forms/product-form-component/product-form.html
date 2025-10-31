@@ -37,18 +37,6 @@
 
     <div class="col-md-3">
       <div class="form-group">
-        <label for="suggestedCost">Costo Sugerido</label>
-        <input
-          type="number"
-          class="form-control"
-          id="suggestedCost"
-          formControlName="suggestedCost"
-          readonly>
-      </div>
-    </div>
-
-    <div class="col-md-3">
-      <div class="form-group">
         <label for="cost">Costo con IVA*</label>
         <input
           type="number"
@@ -57,6 +45,18 @@
           min="0"
           step="0.10"/>
         <small class="text-danger" *ngIf="c('cost').touched && c('cost').invalid">El costo con IVA es obligatorio.</small>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="form-group">
+        <label for="suggestedCost">Costo Sugerido</label>
+        <input
+          type="number"
+          class="form-control"
+          id="suggestedCost"
+          formControlName="suggestedCost"
+          readonly>
       </div>
     </div>
 

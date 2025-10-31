@@ -17,8 +17,7 @@ declare var $: any;
     PresentationFormComponent,
     FilterByPipe
   ],
-  templateUrl: './presentation-component.html',
-  styleUrl: './presentation-component.css'
+  templateUrl: './presentation-component.html'
 })
 export class PresentationComponent {
 

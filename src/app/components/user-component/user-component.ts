@@ -3,11 +3,17 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
 import { BooleanToTextPipe } from '../../shared/pipes/booelean-to-text-pipe';
-import { UserFormOmponent } from '../forms/user-form-omponent/user-form-omponent';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
 import { NotificationService } from '../../services/notification.service';
 import { RoleNamePipe } from '../../shared/pipes/role-name-pipe';
+import { ChangePasswordRequestDto } from '../../models/change-password-request-dto';
+import { ChangePasswordFormComponent } from '../forms/change-password-form-component/change-password-form-component';
+import { UserFormOmponent } from "../forms/user-form-component/user-form-component";
+import { UserRequestDto } from '../../models/user-request-dto';
+import { Employee } from '../../models/employee';
+import { EmployeeService } from '../../services/employee.service';
+import { CreateUserForEmployeeEvent } from '../../models/create-user-for-employee-event';
 
 declare var $: any;
 
@@ -18,21 +24,25 @@ declare var $: any;
     FormsModule,
     FilterByPipe,
     BooleanToTextPipe,
-    RoleNamePipe
-  ],
-  templateUrl: './user-component.html',
-  styleUrl: './user-component.css'
+    RoleNamePipe,
+    ChangePasswordFormComponent,
+    UserFormOmponent
+],
+  templateUrl: './user-component.html'
 })
 export class UserComponent implements OnInit {
 
-  @ViewChild('userFormModal') userFormModal!: UserFormOmponent;
+  @ViewChild('changePasswordModal') changePasswordFormModal!: ChangePasswordFormComponent;
 
   users: User[] = [];
   selectedUser: User | null = null;
   searchTerm: string = '';
   showActiveProducts: boolean = true;
 
-  constructor(private userService: UserService, private notify: NotificationService) {}
+  constructor(
+    private userService: UserService, 
+    private employeeService: EmployeeService,
+    private notify: NotificationService) {}
 
   ngOnInit(): void {
     this.getUsers();
@@ -42,17 +52,20 @@ export class UserComponent implements OnInit {
     this.getUsers();
   }
 
-  openCreateModal(): void {
-    this.selectedUser = null;
-    $('#userModal').modal('show');
-  }
-
-  openEditModal(user: User) {
+  openChangePasswordModal(user: User) {
     this.selectedUser = user;
+    $('#changePasswordModal').modal('show');
+  }
+
+  closeChangePasswordModal(): void {
+    $('#changePasswordModal').modal('hide');
+  }
+
+  openUserModal() {
     $('#userModal').modal('show');
   }
 
-  closeCategoryForm(): void {
+  closeUserModal(): void {
     $('#userModal').modal('hide');
   }
 
@@ -65,5 +78,91 @@ export class UserComponent implements OnInit {
         console.error('Error al obtener los usuarios:', error);
       }
     });
+  }
+
+  onUserSaved(user: CreateUserForEmployeeEvent): void {
+    this.employeeService.createUserForEmployee(user.employeeId, user.user).subscribe({
+      next: (res) => {
+        this.getUsers();
+        this.notify.success('¡Usuario creado!', res?.message);
+        this.closeUserModal();
+      },
+      error(err) {
+        console.error(err);
+      }
+    });
+  }
+
+  onChangePassword(user: User, changePasswordRequestDto: ChangePasswordRequestDto): void {
+    console.log('password recibido en el componente', changePasswordRequestDto);
+    this.notify.confirm('¿Estás seguro?', `¿Quieres cambiar la contraseña de el usuario "${user.username}"?`)
+      .then((result) => {
+        if (result.isConfirmed) {
+          let id: number = user.id ?? 0;
+          this.userService.changePassword(id, changePasswordRequestDto).subscribe({
+            next: () => {
+              this.getUsers();
+              this.notify.success('!Contraseña actualizada!');
+            },
+            error(err) {
+              console.error(err);
+            }
+          });
+        }
+      });
+  }
+
+  desactivateUser(user: User): void {
+    this.notify.confirm('¿Estás seguro?', `¿Quieres desactivar el usuario "${user.username}"?`)
+      .then((result) => {
+        if (result.isConfirmed) {
+          let id: number = user.id ?? 0;
+          this.userService.desactivateUser(id).subscribe({
+            next: () => {
+              this.getUsers();
+              this.notify.success('!Usuario descativado!');
+            },
+            error(err) {
+              console.error(err);
+            }
+          });
+        }
+      });
+  }
+
+  activateUser(user: User): void {
+    this.notify.confirm('¿Estás seguro?', `¿Quieres activar el usuario "${user.username}"?`)
+      .then((result) => {
+        if (result.isConfirmed) {
+          let id: number = user.id ?? 0;
+          this.userService.activateUser(id).subscribe({
+            next: () => {
+              this.getUsers();
+              this.notify.success('¡Usuario activado!');
+            },
+            error(err) {
+              console.error(err);
+            }
+          });
+        }
+      });
+  }
+
+  unblockUser(user: User): void {
+    this.notify.confirm('¿Estás seguro?', `¿Quieres descbloquear el usuario "${user.username}"?`)
+      .then((result) => {
+        if (result.isConfirmed) {
+          let id: number = user.id ?? 0;
+          this.userService.unblockUser(id).subscribe({
+            next: () => {
+              this.getUsers();
+              this.notify.success('¡Usuario desbloqueado!');
+            },
+            error(err) {
+              console.error(err);
+            }
+          });
+        }
+      });
   }
 }

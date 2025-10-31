@@ -17,8 +17,7 @@ declare var $: any;
     SupplierFormComponent,
     FilterByPipe
   ],
-  templateUrl: './supplier-component.html',
-  styleUrl: './supplier-component.css'
+  templateUrl: './supplier-component.html'
 })
 export class SupplierComponent {
 

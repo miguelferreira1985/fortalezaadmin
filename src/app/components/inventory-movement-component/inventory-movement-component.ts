@@ -16,8 +16,7 @@ import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
     FormsModule,
     FilterByPipe
   ],
-  templateUrl: './inventory-movement-component.html',
-  styleUrl: './inventory-movement-component.css'
+  templateUrl: './inventory-movement-component.html'
 })
 export class InventoryMovementComponent implements OnInit {
 

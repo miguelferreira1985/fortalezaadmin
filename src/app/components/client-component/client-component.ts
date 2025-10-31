@@ -17,8 +17,7 @@ declare var $: any;
     ClientFormComponent,
     FilterByPipe
   ],
-  templateUrl: './client-component.html',
-  styleUrl: './client-component.css'
+  templateUrl: './client-component.html'
 })
 export class ClientComponent implements OnInit {
 

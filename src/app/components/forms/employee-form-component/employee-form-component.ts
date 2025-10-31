@@ -26,10 +26,10 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
   form!: FormGroup;
   createUser: boolean = false;
   roles = [
-    { id: 'casshier', name: 'Cajero'},
+    { id: 'cashier', name: 'Cajero'},
     { id: 'manager', name: 'Gerente'},
     { id: 'admin', name: 'Administrador'}
-  ]
+  ];
 
   constructor(private fb: FormBuilder) {}
 
@@ -47,6 +47,12 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
       roles: [[]],
       createUser: [false]
     });
+
+    this.applyUserValidators(this.c('createUser').value === true);
+
+    this.c('createUser').valueChanges.subscribe((checked: boolean) => {
+      this.applyUserValidators(checked);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -63,10 +69,11 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
         username: null,
         password: null,
         roles: [],
-        createUser: [false]
+        createUser: false
       });
 
-      this.createUser = false;
+      this.applyUserValidators(false);
+      this.form.updateValueAndValidity({ emitEvent: false });
     }
   }
 
@@ -88,7 +95,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
       email: this.form.get('email')?.value,
       phone: this.form.get('phone')?.value,
       ssn: this.form.get('ssn')?.value,
-      userRequestDTO: userDto
+      userRequestDTO: this.c('createUser').value ? userDto : null
     };
     console.log('Employee to send:', dto);
     this.saveEmployee.emit(dto)
@@ -117,5 +124,28 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
     return this.form.get(name)!;
   }
 
+  private applyUserValidators(enabled: boolean): void {
+    const username = this.c('username');
+    const password = this.c('password');
+    const roles    = this.c('roles');
+  
+    if (enabled) {
+      username.setValidators([Validators.required]);
+      password.setValidators([Validators.required, Validators.minLength(8)]);
+      roles.setValidators([Validators.required]);
+    } else {
+      username.clearValidators();
+      password.clearValidators();
+      roles.clearValidators();
+  
+      username.setValue('');
+      password.setValue('');
+      roles.setValue([]);
+    }
+  
+    username.updateValueAndValidity({ emitEvent: false });
+    password.updateValueAndValidity({ emitEvent: false });
+    roles.updateValueAndValidity({ emitEvent: false });
+  }
 
 }

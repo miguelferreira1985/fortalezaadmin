@@ -11,8 +11,7 @@ declare var $: any;
     CommonModule,
     ReactiveFormsModule
   ],
-  templateUrl: './supplier-form-component.html',
-  styleUrl: './supplier-form-component.css'
+  templateUrl: './supplier-form-component.html'
 })
 export class SupplierFormComponent {
 

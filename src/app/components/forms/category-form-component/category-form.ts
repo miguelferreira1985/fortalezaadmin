@@ -11,8 +11,7 @@ declare var $: any;
     CommonModule,
     ReactiveFormsModule
   ],
-  templateUrl: './category-form.html',
-  styleUrl: './category-form.css'
+  templateUrl: './category-form.html'
 })
 export class CategoryFormComponent implements OnInit {
 

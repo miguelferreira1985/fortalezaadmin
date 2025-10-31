@@ -1,4 +1,5 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
+import { grep } from "jquery";
 
 export class CustomValidators {
 
@@ -22,6 +23,37 @@ export class CustomValidators {
     static nonZeroQuantity(control: AbstractControl): ValidationErrors | null {
         const value = control.value;
         return value && value != 0 ? null : { zeroQuantity: true };
-    }
+    };
 
+    /** Confirm password */
+    static passwordConfirmed: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
+        const newCtrl = group.get('newPassword');
+        const confCtrl = group.get('confirmPassword');
+    
+        const newVal = newCtrl?.value;
+        const confVal = confCtrl?.value;
+    
+        if (!newVal || !confVal) {
+          if (confCtrl?.hasError('passwordMismatch')) {
+            const { passwordMismatch, ...rest } = confCtrl.errors ?? {};
+            confCtrl.setErrors(Object.keys(rest).length ? rest : null);
+          }
+          return null;
+        }
+    
+        const mismatch = newVal !== confVal;
+    
+        if (confCtrl) {
+          const existing = confCtrl.errors ?? {};
+          if (mismatch) {
+            confCtrl.setErrors({ ...existing, passwordMismatch: true });
+          } else if ('passwordMismatch' in existing) {
+            const { passwordMismatch, ...rest } = existing;
+            confCtrl.setErrors(Object.keys(rest).length ? rest : null);
+          }
+        }
+    
+        return mismatch ? { passwordMismatch: true } : null;
+      };
+    
 }

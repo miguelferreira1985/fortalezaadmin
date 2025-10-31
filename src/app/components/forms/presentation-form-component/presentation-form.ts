@@ -11,8 +11,7 @@ declare var $: any;
     CommonModule,
     ReactiveFormsModule
   ],
-  templateUrl: './presentation-form.html',
-  styleUrl: './presentation-form.css'
+  templateUrl: './presentation-form.html'
 })
 export class PresentationFormComponent implements OnInit {
 

@@ -63,6 +63,8 @@
             </div>
           </div>
 
+          
+
           <div class="row">
             <div class="col-lg-6">
               <div class="card">
@@ -89,6 +91,36 @@
                             <td>{{ product.stock }}</td>
                             <td>{{ product.minimumStock }}</td>
                             <td>{{ product.recommendedStock }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-header border-0">
+                  <div class="d-flex justify-content-center">
+                    <h3 class="card-title"># Productos por Categoria</h3>
+                  </div>
+                </div>
+                <div class="card-body table-responsive" style="height: 300px;">
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <table class="table table-head-fixed text-nowrap">
+                        <thead>
+                          <tr>
+                            <th>Categoría</th>
+                            <th>Productos</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let product of lowStockProducts">
+                            <td>{{ product.subcategory?.category?.name| uppercase }}</td>
+                            <td>{{ product.stock }}</td>
                           </tr>
                         </tbody>
                       </table>

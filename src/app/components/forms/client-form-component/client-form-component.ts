@@ -11,8 +11,7 @@ declare var $: any;
     CommonModule,
     ReactiveFormsModule
   ],
-  templateUrl: './client-form-component.html',
-  styleUrl: './client-form-component.css'
+  templateUrl: './client-form-component.html'
 })
 export class ClientFormComponent implements OnInit {
 
