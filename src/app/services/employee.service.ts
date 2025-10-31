@@ -6,6 +6,7 @@ import { Employee } from '../models/employee';
 import { ApiResponse } from '../models/api-response';
 import { map } from 'rxjs/operators';
 import { EmployeeRequestDto } from '../models/employee-request-dto';
+import { UserRequestDto } from '../models/user-request-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class EmployeeService {
 
   constructor(private http: HttpClient) {}
 
-  getProducts(isActivate?: boolean): Observable<Employee[]> {
+  getEmployees(isActivate?: boolean): Observable<Employee[]> {
     let params = new HttpParams();
     if (isActivate !== undefined) {
       params = params.set('isActivate', isActivate.toString());
@@ -41,6 +42,10 @@ export class EmployeeService {
 
   desactivateEmployee(id: number): Observable<Employee> {
     return this.http.patch<Employee>(`${this.apiUrl}${this.apiPath}/${id}/desactivate`, null);
+  }
+
+  createUserForEmployee(id: number, userRequestDTO: UserRequestDto): Observable<ApiResponse<Employee>> {
+    return this.http.put<ApiResponse<Employee>>(`${this.apiUrl}${this.apiPath}/${id}/user`, userRequestDTO);
   }
   
 }

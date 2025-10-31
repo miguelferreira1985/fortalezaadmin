@@ -9,6 +9,11 @@ import { NotificationService } from '../../services/notification.service';
 import { RoleNamePipe } from '../../shared/pipes/role-name-pipe';
 import { ChangePasswordRequestDto } from '../../models/change-password-request-dto';
 import { ChangePasswordFormComponent } from '../forms/change-password-form-component/change-password-form-component';
+import { UserFormOmponent } from "../forms/user-form-component/user-form-component";
+import { UserRequestDto } from '../../models/user-request-dto';
+import { Employee } from '../../models/employee';
+import { EmployeeService } from '../../services/employee.service';
+import { CreateUserForEmployeeEvent } from '../../models/create-user-for-employee-event';
 
 declare var $: any;
 
@@ -20,7 +25,8 @@ declare var $: any;
     FilterByPipe,
     BooleanToTextPipe,
     RoleNamePipe,
-    ChangePasswordFormComponent
+    ChangePasswordFormComponent,
+    UserFormOmponent
 ],
   templateUrl: './user-component.html'
 })
@@ -33,7 +39,10 @@ export class UserComponent implements OnInit {
   searchTerm: string = '';
   showActiveProducts: boolean = true;
 
-  constructor(private userService: UserService, private notify: NotificationService) {}
+  constructor(
+    private userService: UserService, 
+    private employeeService: EmployeeService,
+    private notify: NotificationService) {}
 
   ngOnInit(): void {
     this.getUsers();
@@ -52,6 +61,14 @@ export class UserComponent implements OnInit {
     $('#changePasswordModal').modal('hide');
   }
 
+  openUserModal() {
+    $('#userModal').modal('show');
+  }
+
+  closeUserModal(): void {
+    $('#userModal').modal('hide');
+  }
+
   getUsers(): void {
     this.userService.getUsers(this.showActiveProducts).subscribe({
       next: (data) => {
@@ -59,6 +76,19 @@ export class UserComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al obtener los usuarios:', error);
+      }
+    });
+  }
+
+  onUserSaved(user: CreateUserForEmployeeEvent): void {
+    this.employeeService.createUserForEmployee(user.employeeId, user.user).subscribe({
+      next: (res) => {
+        this.getUsers();
+        this.notify.success('¡Usuario creado!', res?.message);
+        this.closeUserModal();
+      },
+      error(err) {
+        console.error(err);
       }
     });
   }

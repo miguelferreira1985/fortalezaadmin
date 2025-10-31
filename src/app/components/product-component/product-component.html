@@ -99,7 +99,7 @@
                               <td class="text-truncate" style="max-width: 250px;">{{ product.name }}</td>
                               <td>{{ product.cost | currency }}</td>
                               <td>{{ product. price | currency }}</td>
-                              <td>{{ product.isBelowOrEqualMinimumStock ?? false | booleanToText}}</td>
+                              <td>{{ product.stock }}</td>
                               <td>{{ product.subcategory?.name }}</td>
                               <td>{{ product.presentation?.name }}</td>
                               <td>

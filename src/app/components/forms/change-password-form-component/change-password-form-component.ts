@@ -34,7 +34,7 @@ export class ChangePasswordFormComponent implements OnInit {
         confirmPassword: ['', [Validators.required]]
       },
       { validators : CustomValidators.passwordConfirmed }
-    )
+    );
   }
 
   onSubmit(): void {

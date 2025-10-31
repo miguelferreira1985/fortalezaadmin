@@ -26,10 +26,10 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
   form!: FormGroup;
   createUser: boolean = false;
   roles = [
-    { id: 'casshier', name: 'Cajero'},
+    { id: 'cashier', name: 'Cajero'},
     { id: 'manager', name: 'Gerente'},
     { id: 'admin', name: 'Administrador'}
-  ]
+  ];
 
   constructor(private fb: FormBuilder) {}
 

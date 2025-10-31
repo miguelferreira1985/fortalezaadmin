@@ -61,7 +61,7 @@ export class EmployeeComponent implements OnInit {
   }
 
   getEmployees(): void {
-    this.employeeService.getProducts(this.showActiveEmployees).subscribe({
+    this.employeeService.getEmployees(this.showActiveEmployees).subscribe({
       next: (data) => {
         this.employees = data;
       },
@@ -75,7 +75,7 @@ export class EmployeeComponent implements OnInit {
     if (employeeRequestDto.id) {
       this.employeeService.updateEmployee(employeeRequestDto.id, employeeRequestDto).subscribe({
         next: (res) => {
-          this.getEmployees()
+          this.getEmployees();
           this.notify.success('Empleado actualizado!', res?.message);
           this.closeEmployeeForm();
         }, 
