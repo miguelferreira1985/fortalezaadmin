@@ -220,7 +220,7 @@
                             <!-- Form Modal -->
 
               <div class="modal fade" id="productDetailsModal" tabindex="-1" role="dialog" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-dialog modal-md" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title" id="productDetailsModalLabel">Detalles del Producto</h5>
@@ -233,92 +233,93 @@
 
                       <div class="modal-body" *ngIf="productForDetails">
                         <div class="row">
-                          <div class="col-md-4">
+                          <div class="col-md-6">
                             <div class="form-group">
                               <strong>Nombre:</strong>
                               <p>{{ productForDetails.name }}</p>
                             </div>
                           </div>
-                          <div class="col-md-4">
+                          <div class="col-md-6">
                             <div class="form-group">
                               <strong>Código:</strong>
                               <p>{{ productForDetails.code }}</p>
                             </div>
                           </div>
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <strong>Descripción:</strong>
-                              <p>{{ productForDetails.description }}</p>
-                            </div>
-                          </div>
+                        <div class="form-group">
+                          <strong>Descripción:</strong>
+                          @if (productForDetails.description) {
+                            <p>{{ productForDetails.description }}</p>
+                          } @else {
+                            <p>Sin descripción</p>
+                          }
+                          
                         </div>
+                      </div>
                         <div class="row">
-                          <div class="col-md-2">
+                          <div class="col-md-4">
                             <div class="form-group">
                               <strong>Costo sin IVA:</strong>
                               <p>{{ costWithoutTaxes | currency }}</p>
                             </div>
                           </div>
-                          <div class="col-md-2">
+                          <div class="col-md-4">
                             <div class="form-group">
                               <strong>Costo con IVA:</strong>
                               <p>{{ productForDetails.cost | currency }}</p>
                             </div>
                           </div>
-                          <div class="col-md-2">
+                          <div class="col-md-4">
                             <div class="form-group">
                               <strong>Precio:</strong>
                               <p>{{ productForDetails.price | currency }}</p>
                             </div>
                           </div>
-                          <div class="col-md-2">
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
                             <div class="form-group">
-                              <strong>Gan. ($):</strong>
+                              <strong>Gananancia por Producto:</strong>
                               <p>{{ productForDetails.profitMargin | currency }}</p>
                             </div>
                           </div>
-                          <div class="col-md-2">
+                          <div class="col-md-6">
                             <div class="form-group">
-                              <strong>Gan. (%):</strong>
-                              <p>{{ profitPercentage | number:'1.2-2' }}</p>
-                            </div>
-                          </div>
-                          <div class="col-md-2">
-                            <div class="form-group">
-                              <strong>Gan. Inventario:</strong>
-                              <p>{{ productForDetails.profitValue | currency}}</p>
+                              <strong>Porcentaje de Ganancia:</strong>
+                              <p>{{ profitPercentage | number:'1.2-2' }} %</p>
                             </div>
                           </div>
                         </div>
-                        <div class="row">
-                          <div class="col-md-2">
+                        <div *hasRole="['ROLE_ADMIN']"  class="row">
+                          <div class="col-md-6">
                             <div class="form-group">
-                              <strong>Stock:</strong>
-                              <p>{{ productForDetails.stock }}</p>
+                              <strong>Ganancia del Inventario:</strong>
+                              <p>{{ productForDetails.profitValue | currency}}</p>
                             </div>
                           </div>
-                          <div class="col-md-2">
-                            <div class="form-group">
-                              <strong>Stock Minimo:</strong>
-                              <p>{{ productForDetails.minimumStock }}</p>
-                            </div>
-                          </div>
-                          <div class="col-md-2">
-                            <div class="form-group">
-                              <strong>Stock Máximo:</strong>
-                              <p>{{ productForDetails.recommendedStock }}</p>
-                            </div>
-                          </div>
-                          <div class="col-md-3">
+                          <div class="col-md-6">
                             <div class="form-group">
                               <strong>Valor Inventario:</strong>
                               <p>{{ productForDetails.inventoryValue | currency}}</p>
                             </div>
                           </div>
-                          <div class="col-md-2">
+                        </div>
+                        <div class="row">
+                          <div class="col-md-4">
                             <div class="form-group">
-                              <strong>Bajo Inventario:</strong>
-                              <p>{{ productForDetails.isBelowOrEqualMinimumStock ?? false | booleanToText }}</p>
+                              <strong>Stock Actual:</strong>
+                              <p>{{ productForDetails.stock }}</p>
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <strong>Stock Minimo:</strong>
+                              <p>{{ productForDetails.minimumStock }}</p>
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <strong>Stock Máximo:</strong>
+                              <p>{{ productForDetails.recommendedStock }}</p>
                             </div>
                           </div>
                         </div>
@@ -338,15 +339,27 @@
                         </div>
                         <div class="row">
                           @if (!productForDetails.supplierCosts || productForDetails.supplierCosts.length === 0) {
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                               <strong>Proveedores:</strong>
                                 <p>Sin Proveedores</p>
                             </div>
                           } @else {
-                            <div class="col-md-12">
+                            <div class="col-md-4">
                               <strong>Proveedores:</strong>
                               <div *ngFor="let supplier of productForDetails.supplierCosts">
                                 <p>{{ supplier.supplierName }}</p>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <strong>Costo Proveedor:</strong>
+                              <div *ngFor="let supplier of productForDetails.supplierCosts">
+                                <p>{{ supplier.cost | currency}}</p>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <strong>Descuento:</strong>
+                              <div *ngFor="let supplier of productForDetails.supplierCosts">
+                                <p>{{ supplier.discount | percent}}</p>
                               </div>
                             </div>
                           }

@@ -20,7 +20,6 @@ declare var $: any;
     CommonModule,
     FormsModule,
     ProductFormComponent,
-    BooleanToTextPipe,
     StockFormComponent,
     FilterByPipe, 
     HasRoleDirective
