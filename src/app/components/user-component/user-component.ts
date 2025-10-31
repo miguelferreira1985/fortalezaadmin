@@ -2,16 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
-import { BooleanToTextPipe } from '../../shared/pipes/booelean-to-text-pipe';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
 import { NotificationService } from '../../services/notification.service';
 import { RoleNamePipe } from '../../shared/pipes/role-name-pipe';
 import { ChangePasswordRequestDto } from '../../models/change-password-request-dto';
 import { ChangePasswordFormComponent } from '../forms/change-password-form-component/change-password-form-component';
-import { UserFormOmponent } from "../forms/user-form-component/user-form-component";
-import { UserRequestDto } from '../../models/user-request-dto';
-import { Employee } from '../../models/employee';
+import { UserFormComponent } from "../forms/user-form-component/user-form-component";
 import { EmployeeService } from '../../services/employee.service';
 import { CreateUserForEmployeeEvent } from '../../models/create-user-for-employee-event';
 
@@ -23,10 +20,9 @@ declare var $: any;
     CommonModule,
     FormsModule,
     FilterByPipe,
-    BooleanToTextPipe,
     RoleNamePipe,
     ChangePasswordFormComponent,
-    UserFormOmponent
+    UserFormComponent
 ],
   templateUrl: './user-component.html'
 })

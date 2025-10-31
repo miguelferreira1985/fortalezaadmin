@@ -33,7 +33,7 @@ export class ChangePasswordFormComponent implements OnInit {
         newPassword: ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', [Validators.required]]
       },
-      { validators : CustomValidators.passwordConfirmed }
+      { validators : CustomValidators.matchFields('newPassword', 'confirmPassword') }
     );
   }
 

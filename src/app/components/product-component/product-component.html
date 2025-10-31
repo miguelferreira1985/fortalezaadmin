@@ -64,7 +64,7 @@
                             (click)="openCreateModal()" 
                             data-toggle="modal" data-target="#productForm">
 
-                              <i class="fas fa-plus-circle"></i> Agregar Producto
+                            <i class="fa-solid fa-circle-plus"></i> Agregar Producto
 
                           </button> 
                       </div>
@@ -109,7 +109,7 @@
                                   data-bs-toggle="tooltip"
                                   data-placement="top"
                                   title="Ver detalles">
-                                  <i class="fas fa-eye"></i>
+                                  <i class="fa-solid fa-circle-info"></i>
                                 </button>
                                 <button 
                                   *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
@@ -118,7 +118,7 @@
                                   data-bs-toggle="tooltip"
                                   data-placement="top"
                                   title="Editar">
-                                      <i class="fas fa-edit"></i>
+                                      <i class="fa-solid fa-file-pen"></i>
                                 </button>
                                 @if (product.isActivate) {
                                   <button 
@@ -128,7 +128,7 @@
                                     data-bs-toggle="tooltip"
                                     data-placement="top"
                                     title="Desactivar">
-                                    <i class="fas fa-ban"></i>
+                                    <i class="fa-solid fa-ban"></i>
                                   </button>
                                 } @else {
                                   <button 
@@ -138,7 +138,7 @@
                                     data-bs-toggle="tooltip"
                                     data-placement="top"
                                     title="Activar">
-                                    <i class="fas fa-check-square"></i>
+                                    <i class="fa-solid fa-check-to-slot"></i>
                                   </button>
                                 }
                                 <button 
@@ -149,7 +149,7 @@
                                   data-placement="top"
                                   title="Ajustar inventario">
                                   
-                                    <i class="fa-regular fa-file-lines"></i>
+                                    <i class="fa-solid fa-plus-minus"></i>
                               </button>
                               </td>
                             </tr>

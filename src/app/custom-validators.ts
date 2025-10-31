@@ -1,5 +1,4 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
-import { grep } from "jquery";
 
 export class CustomValidators {
 
@@ -26,34 +25,25 @@ export class CustomValidators {
     };
 
     /** Confirm password */
-    static passwordConfirmed: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
-        const newCtrl = group.get('newPassword');
-        const confCtrl = group.get('confirmPassword');
-    
-        const newVal = newCtrl?.value;
-        const confVal = confCtrl?.value;
-    
-        if (!newVal || !confVal) {
-          if (confCtrl?.hasError('passwordMismatch')) {
-            const { passwordMismatch, ...rest } = confCtrl.errors ?? {};
-            confCtrl.setErrors(Object.keys(rest).length ? rest : null);
-          }
-          return null;
+    static matchFields(primary: string, confirm: string): ValidatorFn {
+      return (group: AbstractControl): ValidationErrors | null => {
+        const p = group.get(primary);
+        const c = group.get(confirm);
+        const pv = p?.value;
+        const cv = c?.value;
+  
+        if (!p || !c) return null;
+  
+        const existing = c.errors ?? {};
+        if (existing['passwordMismatch']) {
+          const { passwordMismatch, ...rest } = existing;
+          c.setErrors(Object.keys(rest).length ? rest : null);
         }
-    
-        const mismatch = newVal !== confVal;
-    
-        if (confCtrl) {
-          const existing = confCtrl.errors ?? {};
-          if (mismatch) {
-            confCtrl.setErrors({ ...existing, passwordMismatch: true });
-          } else if ('passwordMismatch' in existing) {
-            const { passwordMismatch, ...rest } = existing;
-            confCtrl.setErrors(Object.keys(rest).length ? rest : null);
-          }
-        }
-    
-        return mismatch ? { passwordMismatch: true } : null;
+  
+        if (pv === cv) return null;
+  
+        c.setErrors({ ...(c.errors ?? {}), passwordMismatch: true });
+        return { passwordMismatch: true };
       };
-    
+    }
 }

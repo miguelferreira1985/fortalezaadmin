@@ -6,7 +6,7 @@
 function decodeJwtPayload(token: string): any | null {
     try {
         const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/-/g, '/');
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
         const jsonPayload = decodeURIComponent(
             atob(base64)
             .split('')

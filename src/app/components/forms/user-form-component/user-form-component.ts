@@ -12,7 +12,7 @@ import { CreateUserForEmployeeEvent } from '../../../models/create-user-for-empl
 declare const $: any;
 
 @Component({
-  selector: 'app-user-form-omponent',
+  selector: 'app-user-form-component',
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -21,7 +21,7 @@ declare const $: any;
   ],
   templateUrl: './user-form-component.html'
 })
-export class UserFormOmponent implements OnInit {
+export class UserFormComponent implements OnInit {
 
   @Output() createUser = new EventEmitter<CreateUserForEmployeeEvent>();
 
@@ -50,7 +50,7 @@ export class UserFormOmponent implements OnInit {
       confirmPassword: [{value: '', disabled: true}, [Validators.required]],
       roles: []
     },
-    { validators : CustomValidators.passwordConfirmed});
+    { validators : CustomValidators.matchFields('password', 'confirmPassword')});
 
     this.getEmployees();
 
