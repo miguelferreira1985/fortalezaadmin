@@ -1,0 +1,24 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+        <label>Permisos*</label>
+        <ng-select
+          [items]="roles"
+          [multiple]="true"
+          bindLabel="name"
+          bindValue="id"
+          dropdownPosition="bottom"
+          formControlName="roles"
+          placeholder="Seleccione uno o más permisos">
+        </ng-select>
+        <small class="text-danger"
+          *ngIf="c('roles')?.touched && (c('roles')?.hasError('minSelected') || c('roles')?.hasError('required'))">
+          Selecciona al menos un permiso.
+        </small>
+    </div>
+    
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeUpdateRolesModal()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Guardar</button>
+    </div>
+  </form>

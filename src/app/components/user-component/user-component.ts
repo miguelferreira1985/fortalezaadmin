@@ -11,6 +11,8 @@ import { ChangePasswordFormComponent } from '../forms/change-password-form-compo
 import { UserFormComponent } from "../forms/user-form-component/user-form-component";
 import { EmployeeService } from '../../services/employee.service';
 import { CreateUserForEmployeeEvent } from '../../models/create-user-for-employee-event';
+import { UpdateRolesFormComponent } from "../forms/update-roles-form-component/update-roles-form-component";
+import { UpdateRolesRequestDto } from '../../models/update-roles-requets-dto';
 
 declare var $: any;
 
@@ -22,13 +24,15 @@ declare var $: any;
     FilterByPipe,
     RoleNamePipe,
     ChangePasswordFormComponent,
-    UserFormComponent
+    UserFormComponent,
+    UpdateRolesFormComponent
 ],
   templateUrl: './user-component.html'
 })
 export class UserComponent implements OnInit {
 
   @ViewChild('changePasswordModal') changePasswordFormModal!: ChangePasswordFormComponent;
+  @ViewChild('updateRolesModal') updateRolesFormModal!: UpdateRolesFormComponent;
 
   users: User[] = [];
   selectedUser: User | null = null;
@@ -53,16 +57,25 @@ export class UserComponent implements OnInit {
     $('#changePasswordModal').modal('show');
   }
 
-  closeChangePasswordModal(): void {
-    $('#changePasswordModal').modal('hide');
-  }
-
   openUserModal() {
     $('#userModal').modal('show');
   }
 
+  openUpdateRolesModal(user: User) {
+    this.selectedUser = user;
+    $('#updateRolesModal').modal('show');
+  }
+
+  closeChangePasswordModal(): void {
+    $('#changePasswordModal').modal('hide');
+  }
+
   closeUserModal(): void {
     $('#userModal').modal('hide');
+  }
+
+  closeUpdateRolesModal(): void {
+    $('#updateRolesModal').modal('hide');
   }
 
   getUsers(): void {
@@ -77,20 +90,24 @@ export class UserComponent implements OnInit {
   }
 
   onUserSaved(user: CreateUserForEmployeeEvent): void {
-    this.employeeService.createUserForEmployee(user.employeeId, user.user).subscribe({
-      next: (res) => {
-        this.getUsers();
-        this.notify.success('¡Usuario creado!', res?.message);
-        this.closeUserModal();
-      },
-      error(err) {
-        console.error(err);
+    this.notify.confirm('¿Estás seguro?', `¿Quieres agregar el usuario "${user.user.username}"?`)
+    .then((result) => {
+      if (result.isConfirmed) {
+        this.employeeService.createUserForEmployee(user.employeeId, user.user).subscribe({
+          next: (res) => {
+            this.getUsers();
+            this.notify.success('¡Usuario creado!', res?.message);
+            this.closeUserModal();
+          },
+          error(err) {
+            console.error(err);
+          }
+        });
       }
     });
   }
 
   onChangePassword(user: User, changePasswordRequestDto: ChangePasswordRequestDto): void {
-    console.log('password recibido en el componente', changePasswordRequestDto);
     this.notify.confirm('¿Estás seguro?', `¿Quieres cambiar la contraseña de el usuario "${user.username}"?`)
       .then((result) => {
         if (result.isConfirmed) {
@@ -99,6 +116,7 @@ export class UserComponent implements OnInit {
             next: () => {
               this.getUsers();
               this.notify.success('!Contraseña actualizada!');
+              this.closeChangePasswordModal();
             },
             error(err) {
               console.error(err);
@@ -145,7 +163,7 @@ export class UserComponent implements OnInit {
   }
 
   unblockUser(user: User): void {
-    this.notify.confirm('¿Estás seguro?', `¿Quieres descbloquear el usuario "${user.username}"?`)
+    this.notify.confirm('¿Estás seguro?', `¿Quieres desbloquear el usuario "${user.username}"?`)
       .then((result) => {
         if (result.isConfirmed) {
           let id: number = user.id ?? 0;
@@ -153,6 +171,43 @@ export class UserComponent implements OnInit {
             next: () => {
               this.getUsers();
               this.notify.success('¡Usuario desbloqueado!');
+            },
+            error(err) {
+              console.error(err);
+            }
+          });
+        }
+      });
+  }
+
+  onUpdateRoles(user: User, updateRolesRequest: UpdateRolesRequestDto): void {
+    this.notify.confirm('¿Estás seguro?', `¿Quieres actualizar los permisos de el usuario "${user.username}?`)
+      .then((result) => {
+        if (result.isConfirmed) {
+          let id: number = user.id ?? 0;
+          this.userService.updateRoles(id, updateRolesRequest).subscribe({
+            next: () => {
+              this.getUsers();
+              this.notify.success('Permisos del Usuario Actualizados!');
+              this.closeUpdateRolesModal();
+            },
+            error(err) {
+              console.error(err);
+            }
+          });
+        }
+      });
+  }
+
+  deleteUser(user: User): void {
+    this.notify.confirm('¿Estás seguro?', `¿Quieres eliminar el usuario "${user.username}? Esta acción es irreversible."`)
+      .then((result) => {
+        if (result.isConfirmed) {
+          let id: number = user.id ?? 0;
+          this.userService.deleteUser(id).subscribe({
+            next: () => {
+              this.getUsers();
+              this.notify.success('Usuario eliminad0!');
             },
             error(err) {
               console.error(err);

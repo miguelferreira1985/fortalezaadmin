@@ -8,6 +8,7 @@ import { UserRequestDto } from '../../../models/user-request-dto';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CreateUserForEmployeeEvent } from '../../../models/create-user-for-employee-event';
+import { UpdateRolesFormComponent } from '../update-roles-form-component/update-roles-form-component';
 
 declare const $: any;
 
@@ -50,7 +51,7 @@ export class UserFormComponent implements OnInit {
       confirmPassword: [{value: '', disabled: true}, [Validators.required]],
       roles: []
     },
-    { validators : CustomValidators.matchFields('password', 'confirmPassword')});
+    { validators : CustomValidators.matchFields('password', 'confirmPassword')} );
 
     this.getEmployees();
 
@@ -78,6 +79,7 @@ export class UserFormComponent implements OnInit {
     };
 
     this.createUser.emit({ employeeId, user });
+    this.resetFormAndModal();
   }
 
   c(name: string) {
@@ -94,6 +96,16 @@ export class UserFormComponent implements OnInit {
 
   closeUserForm(): void {
     $('#userModal').modal('hide');
+  }
+
+  resetFormAndModal(): void {
+    this.form.reset({
+      employeId: '',
+      username: '',
+      password: '',
+      confirmPassword: '',
+      roles: []
+    })
   }
 
   private enableFields() {

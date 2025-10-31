@@ -110,6 +110,7 @@
                                 class="btn btn-primary btn-sm mr-2" 
                                 data-bs-toggle="tooltip"
                                 data-placement="top"
+                                (click)="openUpdateRolesModal(user)"
                                 title="Editar Roles">
                                 <i class="fa-solid fa-user-gear"></i>
                               </button>
@@ -134,6 +135,7 @@
                               </button>
                               <button 
                                 class="btn btn-danger btn-sm mr-2" 
+                                (click)="deleteUser(user)"
                                 data-bs-toggle="tooltip"
                                 data-placement="top"
                                 title="Eliminar">
@@ -188,6 +190,28 @@
                         #userModal
                         (createUser)="onUserSaved($event)">
                       </app-user-form-component>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal fade" id="updateRolesModal" tabindex="-1" role="dialog" aria-labelledby="updateRolesModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="updateRolesModalLabel">
+                        Editar Roles de {{ selectedUser?.username }}
+                      </h5>
+                      <button type="button" class="close" (click)="closeUpdateRolesModal()">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <app-update-roles-form-component
+                        #updateRolesModal
+                        [user]="selectedUser"
+                        (updateRoles)="onUpdateRoles(selectedUser!, $event)">
+                      </app-update-roles-form-component>
                     </div>
                   </div>
                 </div>

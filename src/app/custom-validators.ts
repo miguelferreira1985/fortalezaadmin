@@ -19,10 +19,19 @@ export class CustomValidators {
     };
 
     /** Cantidad debe ser distinta de 0 */
-    static nonZeroQuantity(control: AbstractControl): ValidationErrors | null {
+    static nonZeroQuantity: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
         const value = control.value;
         return value && value != 0 ? null : { zeroQuantity: true };
     };
+
+    /** Minimum 1 item selected validation */
+    static minSelected(min: number): ValidatorFn {
+      return (control: AbstractControl): ValidationErrors | null => {
+        const val = control.value;
+        const length = Array.isArray(val) ? val.length : (val ? 1 : 0);
+        return length >= min ? null: { minimumSelected: { required: min, actual: length } };
+      };
+    }
 
     /** Confirm password */
     static matchFields(primary: string, confirm: string): ValidatorFn {
