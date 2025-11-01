@@ -122,7 +122,7 @@
                                 </button>
                                 @if (product.isActivate) {
                                   <button 
-                                    *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
+                                    *hasRole="['ROLE_ADMIN']"
                                     class="btn btn-danger btn-sm mr-2" 
                                     (click)="desactivateProduct(product)"
                                     data-bs-toggle="tooltip"
@@ -132,7 +132,7 @@
                                   </button>
                                 } @else {
                                   <button 
-                                    *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
+                                    *hasRole="['ROLE_ADMIN']"
                                     class="btn btn-success btn-sm mr-2" 
                                     (click)="activateProduct(product)"
                                     data-bs-toggle="tooltip"

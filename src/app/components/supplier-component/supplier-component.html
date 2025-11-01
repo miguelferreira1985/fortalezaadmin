@@ -13,81 +13,128 @@
       <!-- Main content -->
       <div class="content">
         <div class="container-fluid">
+
             <div class="row">
-                <div class="col-12">
-                  <div class="card">
-                    <div class="card-header d-flex w-100 align-items-center">
-                      <h3 class="card-title my-auto">Lista de Proveedores</h3>
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header d-flex w-100 align-items-center">
+                    <h3 class="card-title my-auto">Lista de Proveedores</h3>
 
-                      <div class="input-group input-group-sm mx-auto" style="width: 800px;">
-                        <input 
-                          type="text" 
-                          name="table_search" 
-                          class="form-control" 
-                          placeholder="Buscar proveedor..."
-                          [(ngModel)]="searchTerm">
-                        <div class="input-group-append">
-                          <button type="submit" class="btn btn-default">
-                            <i class="fas fa-search"></i>
-                          </button>
-                        </div>
+                    <div class="input-group input-group-sm mx-auto" style="width: 600px;">
+                      <input 
+                        type="text" 
+                        name="table_search" 
+                        class="form-control" 
+                        placeholder="Buscar proveedor..."
+                        [(ngModel)]="searchTerm">
+                      <div class="input-group-append">
+                        <button type="button" class="btn btn-default">
+                          <i class="fas fa-search"></i>
+                        </button>
                       </div>
-
-                      <div class="ml-auto">
-                          <button class="btn btn-success" (click)="openCreateModal()" data-toggle="modal" data-target="#supplierForm">
-                              <i class="fa-solid fa-person-circle-plus"></i> Agregar Proveedor
-                          </button> 
-                      </div>
-          
                     </div>
-                    <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0" style="height: 600px;">
-                      <table class="table table-head-fixed text-nowrap">
-                        <thead>
+
+                    <div class="form-check form-switch ml-auto">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="toggleIsActivate">
+                      <label class="form-check-label" for="toggleIsActivate">
+                        Mostrar activos
+                      </label>
+                    </div>
+
+                    <div class="ml-auto">
+                        <button 
+                          *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
+                          class="btn btn-success" 
+                          (click)="openCreateModal()" 
+                          data-toggle="modal" data-target="#supplierForm">
+
+                          <i class="fa-solid fa-person-circle-plus"></i> Agregar Proveedor
+
+                        </button> 
+                    </div>
+        
+                  </div>
+                  <!-- /.card-header -->
+                  <div class="card-body p-0">
+
+                    <div class="table-responsive w-100" style="max-height: 72vh; overflow: auto;">
+
+                      <table class="table table-hover text-nowrap mb-0 w-100">
+
+                        <thead class="thread-light">
                           <tr>
-                            <th>Nombre</th>
-                            <th>Contacto</th>
-                            <th>Tel. Contacto</th>
-                            <th>Tel. Oficina</th>
-                            <th>Email</th>
-                            <th>Ubicación</th>
-                            <th></th>
+                            <th style="position: sticky; top: 0; background: white; z-index: 10;">Nombre</th>
+                            <th style="position: sticky; top: 0; background: white; z-index: 10;">Contacto</th>
+                            <th style="position: sticky; top: 0; background: white; z-index: 10;">Tel. Contacto</th>
+                            <th style="position: sticky; top: 0; background: white; z-index: 10;">Tel. Oficina</th>
+                            <th style="position: sticky; top: 0; background: white; z-index: 10;">Email</th>
+                            <th style="position: sticky; top: 0; background: white; z-index: 10;">Ubicación</th>
+                            <th style="position: sticky; top: 0; background: white; z-index: 10;"></th>
                           </tr>
                         </thead>
+
                         <tbody>
-                          <tr *ngFor="let supplier of suppliers | filterBy:searchTerm:['name','contact','location']">
-                            <td>{{ supplier.name }}</td>
-                            <td>{{ supplier.contact }}</td>
+                            <tr 
+                            *ngFor="let supplier of suppliers | filterBy:searchTerm:['name', 'contact', 'location']; trackBy: trackBySupplier">
+
+                            <td class="text-truncate" style="max-width: 150px;">{{ supplier.name | uppercase }}</td>
+                            <td class="text-truncate" style="max-width: 250px;">{{ supplier.contact }}</td>
                             <td>{{ supplier.contactPhone }}</td>
                             <td>{{ supplier.officePhone }}</td>
                             <td>{{ supplier.email }}</td>
                             <td>{{ supplier.location }}</td>
                             <td>
                               <button 
-                              class="btn btn-warning btn-sm mr-2" 
-                              (click)="openEditModal(supplier)"
-                              data-bs-toggle="tooltip"
-                              data-placement="top"
-                              title="Editar">
-                                  <i class="fa-solid fa-file-pen"></i>
-                            </button>
-                              <button 
-                                class="btn btn-danger btn-sm mr-2" 
+                                *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
+                                class="btn btn-warning btn-sm mr-2" 
+                                (click)="openEditModal(supplier)"
                                 data-bs-toggle="tooltip"
                                 data-placement="top"
-                                title="Ver detalles">
-                                <i class="fa-solid fa-ban"></i>
+                                title="Editar">
+                                  <i class="fa-solid fa-file-pen"></i>
                               </button>
+                              @if (supplier.isActivate) {
+                                <button 
+                                  *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
+                                  class="btn btn-danger btn-sm mr-2" 
+                                  data-bs-toggle="tooltip"
+                                  data-placement="top"
+                                  title="Desactivar">
+                                  <i class="fa-solid fa-ban"></i>
+                                </button>
+                              } @else {
+                                <button 
+                                  *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
+                                  class="btn btn-success btn-sm mr-2" 
+                                  data-bs-toggle="tooltip"
+                                  data-placement="top"
+                                  title="Activar">
+                                  <i class="fa-solid fa-check-to-slot"></i>
+                                </button>
+                              }
                             </td>
                           </tr>
                         </tbody>
+
+                        <tfoot>
+                          <td colspan="8" class="text-right font-weight-bold">
+                            Total de proveedores: {{ (suppliers | filterBy:searchTerm:['name', 'contact', 'location']).length }}
+                          </td>
+                        </tfoot>
+
                       </table>
                     </div>
-                    <!-- /.card-body -->
+
                   </div>
-                  <!-- /.card -->
+                  <!-- /.card-body -->
                 </div>
-              </div> 
+                <!-- /.card -->
+              </div>
+            </div> 
 
               <!-- Form Modal -->
               <div class="modal fade" id="supplierModal" tabindex="-1" role="dialog" aria-labelledby="supplierModalLabel" aria-hidden="true">

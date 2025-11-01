@@ -6,6 +6,7 @@ import { Supplier } from '../../models/supplier';
 import { SupplierService } from '../../services/supplier.service';
 import { NotificationService } from '../../services/notification.service';
 import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
+import { HasRoleDirective } from '../../core/has-role.directive';
 
 declare var $: any;
 
@@ -15,9 +16,11 @@ declare var $: any;
     CommonModule,
     FormsModule,
     SupplierFormComponent,
-    FilterByPipe
+    FilterByPipe,
+    HasRoleDirective
   ],
-  templateUrl: './supplier-component.html'
+  templateUrl: './supplier-component.html',
+  styleUrl: './supplier-component.css'
 })
 export class SupplierComponent {
 
@@ -106,6 +109,10 @@ export class SupplierComponent {
         });
       }
     });
+  }
+
+  trackBySupplier(index: number, item: Supplier): number {
+    return item.id ?? index;
   }
 
 }
