@@ -65,7 +65,7 @@
             "qa": {
               "fileReplacements": [{
                 "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.qa.ts"
+                "with": "src/environment/environment.qa.ts"
               }],
               "optimization": true,
               "extractLicenses": true,
