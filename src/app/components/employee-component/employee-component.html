@@ -82,6 +82,14 @@
                             }
                             <td>
                               <button 
+                                class="btn btn-info btn-sm mr-2" 
+                                (click)="viewEmployeeDetails(employee)"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Ver detalles">
+                                <i class="fa-solid fa-circle-info"></i>
+                              </button>
+                              <button 
                                 class="btn btn-warning btn-sm mr-2" 
                                 (click)="openEditModal(employee)"
                                 data-bs-toggle="tooltip"
@@ -142,6 +150,92 @@
                 </div>
               </div>
               <!-- Form Modal -->
+
+              <div class="modal fade" id="employeeDetailsModal" tabindex="-1" role="dialog" aria-labelledby="employeeDetailsModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="employeeDetailsModalLabel">Detalles del Empleado</h5>
+                      <button type="button" class="close" (click)="closeEmployeeDetails()">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+
+                    @if (employeeForDetails) {
+
+                      <div class="modal-body">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <strong>Nombre:</strong>
+                              <p>{{ employeeForDetails.firstName }}</p>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <strong>Apellido:</strong>
+                              <p>{{ employeeForDetails.lastName }}</p>
+                            </div>
+                          </div>
+                        <div class="form-group">
+                          <strong>Dirección:</strong>
+                          @if (employeeForDetails.address) {
+                            <p>{{ employeeForDetails.address }}</p>
+                          } @else {
+                            <p>Sin dirección</p>
+                          }     
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <strong>Telefono:</strong>
+                            <p>{{ employeeForDetails.phone }}</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <strong>Email:</strong>
+                            <p>{{ employeeForDetails.email }}</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <strong>NSS:</strong>
+                            <p>{{ employeeForDetails.ssn }}</p>
+                          </div>
+                        </div>
+                      </div>
+                      @if (employeeForDetails.user) {
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <strong>Usuario:</strong>
+                              <p>{{ employeeForDetails.user.username }}</p>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <strong>Permisos:</strong>
+                              <div *ngFor="let role of employeeForDetails.user.roles">
+                                <p>{{ role.toString() }}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      }
+                      </div>
+
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" (click)="openEditModal(employeeForDetails)">Editar</button>
+                        <button type="button" class="btn btn-secondary" (click)="closeEmployeeDetails()">Cerrar</button>
+                      </div>
+
+                    }
+
+                  </div>
+                </div>
+              </div>
         </div>
         <!-- /.container-fluid-->
       </div>

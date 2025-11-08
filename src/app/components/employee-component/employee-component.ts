@@ -29,6 +29,7 @@ export class EmployeeComponent implements OnInit {
 
   employees: Employee[] = [];
   selectedEmployee: Employee | null = null;
+  employeeForDetails: Employee | null = null;
   searchTerm: string = '';
   showActiveEmployees: boolean = true;
 
@@ -58,6 +59,15 @@ export class EmployeeComponent implements OnInit {
 
   closeEmployeeForm(): void {
     $('#employeeModal').modal('hide');
+  }
+
+  viewEmployeeDetails(employee: Employee): void {
+    this.employeeForDetails = employee;
+    $('#employeeDetailsModal').modal('show');
+  }
+
+  closeEmployeeDetails(): void {
+    $('#employeeDetailsModal').modal('hide');
   }
 
   getEmployees(): void {
