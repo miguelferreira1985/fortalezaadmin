@@ -44,44 +44,44 @@
           },
           "configurations": {
             "production": {
-            "outputHashing": "all",
-            "fileReplacements": [
-              {
-                "replace": "src/environment/environment.ts",
-                "with": "src/environment/environment.prod.ts"
-              }
-            ],
-          "budgets": [
-            {
-              "type": "initial",
-              "maximumWarning": "3MB",
-              "maximumError": "5MB"
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environment/environment.ts",
+                  "with": "src/environment/environment.prod.ts"
+                }
+              ],
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3MB",
+                  "maximumError": "5MB"
+                },
+                { 
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ]
             },
-            { 
-              "type": "anyComponentStyle",
-              "maximumWarning": "4kB",
-              "maximumError": "8kB"
+            "qa": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environment/environment.ts",
+                  "with": "src/environment/environment.qa.ts"
+                }
+              ],
+              "optimization": true,
+              "extractLicenses": true,
+              "sourceMap": false,
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
             }
-          ]
           },
-  "qa": {
-    "fileReplacements": [
-      {
-        "replace": "src/environment/environment.ts",
-        "with": "src/environment/environment.qa.ts"
-      }
-    ],
-    "optimization": true,
-    "extractLicenses": true,
-    "sourceMap": false,
-    "outputHashing": "all"
-  },
-  "development": {
-    "optimization": false,
-    "extractLicenses": false,
-    "sourceMap": true
-  }
-},
           "defaultConfiguration": "production"
         },
         "serve": {
