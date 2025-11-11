@@ -4,7 +4,6 @@ import { NgSelectComponent } from "@ng-select/ng-select";
 import { Product } from '../../models/product';
 import { InventoryMovement } from '../../models/inventory-movement';
 import { ProductService } from '../../services/product.service';
-import { error } from 'jquery';
 import { FormsModule } from '@angular/forms';
 import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
 

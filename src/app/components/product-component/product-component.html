@@ -78,7 +78,7 @@
                         <table class="table table-hover text-nowrap mb-0 w-100">
 
                           <thead class="thread-light">
-                            <tr>
+                            <tr class="text-center">
                               <th style="position: sticky; top: 0; background: white; z-index: 10;">Código</th>
                               <th style="position: sticky; top: 0; background: white; z-index: 10;">Nombre</th>
                               <th style="position: sticky; top: 0; background: white; z-index: 10;">Costo</th>
@@ -91,7 +91,7 @@
                           </thead>
 
                           <tbody>
-                              <tr 
+                              <tr class="text-center"
                               *ngFor="let product of products | filterBy:searchTerm:['code', 'name']; trackBy: trackByProduct"
                               [ngClass]="{'table-danger font-weight-bold': product.isBelowOrEqualMinimumStock}">
   
@@ -100,8 +100,18 @@
                               <td>{{ product.cost | currency }}</td>
                               <td>{{ product. price | currency }}</td>
                               <td>{{ product.stock }}</td>
-                              <td>{{ product.subcategory?.name }}</td>
-                              <td>{{ product.presentation?.name }}</td>
+                              @if (product.subcategory?.name) {
+                                <td>{{ product.subcategory?.name | uppercase}}</td>
+                              } @else {
+                                <td>Sin subcategoría</td>
+                              }
+
+                              @if (product.presentation?.name) {
+                                <td>{{ product.presentation?.name | uppercase}}</td>
+                              } @else {
+                                <td>Sin presentación</td>
+                              }
+                    
                               <td>
                                 <button 
                                   class="btn btn-info btn-sm mr-2" 
@@ -217,7 +227,7 @@
                   </div>
                 </div>
               </div>
-                            <!-- Form Modal -->
+              <!-- Form Modal -->
 
               <div class="modal fade" id="productDetailsModal" tabindex="-1" role="dialog" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-md" role="document">
@@ -251,8 +261,7 @@
                             <p>{{ productForDetails.description }}</p>
                           } @else {
                             <p>Sin descripción</p>
-                          }
-                          
+                          }  
                         </div>
                       </div>
                         <div class="row">
@@ -327,13 +336,21 @@
                           <div class="col-md-6">
                             <div class="form-group">
                               <strong>Subcategoría:</strong>
-                              <p>{{ productForDetails.subcategory?.name }}</p>
+                              @if (productForDetails.subcategory?.name) {
+                                <p>{{ productForDetails.subcategory?.name }}</p>
+                              } @else {
+                                <p>Sin subcategoría</p>
+                              }  
                             </div>
                           </div>
                           <div class="col-md-6">
                             <div class="form-group">
                               <strong>Presentación:</strong>
-                              <p>{{ productForDetails.presentation?.name }}</p>
+                              @if (productForDetails.presentation?.name) {
+                                <p>{{ productForDetails.presentation?.name }}</p>
+                              } @else {
+                                <p>Sin presentación</p>
+                              }  
                             </div>
                           </div>
                         </div>

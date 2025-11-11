@@ -75,12 +75,20 @@
                           <td>{{ employee.ssn }}</td>
                           @if (employee.user) {
                               <td>{{ employee.user.username }}</td>
-                              <td>{{ employee.user.isBlocked | booleanToText}}</td>
+                              @if (employee.user.isActivate) {
+                                <td class="text-success text-center">
+                                  <i class="fa-solid fa-user-check"></i>
+                                </td>
+                              } @else {
+                                <td class="text-danger text-center">
+                                  <i class="fa-solid fa-user-slash"></i>
+                                </td>                              
+                              }
                           } @else {
                               <td>Sin Usuario</td>
                               <td></td>
                           }
-                          <td>
+                          <td class="text-center">
                             <button 
                               class="btn btn-info btn-sm mr-2" 
                               (click)="viewEmployeeDetails(employee)"
