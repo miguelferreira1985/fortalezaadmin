@@ -35,19 +35,6 @@
                     </div>
                   </div>
 
-                  <div class="form-check form-switch ml-auto">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      id="toggleIsActivate"
-                      [(ngModel)]="showActiveEmployees"
-                      (change)="onToggleChange()">
-                    <label class="form-check-label" for="toggleIsActivate">
-                      Mostrar activos
-                    </label>
-                  </div>
-
                   <div class="ml-auto">
                       <button 
                         *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
@@ -72,7 +59,7 @@
                         <tr>
                           <th>Nombre</th>
                           <th>Email</th>
-                          <th>Telefono</th>
+                          <th>Teléfono</th>
                           <th>NSS</th>
                           <th>Usuario</th>
                           <th>Bloqueado</th>
@@ -110,25 +97,14 @@
                               title="Editar">
                                   <i class="fa-solid fa-file-pen"></i>
                             </button>
-                            @if (employee.isActivate) {
-                              <button 
-                                class="btn btn-danger btn-sm mr-2" 
-                                (click)="desactivateEmployee(employee)"
-                                data-bs-toggle="tooltip"
-                                data-placement="top"
-                                title="Desactivar">
-                                <i class="fa-solid fa-ban"></i>
-                              </button>
-                            } @else {
-                              <button 
-                                class="btn btn-success btn-sm mr-2" 
-                                (click)="desactivateEmployee(employee)"
-                                data-bs-toggle="tooltip"
-                                data-placement="top"
-                                title="Activar">
-                                <i class="fas fa-check-square"></i>
-                              </button>
-                            }
+                            <button 
+                              class="btn btn-danger btn-sm mr-2" 
+                              (click)="desactivateEmployee(employee)"
+                              data-bs-toggle="tooltip"
+                              data-placement="top"
+                              title="Desactivar">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
                           </td>
                         </tr>
                       </tbody>

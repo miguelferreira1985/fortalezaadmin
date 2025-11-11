@@ -77,7 +77,7 @@ export class SubcategoryComponent implements OnInit {
       this.subcategoryService.updateSubcategory(subcategoryRequestDto.id, subcategoryRequestDto).subscribe({
         next: (res) => {
           this.getSubcategories();
-          this.notify.success('¡Categoría actualizada!', res?.message);
+          this.notify.success('¡Subategoría actualizada!', res?.message);
           $('#subcategoryModal').modal('hide');
         }, 
         error(err) {
@@ -88,7 +88,7 @@ export class SubcategoryComponent implements OnInit {
       this.subcategoryService.createSubcategory(subcategoryRequestDto).subscribe({
         next: (res) => {
           this.getSubcategories();
-          this.notify.success('¡Categoría agregada!', res?.message);
+          this.notify.success('¡Subategoría agregada!', res?.message);
           $('#subcategoryModal').modal('hide');
         },
         error(err) {
@@ -99,7 +99,7 @@ export class SubcategoryComponent implements OnInit {
   }
 
   deleteSubcategory(subcategory: Subcategory): void {
-    this.notify.confirm('¿Estás seguro?', `¿Quieres eliminar la subcategoría "${subcategory.name}? Esta acción es irreversible."`)
+    this.notify.confirm('¿Estás seguro?', `¿Quieres eliminar la subcategoría "${subcategory.name}"? Esta acción es irreversible.`)
       .then((result) => {
         if (result.isConfirmed) {
           let id: number = subcategory.id ?? 0;

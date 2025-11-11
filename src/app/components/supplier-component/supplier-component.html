@@ -34,17 +34,6 @@
                       </div>
                     </div>
 
-                    <div class="form-check form-switch ml-auto">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        role="switch"
-                        id="toggleIsActivate">
-                      <label class="form-check-label" for="toggleIsActivate">
-                        Mostrar activos
-                      </label>
-                    </div>
-
                     <div class="ml-auto">
                         <button 
                           *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
@@ -97,25 +86,14 @@
                                 title="Editar">
                                   <i class="fa-solid fa-file-pen"></i>
                               </button>
-                              @if (supplier.isActivate) {
-                                <button 
-                                  *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
-                                  class="btn btn-danger btn-sm mr-2" 
-                                  data-bs-toggle="tooltip"
-                                  data-placement="top"
-                                  title="Desactivar">
-                                  <i class="fa-solid fa-ban"></i>
-                                </button>
-                              } @else {
-                                <button 
-                                  *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
-                                  class="btn btn-success btn-sm mr-2" 
-                                  data-bs-toggle="tooltip"
-                                  data-placement="top"
-                                  title="Activar">
-                                  <i class="fa-solid fa-check-to-slot"></i>
-                                </button>
-                              }
+                              <button 
+                                *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
+                                class="btn btn-danger btn-sm mr-2" 
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Eliminar">
+                                <i class="fa-solid fa-trash"></i>
+                              </button>
                             </td>
                           </tr>
                         </tbody>

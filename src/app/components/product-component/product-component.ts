@@ -130,7 +130,6 @@ export class ProductComponent implements OnInit {
         }
       });
     } else {
-      console.log("Producto para crear:" + productRequestDto)
       this.productService.createProduct(productRequestDto).subscribe({
         next: (res) => {
           this.getProducts();
@@ -149,7 +148,7 @@ export class ProductComponent implements OnInit {
       this.productService.updateStock(product.id, stockRequestDto).subscribe({
         next: (res) => {
           this.getProducts();
-          this.notify.success("¡Stock actulizado!", res?.message);
+          this.notify.success("¡Stock actualizado!", res?.message);
           this.closeUpdateStockModal()
         },
         error(err) {
@@ -160,14 +159,14 @@ export class ProductComponent implements OnInit {
   }
 
   desactivateProduct(product: Product): void {
-    this.notify.confirm('¿Estás seguro?', `¿Quieres desactivar el producto "${product.name}?"`)
+    this.notify.confirm('¿Estás seguro?', `¿Quieres desactivar el producto "${product.name}"?`)
       .then((result) => {
         if (result.isConfirmed) {
           let id: number = product.id ?? 0;
           this.productService.desactivateProduct(id).subscribe({
             next: () => {
               this.getProducts();
-              this.notify.success('¡Producto descativado!');
+              this.notify.success('¡Producto desactivado!');
             },
             error(err) {
               console.error(err);
@@ -178,7 +177,7 @@ export class ProductComponent implements OnInit {
   }
 
   activateProduct(product: Product): void {
-    this.notify.confirm('¿Estás seguro?', `¿Quieres activar el producto "${product.name}?"`)
+    this.notify.confirm('¿Estás seguro?', `¿Quieres activar el producto "${product.name}"?`)
       .then((result) => {
         if (result.isConfirmed) {
           let id: number = product.id ?? 0;

@@ -3,7 +3,7 @@
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0">Gestión de Subcategorias</h1>
+              <h1 class="m-0">Gestión de Subcategorías</h1>
             </div><!-- /.col -->
           </div><!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -18,14 +18,14 @@
             <div class="col-12">
               <div class="card">
                 <div class="card-header d-flex w-100 align-items-center">
-                  <h3 class="card-title my-auto">Lista de Subcategorias</h3>
+                  <h3 class="card-title my-auto">Lista de Subcategorías</h3>
 
                   <div class="input-group input-group-sm mx-auto" style="width: 600px;">
                     <input 
                       type="text" 
                       name="table_search" 
                       class="form-control" 
-                      placeholder="Buscar subcateforia..."
+                      placeholder="Buscar subcategoría..."
                       [(ngModel)]="searchTerm">
                     <div class="input-group-append">
                       <button type="button" class="btn btn-default">
@@ -36,7 +36,7 @@
 
                   <div class="ml-auto">
                     <button class="btn btn-success" (click)="openCreateModal()" data-toggle="modal" data-target="#subcategoryForm">
-                        <i class="fa-solid fa-circle-plus"></i> Agregar Subcategoria
+                        <i class="fa-solid fa-circle-plus"></i> Agregar Subcategoría
                     </button> 
                 </div>
       
@@ -85,7 +85,7 @@
 
                       <tfoot>
                         <td colspan="8" class="text-right font-weight-bold">
-                          Total de subcategorias: {{ (subcategories | filterBy:searchTerm:['name','category.name']).length }}
+                          Total de subcategorías: {{ (subcategories | filterBy:searchTerm:['name','category.name']).length }}
                         </td>
                       </tfoot>
 

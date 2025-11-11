@@ -88,7 +88,7 @@ export class PresentationComponent {
   }
 
   deletePresentation(presentation: Presentation): void {
-    this.notify.confirm('¿Estás seguro?', `¿Quieres eliminar la presentación "${presentation.name}? Esta acción es irreversible."`)
+    this.notify.confirm('¿Estás seguro?', `¿Quieres eliminar la presentación "${presentation.name}"? Esta acción es irreversible.`)
       .then((result) => {
         if (result.isConfirmed) {
           let id: number = presentation.id ?? 0;

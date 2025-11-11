@@ -71,7 +71,7 @@ export class CategoryComponent {
           $('#categoryModal').modal('hide');
         }, 
         error(err) {
-          console.log(err);
+          console.error(err);
         }
       });
     } else {
@@ -89,7 +89,7 @@ export class CategoryComponent {
   }
 
   deleteCategory(category: Category): void {
-    this.notify.confirm('¿Estás seguro?', `¿Quieres eliminar la categoría "${category.name}? Esta acción es irreversible."`)
+    this.notify.confirm('¿Estás seguro?', `¿Quieres eliminar la categoría "${category.name}"? Esta acción es irreversible.`)
       .then((result) => {
         if (result.isConfirmed) {
           let id: number = category.id ?? 0;
