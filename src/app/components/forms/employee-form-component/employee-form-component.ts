@@ -7,6 +7,8 @@ import { Employee } from '../../../models/employee';
 import { EmployeeRequestDto } from '../../../models/employee-request-dto';
 import { UserRequestDto } from '../../../models/user-request-dto';
 
+declare var $: any;
+
 @Component({
   selector: 'app-employee-form-component',
   imports: [
