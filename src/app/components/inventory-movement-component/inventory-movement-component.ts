@@ -16,14 +16,15 @@ import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
     FormsModule,
     FilterByPipe
   ],
-  templateUrl: './inventory-movement-component.html'
+  templateUrl: './inventory-movement-component.html',
+  styleUrl: './inventory-movement-component.css'
 })
 export class InventoryMovementComponent implements OnInit {
 
   products: Product[] = [];
   selectedProductId: number | null = null;
   movements: InventoryMovement[] =[];
-  searchItem: string = '';
+  searchTerm: string = '';
 
   constructor(
     private productService: ProductService
@@ -50,6 +51,10 @@ export class InventoryMovementComponent implements OnInit {
         console.error(err);
       }
     });
+  }
+
+  trackByMovement(index: number, item: InventoryMovement): number {
+    return item.id ?? index;
   }
 
 }

@@ -13,75 +13,89 @@
       <!-- Main content -->
       <div class="content">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                  <div class="card">
-                    <div class="card-header d-flex w-100 align-items-center">
-                      <h3 class="card-title my-auto">Lista de Presentaciones</h3>
 
-                      <div class="input-group input-group-sm mx-auto" style="width: 600px;">
-                        <input 
-                          type="text" 
-                          name="table_search" 
-                          class="form-control" 
-                          placeholder="Buscar presentacion..."
-                          [(ngModel)]="searchTerm">
-                        <div class="input-group-append">
-                          <button type="submit" class="btn btn-default">
-                            <i class="fas fa-search"></i>
-                          </button>
-                        </div>
-                      </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header d-flex w-100 align-items-center">
+                  <h3 class="card-title my-auto">Lista de Presentaciones</h3>
 
-                      <div class="ml-auto">
-                          <button class="btn btn-success" (click)="openCreateModal()" data-toggle="modal" data-target="#presentationForm">
-                              <i class="fa-solid fa-circle-plus"></i> Agregar Presentación
-                          </button> 
-                      </div>
-          
+                  <div class="input-group input-group-sm mx-auto" style="width: 600px;">
+                    <input 
+                      type="text" 
+                      name="table_search" 
+                      class="form-control" 
+                      placeholder="Buscar presentacion..."
+                      [(ngModel)]="searchTerm">
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-default">
+                        <i class="fas fa-search"></i>
+                      </button>
                     </div>
-                    <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0" style="height: 600px;">
-                      <table class="table table-head-fixed text-nowrap">
-                        <thead>
-                          <tr>
-                            <th>Nombre</th>
-                            <th>Abreviación</th>
-                            <th></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr *ngFor="let presentation of presentations | filterBy:searchTerm:['name']">
-                            <td>{{ presentation.name }}</td>
-                            <td>{{ presentation.abbreviation }}</td>
-                            <td>
-                              <button 
-                              class="btn btn-warning btn-sm mr-2" 
-                              (click)="openEditModal(presentation)"
+                  </div>
+
+                  <div class="ml-auto">
+                    <button class="btn btn-success" (click)="openCreateModal()" data-toggle="modal" data-target="#presentationForm">
+                        <i class="fa-solid fa-circle-plus"></i> Agregar Presentación
+                    </button> 
+                </div>
+      
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+
+                  <div class="table-responsive w-100" style="max-height: 72vh; overflow: auto;">
+
+                    <table class="table table-hover text-nowrap mb-0 w-100">
+
+                      <thead class="thread-light">
+                        <tr>
+                          <th>Nombre</th>
+                          <th>Abreviación</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr *ngFor="let presentation of presentations | filterBy:searchTerm:['name']; trackBy: trackByPresentation">
+                          <td>{{ presentation.name }}</td>
+                          <td>{{ presentation.abbreviation }}</td>
+                          <td>
+                            <button 
+                            class="btn btn-warning btn-sm mr-2" 
+                            (click)="openEditModal(presentation)"
+                            data-bs-toggle="tooltip"
+                            data-placement="top"
+                            title="Editar">
+                                <i class="fa-solid fa-file-pen"></i>
+                          </button>
+                            <button 
+                              class="btn btn-danger btn-sm mr-2" 
+                              (click)="deletePresentation(presentation)"
                               data-bs-toggle="tooltip"
                               data-placement="top"
-                              title="Editar">
-                                  <i class="fa-solid fa-file-pen"></i>
+                              title="Eliminar">
+                              <i class="fa-solid fa-trash"></i>
                             </button>
-                              <button 
-                                class="btn btn-danger btn-sm mr-2" 
-                                (click)="deletePresentation(presentation)"
-                                data-bs-toggle="tooltip"
-                                data-placement="top"
-                                title="Eliminar">
-                                <i class="fa-solid fa-trash"></i>
-                              </button>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <!-- /.card-body -->
-                  </div>
-                  <!-- /.card -->
-                </div>
-              </div> 
+                          </td>
+                        </tr>
+                      </tbody>
 
+                      <tfoot>
+                        <td colspan="8" class="text-right font-weight-bold">
+                          Total de presentaciones: {{ (presentations | filterBy:searchTerm:['name']).length }}
+                        </td>
+                      </tfoot>
+
+                    </table>
+                  </div>
+
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+          </div> 
 
               <!-- Form Modal -->
               <div class="modal fade" id="presentationModal" tabindex="-1" role="dialog" aria-labelledby="presentationModalLabel" aria-hidden="true">

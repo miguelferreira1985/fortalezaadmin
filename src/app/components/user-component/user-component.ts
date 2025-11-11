@@ -27,7 +27,8 @@ declare var $: any;
     UserFormComponent,
     UpdateRolesFormComponent
 ],
-  templateUrl: './user-component.html'
+  templateUrl: './user-component.html',
+  styleUrl: './user-component.css'
 })
 export class UserComponent implements OnInit {
 
@@ -215,5 +216,9 @@ export class UserComponent implements OnInit {
           });
         }
       });
+  }
+
+  trackByUser(index: number, item: User): number {
+    return item.id ?? index;
   }
 }

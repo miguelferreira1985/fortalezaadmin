@@ -13,145 +13,160 @@
       <!-- Main content -->
       <div class="content">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                  <div class="card">
-                    <div class="card-header d-flex w-100 align-items-center">
-                      <h3 class="card-title my-auto">Lista de Usuarios</h3>
 
-                      <div class="input-group input-group-sm mx-auto" style="width: 600px;">
-                        <input 
-                          type="text" 
-                          name="table_search" 
-                          class="form-control" 
-                          placeholder="Buscar usuario..."
-                          [(ngModel)]="searchTerm">
-                        <div class="input-group-append">
-                          <button type="submit" class="btn btn-default">
-                            <i class="fas fa-search"></i>
-                          </button>
-                        </div>
-                      </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header d-flex w-100 align-items-center">
+                  <h3 class="card-title my-auto">Lista de Usuarios</h3>
 
-                      <div class="form-check form-switch ml-auto">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          role="switch"
-                          id="toggleIsActivate"
-                          [(ngModel)]="showActiveProducts"
-                          (change)="onToggleChange()">
-                        <label class="form-check-label" for="toggleIsActivate">
-                          Mostrar activos
-                        </label>
-                      </div>
-
-
-                      <div class="ml-auto">
-                          <button class="btn btn-success" (click)="openUserModal()" data-toggle="modal" data-target="#userForm">
-                              <i class="fa-solid fa-user-plus"></i> Agregar Usuario
-                          </button> 
-                      </div>
-          
+                  <div class="input-group input-group-sm mx-auto" style="width: 600px;">
+                    <input 
+                      type="text" 
+                      name="table_search" 
+                      class="form-control" 
+                      placeholder="Buscar usuario..."
+                      [(ngModel)]="searchTerm">
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-default">
+                        <i class="fas fa-search"></i>
+                      </button>
                     </div>
-                    <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0" style="height: 600px;">
-                      <table class="table table-head-fixed text-nowrap">
-                        <thead>
-                          <tr>
-                            <th>Usuario</th>
-                            <th>Activo</th>
-                            <th>Bloqueado</th>
-                            <th>Permisos</th>
-                            <th></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr *ngFor="let user of users | filterBy:searchTerm:['username']">
-                            <td>{{ user.username }}</td>
-                            @if (user.isActivate) {
-                              <td class="text-success">
-                                <i class="fa-solid fa-user-check"></i>
-                              </td>
-                            } @else {
-                              <td class="text-danger">
-                                <i class="fa-solid fa-user-slash"></i>
-                              </td>                              
-                            }
-                             @if (user.isBlocked) {
-                              <td class="text-danger">
-                                <i class="fa-solid fa-user-lock"></i>
-                              </td>
-                            } @else {
-                              <td class="text-success">
-                                <i class="fa-solid fa-user-check"></i>
-                              </td>                              
-                            }
-                            <td>{{ user.roles | roleName}}</td>
-                            <td>
-                            @if (user.isActivate) {
-                              <button 
-                                class="btn btn-danger btn-sm mr-2" 
-                                (click)="desactivateUser(user)"
-                                data-bs-toggle="tooltip"
-                                data-placement="top"
-                                title="Desactivar">
-                                <i class="fa-solid fa-user-slash"></i>
-                              </button>
-                              <button 
-                                class="btn btn-primary btn-sm mr-2" 
-                                (click)="openChangePasswordModal(user)"
-                                data-bs-toggle="tooltip"
-                                data-placement="top"
-                                title="Cambiar Contraseña">
-                                <i class="fa fa-key"></i>
-                              </button>
-                              <button 
-                                class="btn btn-primary btn-sm mr-2" 
-                                data-bs-toggle="tooltip"
-                                data-placement="top"
-                                (click)="openUpdateRolesModal(user)"
-                                title="Editar Roles">
-                                <i class="fa-solid fa-user-gear"></i>
-                              </button>
-                              @if (user.isBlocked) {
-                                <button 
-                                  class="btn btn-success btn-sm mr-2" 
-                                  (click)="unblockUser(user)"
-                                  data-bs-toggle="tooltip"
-                                  data-placement="top"
-                                  title="Desbloquear">
-                                  <i class="fa-solid fa-unlock"></i>
-                                </button>
-                              }
-                            } @else {
+                  </div>
+
+                  <div class="form-check form-switch ml-auto">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      role="switch"
+                      id="toggleIsActivate"
+                      [(ngModel)]="showActiveProducts"
+                      (change)="onToggleChange()">
+                    <label class="form-check-label" for="toggleIsActivate">
+                      Mostrar activos
+                    </label>
+                  </div>
+
+                  <div class="ml-auto">
+                    <button class="btn btn-success" (click)="openUserModal()" data-toggle="modal" data-target="#userForm">
+                        <i class="fa-solid fa-user-plus"></i> Agregar Usuario
+                    </button> 
+                </div>
+      
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+
+                  <div class="table-responsive w-100" style="max-height: 72vh; overflow: auto;">
+
+                    <table class="table table-hover text-nowrap mb-0 w-100">
+
+                      <thead class="thread-light">
+                        <tr>
+                          <th>Usuario</th>
+                          <th>Activo</th>
+                          <th>Bloqueado</th>
+                          <th>Permisos</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr *ngFor="let user of users | filterBy:searchTerm:['username']; trackBy: trackByUser">
+                          <td>{{ user.username }}</td>
+                          @if (user.isActivate) {
+                            <td class="text-success">
+                              <i class="fa-solid fa-user-check"></i>
+                            </td>
+                          } @else {
+                            <td class="text-danger">
+                              <i class="fa-solid fa-user-slash"></i>
+                            </td>                              
+                          }
+                           @if (user.isBlocked) {
+                            <td class="text-danger">
+                              <i class="fa-solid fa-user-lock"></i>
+                            </td>
+                          } @else {
+                            <td class="text-success">
+                              <i class="fa-solid fa-user-check"></i>
+                            </td>                              
+                          }
+                          <td>{{ user.roles | roleName}}</td>
+                          <td>
+                          @if (user.isActivate) {
+                            <button 
+                              class="btn btn-danger btn-sm mr-2" 
+                              (click)="desactivateUser(user)"
+                              data-bs-toggle="tooltip"
+                              data-placement="top"
+                              title="Desactivar">
+                              <i class="fa-solid fa-user-slash"></i>
+                            </button>
+                            <button 
+                              class="btn btn-primary btn-sm mr-2" 
+                              (click)="openChangePasswordModal(user)"
+                              data-bs-toggle="tooltip"
+                              data-placement="top"
+                              title="Cambiar Contraseña">
+                              <i class="fa fa-key"></i>
+                            </button>
+                            <button 
+                              class="btn btn-primary btn-sm mr-2" 
+                              data-bs-toggle="tooltip"
+                              data-placement="top"
+                              (click)="openUpdateRolesModal(user)"
+                              title="Editar Roles">
+                              <i class="fa-solid fa-user-gear"></i>
+                            </button>
+                            @if (user.isBlocked) {
                               <button 
                                 class="btn btn-success btn-sm mr-2" 
-                                (click)="activateUser(user)"
+                                (click)="unblockUser(user)"
                                 data-bs-toggle="tooltip"
                                 data-placement="top"
-                                title="Activar">
-                                <i class="fa-solid fa-user-check"></i>
-                              </button>
-                              <button 
-                                class="btn btn-danger btn-sm mr-2" 
-                                (click)="deleteUser(user)"
-                                data-bs-toggle="tooltip"
-                                data-placement="top"
-                                title="Eliminar">
-                                <i class="fa-solid fa-trash"></i>
+                                title="Desbloquear">
+                                <i class="fa-solid fa-unlock"></i>
                               </button>
                             }
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <!-- /.card-body -->
+                          } @else {
+                            <button 
+                              class="btn btn-success btn-sm mr-2" 
+                              (click)="activateUser(user)"
+                              data-bs-toggle="tooltip"
+                              data-placement="top"
+                              title="Activar">
+                              <i class="fa-solid fa-user-check"></i>
+                            </button>
+                            <button 
+                              class="btn btn-danger btn-sm mr-2" 
+                              (click)="deleteUser(user)"
+                              data-bs-toggle="tooltip"
+                              data-placement="top"
+                              title="Eliminar">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          }
+                          </td>
+                        </tr>
+                      </tbody>
+
+                      <tfoot>
+                        <td colspan="8" class="text-right font-weight-bold">
+                          Total de usuarios: {{ (users | filterBy:searchTerm:['username']).length }}
+                        </td>
+                      </tfoot>
+
+                    </table>
                   </div>
-                  <!-- /.card -->
+
                 </div>
-              </div> 
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+          </div> 
+
               <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">

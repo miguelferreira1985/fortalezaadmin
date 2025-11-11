@@ -18,7 +18,8 @@ declare var $: any;
     SubcategoryFormComponent,
     FilterByPipe
   ],
-  templateUrl: './subcategory-component.html'
+  templateUrl: './subcategory-component.html',
+  styleUrl: 'subcategory-component.css'
 })
 export class SubcategoryComponent implements OnInit {
 
@@ -113,6 +114,10 @@ export class SubcategoryComponent implements OnInit {
           });
         }
       });
+  }
+
+  trackBySubcategory(index: number, item: Subcategory): number {
+    return item.id ?? index;
   }
 
 }

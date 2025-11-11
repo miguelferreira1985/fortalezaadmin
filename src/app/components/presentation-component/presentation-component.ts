@@ -17,7 +17,8 @@ declare var $: any;
     PresentationFormComponent,
     FilterByPipe
   ],
-  templateUrl: './presentation-component.html'
+  templateUrl: './presentation-component.html',
+  styleUrl: './presentation-component.css'
 })
 export class PresentationComponent {
 
@@ -102,6 +103,10 @@ export class PresentationComponent {
           });
         }
       });
+  }
+
+  trackByPresentation(index: number, item: Presentation): number {
+    return item.id ?? index;
   }
 
 }
