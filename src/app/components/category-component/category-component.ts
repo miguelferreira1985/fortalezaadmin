@@ -6,6 +6,7 @@ import { CategoryService } from '../../services/category.service';
 import { CategoryFormComponent } from '../forms/category-form-component/category-form';
 import { NotificationService } from '../../services/notification.service';
 import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
+import { HasRoleDirective } from '../../core/has-role.directive';
 
 declare var $: any;
 
@@ -15,9 +16,11 @@ declare var $: any;
     CommonModule,
     FormsModule, 
     CategoryFormComponent,
-    FilterByPipe
+    FilterByPipe,
+    HasRoleDirective
   ],
-  templateUrl: './category-component.html'
+  templateUrl: './category-component.html',
+  styleUrl: './category-component.css'
 })
 export class CategoryComponent {
 
@@ -101,6 +104,10 @@ export class CategoryComponent {
           });
         }
       });
+  }
+
+  trackByCategory(index: number, item: Category): number {
+    return item.id ?? index;
   }
 
 }

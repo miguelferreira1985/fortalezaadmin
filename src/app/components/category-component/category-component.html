@@ -13,75 +13,97 @@
       <!-- Main content -->
       <div class="content">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                  <div class="card">
-                    <div class="card-header d-flex w-100 align-items-center">
-                      <h3 class="card-title my-auto">Lista de Categorias</h3>
 
-                      <div class="input-group input-group-sm mx-auto" style="width: 600px;">
-                        <input 
-                          type="text" 
-                          name="table_search" 
-                          class="form-control" 
-                          placeholder="Buscar categoría..."
-                          [(ngModel)]="searchTerm">
-                        <div class="input-group-append">
-                          <button type="submit" class="btn btn-default">
-                            <i class="fas fa-search"></i>
-                          </button>
-                        </div>
-                      </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header d-flex w-100 align-items-center">
+                  <h3 class="card-title my-auto">Lista de Categorías</h3>
 
-
-                      <div class="ml-auto">
-                          <button class="btn btn-success" (click)="openCreateModal()" data-toggle="modal" data-target="#categoryForm">
-                              <i class="fa-solid fa-circle-plus"></i> Agregar Categoría
-                          </button> 
-                      </div>
-          
+                  <div class="input-group input-group-sm mx-auto" style="width: 600px;">
+                    <input 
+                      type="text" 
+                      name="table_search" 
+                      class="form-control" 
+                      placeholder="Buscar categoría..."
+                      [(ngModel)]="searchTerm">
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-default">
+                        <i class="fas fa-search"></i>
+                      </button>
                     </div>
-                    <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0" style="height: 600px;">
-                      <table class="table table-head-fixed text-nowrap">
-                        <thead>
-                          <tr>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr *ngFor="let category of categories | filterBy:searchTerm:['name']">
-                            <td>{{ category.name }}</td>
-                            <td>{{ category.description }}</td>
-                            <td>
-                              <button 
+                  </div>
+
+                  <div class="ml-auto">
+                      <button 
+                        *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
+                        class="btn btn-success" 
+                        (click)="openCreateModal()" 
+                        data-toggle="modal" data-target="#categoryForm">
+
+                        <i class="fa-solid fa-circle-plus"></i> Agregar Categoía
+
+                      </button> 
+                  </div>
+      
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+
+                  <div class="table-responsive w-100" style="max-height: 72vh; overflow: auto;">
+
+                    <table class="table table-hover text-nowrap mb-0 w-100">
+
+                      <thead class="thread-light">
+                        <tr>
+                          <th style="position: sticky; top: 0; background: white; z-index: 10;">Nombre</th>
+                          <th style="position: sticky; top: 0; background: white; z-index: 10;">Descripción</th>
+                          <th style="position: sticky; top: 0; background: white; z-index: 10;"></th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                          <tr 
+                          *ngFor="let category of categories | filterBy:searchTerm:['name']; trackBy: trackByCategory">
+
+                          <td>{{ category.name | uppercase }}</td>
+                          <td>{{ category.description }}</td>
+                          <td>
+                            <button 
                               class="btn btn-warning btn-sm mr-2" 
                               (click)="openEditModal(category)"
                               data-bs-toggle="tooltip"
                               data-placement="top"
                               title="Editar">
-                                  <i class="fa-solid fa-file-pen"></i>
+                              <i class="fa-solid fa-file-pen"></i>
                             </button>
-                              <button 
-                                class="btn btn-danger btn-sm mr-2" 
-                                (click)="deleteCategory(category)"
-                                data-bs-toggle="tooltip"
-                                data-placement="top"
-                                title="Eliminar">
-                                <i class="fa-solid fa-trash"></i>
-                              </button>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <!-- /.card-body -->
+                            <button *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
+                              class="btn btn-danger btn-sm mr-2" 
+                              (click)="deleteCategory(category)"
+                              data-bs-toggle="tooltip"
+                              data-placement="top"
+                              title="Eliminar">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+
+                      <tfoot>
+                        <td colspan="8" class="text-right font-weight-bold">
+                          Total de categorías: {{ (categories | filterBy:searchTerm:['name']).length }}
+                        </td>
+                      </tfoot>
+
+                    </table>
                   </div>
-                  <!-- /.card -->
+
                 </div>
-              </div> 
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+          </div> 
 
               <!-- Form Modal -->
               <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">

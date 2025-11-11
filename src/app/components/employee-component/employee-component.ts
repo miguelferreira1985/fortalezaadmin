@@ -9,6 +9,7 @@ import { EmployeeService } from '../../services/employee.service';
 import { NotificationService } from '../../services/notification.service';
 import { EmployeeRequestDto } from '../../models/employee-request-dto';
 import { UserService } from '../../services/user.service';
+import { HasRoleDirective } from '../../core/has-role.directive';
 
 declare var $: any;
 
@@ -19,9 +20,11 @@ declare var $: any;
     FormsModule,
     EmployeeFormComponent,
     BooleanToTextPipe,
-    FilterByPipe
+    FilterByPipe,
+    HasRoleDirective
   ],
-  templateUrl: './employee-component.html'
+  templateUrl: './employee-component.html', 
+  styleUrl: './employee-component.css'
 })
 export class EmployeeComponent implements OnInit {
 
@@ -141,6 +144,10 @@ export class EmployeeComponent implements OnInit {
           });
         }
       });
+  }
+
+  trackByEmployee(index: number, item: Employee): number {
+    return item.id ?? index;
   }
 
 }

@@ -6,6 +6,7 @@ import { Client } from '../../models/client';
 import { ClientService } from '../../services/client.service';
 import { NotificationService } from '../../services/notification.service';
 import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
+import { HasRoleDirective } from '../../core/has-role.directive';
 
 declare var $: any;
 
@@ -15,7 +16,8 @@ declare var $: any;
     CommonModule,
     FormsModule,
     ClientFormComponent,
-    FilterByPipe
+    FilterByPipe,
+    HasRoleDirective
   ],
   templateUrl: './client-component.html'
 })
@@ -89,5 +91,9 @@ export class ClientComponent implements OnInit {
         }
       });
     }
+  }
+
+  trackByClient(index: number, item: Client): number {
+    return item.id ?? index;
   }
 }
