@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { EmployeeFormComponent } from '../forms/employee-form-component/employee-form-component';
-import { BooleanToTextPipe } from '../../shared/pipes/boolean-to-text-pipe';
 import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
 import { Employee } from '../../models/employee';
 import { EmployeeService } from '../../services/employee.service';
@@ -19,7 +18,6 @@ declare var $: any;
     CommonModule,
     FormsModule,
     EmployeeFormComponent,
-    BooleanToTextPipe,
     FilterByPipe,
     HasRoleDirective
   ],

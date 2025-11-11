@@ -29,10 +29,6 @@ export class ProductService {
         .pipe(map(res => res.data));
     }
 
-    getInventoryMovementByProdcut(id: number): Observable<ApiResponse<InventoryMovement[]>> {
-      return this.http.get<ApiResponse<InventoryMovement[]>>(`${this.apiUrl}${this.apiPath}/${id}/inventory-movement`);
-    }
-
     getInventoryValue(): Observable<number> {
       return this.http.get<number>(`${this.apiUrl}${this.apiPath}/inventory-value`);
     }

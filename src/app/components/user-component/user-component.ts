@@ -182,7 +182,7 @@ export class UserComponent implements OnInit {
   }
 
   onUpdateRoles(user: User, updateRolesRequest: UpdateRolesRequestDto): void {
-    this.notify.confirm('¿Estás seguro?', `¿Quieres actualizar los permisos de el usuario "${user.username}?`)
+    this.notify.confirm('¿Estás seguro?', `¿Quieres actualizar los permisos de el usuario "${user.username}"?`)
       .then((result) => {
         if (result.isConfirmed) {
           let id: number = user.id ?? 0;

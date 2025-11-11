@@ -3,9 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { NgSelectComponent } from "@ng-select/ng-select";
 import { Product } from '../../models/product';
 import { InventoryMovement } from '../../models/inventory-movement';
-import { ProductService } from '../../services/product.service';
 import { FormsModule } from '@angular/forms';
 import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
+import { InventoryMovementService } from '../../services/inventory-movement.service';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-inventory-movement-component',
@@ -26,11 +27,13 @@ export class InventoryMovementComponent implements OnInit {
   searchTerm: string = '';
 
   constructor(
-    private productService: ProductService
+    private productService: ProductService,
+    private inventoryMovementService: InventoryMovementService
   ) {}
 
   ngOnInit(): void {
     this.loadProducts();
+    this.loadInitialMovements();
   }
 
   loadProducts(): void {
@@ -40,15 +43,22 @@ export class InventoryMovementComponent implements OnInit {
     });
   }
 
-  loadMovements(productId: number | null): void {
-    if (!productId) return;
-    this.productService.getInventoryMovementByProdcut(productId).subscribe({
-      next: (res) => {
-        this.movements = res.data;
-      },
-      error(err) {
-        console.error(err);
-      }
+  loadInitialMovements(): void {
+    this.inventoryMovementService.getDevolutionsAndAdujustments().subscribe({
+      next: (res) => this.movements = res.data,
+      error: (err) => console.error(err)
+    })
+  }
+
+  onProductChange(): void {
+    if (!this.selectedProductId) {
+      this.loadInitialMovements();
+      return;
+    }
+
+    this.inventoryMovementService.getByProdcut(this.selectedProductId).subscribe({
+      next: (res) => this.movements = res.data,
+      error: (err) => console.error(err)
     });
   }
 

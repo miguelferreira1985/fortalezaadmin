@@ -4,9 +4,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { User } from '../../../models/user';
-import { UserRequestDto } from '../../../models/user-request-dto';
 import { UpdateRolesRequestDto } from '../../../models/update-roles-requets-dto';
 import { CustomValidators } from '../../../custom-validators';
+
+declare var $: any;
 
 @Component({
   selector: 'app-update-roles-form-component',
