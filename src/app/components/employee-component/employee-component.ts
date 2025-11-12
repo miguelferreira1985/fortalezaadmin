@@ -51,6 +51,7 @@ export class EmployeeComponent implements OnInit {
 
   openEditModal(employee: Employee) {
     this.selectedEmployee = employee;
+    this.closeEmployeeDetails();
     $('#employeeModal').modal('show');
   }
 
