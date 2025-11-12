@@ -64,9 +64,13 @@
                           @if (subcategory.description) {
                             <td>{{ subcategory.description }}</td>
                           } @else {
-                            <td>Sin descripción</td>
+                            <td>Sin Descripción</td>
                           }
-                          <td>{{ subcategory.category.name| uppercase }}</td>
+                          @if (subcategory.category) {
+                            <td>{{ subcategory.category.name| uppercase }}</td>
+                          } @else {
+                            <td>Sin Categoría</td>
+                          }
                           <td>
                             <button 
                             class="btn btn-warning btn-sm mr-2"
