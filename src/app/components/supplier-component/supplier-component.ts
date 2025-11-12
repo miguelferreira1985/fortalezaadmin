@@ -94,7 +94,7 @@ export class SupplierComponent {
   }
 
   deleteSupplier(supplier: Supplier): void {
-    this.notify.confirm('¿Estás seguro?', `¿Quieres elimanr el proveedror "${supplier.name}"?. Esta acción es irreversible.`)
+    this.notify.confirm('¿Estás seguro?', `¿Quieres eliminar el proveedror "${supplier.name}"?.`)
     .then((result) => {
       if (result.isConfirmed) {
         let id: number = supplier.id ?? 0;

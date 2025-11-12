@@ -9,7 +9,7 @@
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label for="code">Código*</label>
+        <label for="code">Clave*</label>
         <input type="text" class="form-control" id="code" name="code" formControlName="code">
         <small class="text-danger" *ngIf="c('code').touched && c('code').invalid">El código es obligatorio.</small>
       </div>
@@ -160,9 +160,10 @@
       <thead class="table-light">
         <tr>
           <th>Proveedor</th>
+          <th>Clave de Proveedor</th>
           <th>Costo sin IVA</th>
           <th>Costo con IVA</th>
-          <th>Descuento (%)</th>
+          <th>Desc. (%)</th>
           <th></th>
         </tr>
       </thead>
@@ -177,13 +178,21 @@
               placeholder="Seleccionar proveedor">
             </ng-select>
           </td>
-          <td style="width: 20%">
+          <td style="width: 30%">
+            <input type="text" class="form-control" formControlName="supplierProductCode">
+            @if (group.get('supplierProductCode')?.touched && group.get('supplierProductCode')?.hasError('required')) {
+              <small class="text-danger">
+                El código del producto es obligatorio.
+              </small>
+            }
+          </td>
+          <td style="width: 10%">
             <input type="number" class="form-control" formControlName="supplierCostWithoutTaxes" min="0" step="0.01">
           </td>
-          <td style="width: 20%">
+          <td style="width: 10%">
             <input type="number" class="form-control" formControlName="supplierCostWithTaxes" min="0" step="0.01">
           </td>
-          <td style="width: 20%">
+          <td style="width: 10%">
             <input type="number" class="form-control" formControlName="discount" min="0" step="0.01">
           </td>
           <td style="width: 10%" class="text-center">

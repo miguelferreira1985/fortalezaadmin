@@ -33,7 +33,7 @@
                         </div>
                       </div>
 
-                      <div class="form-check form-switch ml-auto">
+                      <!-- <div class="form-check form-switch ml-auto">
                         <input
                           class="form-check-input"
                           type="checkbox"
@@ -42,7 +42,7 @@
                         <label class="form-check-label" for="toggleIsLowStock">
                           Mostrar stock bajo
                         </label>
-                      </div>
+                      </div> -->
 
                       <div class="form-check form-switch ml-auto">
                         <input
@@ -79,7 +79,7 @@
 
                           <thead class="thread-light">
                             <tr class="text-center">
-                              <th style="position: sticky; top: 0; background: white; z-index: 10;">Código</th>
+                              <th style="position: sticky; top: 0; background: white; z-index: 10;">Clave</th>
                               <th style="position: sticky; top: 0; background: white; z-index: 10;">Nombre</th>
                               <th style="position: sticky; top: 0; background: white; z-index: 10;">Costo</th>
                               <th style="position: sticky; top: 0; background: white; z-index: 10;">Precio</th>
@@ -91,9 +91,11 @@
                           </thead>
 
                           <tbody>
-                              <tr class="text-center"
+                              <!-- <tr class="text-center"
                               *ngFor="let product of products | filterBy:searchTerm:['code', 'name']; trackBy: trackByProduct"
-                              [ngClass]="{'table-danger font-weight-bold': product.isBelowOrEqualMinimumStock}">
+                              [ngClass]="{'table-danger font-weight-bold': product.isBelowOrEqualMinimumStock}"> -->
+                              <tr class="text-center"
+                              *ngFor="let product of products | filterBy:searchTerm:['code', 'name']; trackBy: trackByProduct">
   
                               <td class="text-truncate" style="max-width: 150px;">{{ product.code | uppercase }}</td>
                               <td class="text-truncate" style="max-width: 250px;">{{ product.name }}</td>
@@ -183,7 +185,7 @@
 
               <!-- Form Modal -->
               <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-dialog modal-xl" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title" id="productModalLabel">
@@ -207,7 +209,7 @@
 
               <!-- Form Modal -->
               <div class="modal fade" id="updateStockModal" tabindex="-1" role="dialog" aria-labelledby="updateStockModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-md" role="document">
+                <div class="modal-dialog modal-lg" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title" id="updateStockModalLabel">
@@ -251,7 +253,7 @@
                           </div>
                           <div class="col-md-6">
                             <div class="form-group">
-                              <strong>Código:</strong>
+                              <strong>Clave:</strong>
                               <p>{{ productForDetails.code }}</p>
                             </div>
                           </div>
@@ -285,13 +287,13 @@
                           </div>
                         </div>
                         <div class="row">
-                          <div class="col-md-6">
+                          <div *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']" class="col-md-6">
                             <div class="form-group">
                               <strong>Gananancia por Producto:</strong>
                               <p>{{ productForDetails.profitMargin | currency }}</p>
                             </div>
                           </div>
-                          <div class="col-md-6">
+                          <div *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']" class="col-md-6">
                             <div class="form-group">
                               <strong>Porcentaje de Ganancia:</strong>
                               <p>{{ profitPercentage | number:'1.2-2' }} %</p>
@@ -361,19 +363,25 @@
                                 <p>Sin Proveedores</p>
                             </div>
                           } @else {
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                               <strong>Proveedores:</strong>
                               <div *ngFor="let supplier of productForDetails.supplierCosts">
                                 <p>{{ supplier.supplierName }}</p>
                               </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
+                              <strong>Clave Proveedor:</strong>
+                              <div *ngFor="let supplier of productForDetails.supplierCosts">
+                                <p>{{ supplier.supplierProductCode | uppercase }}</p>
+                              </div>
+                            </div>
+                            <div class="col-md-3">
                               <strong>Costo Proveedor:</strong>
                               <div *ngFor="let supplier of productForDetails.supplierCosts">
                                 <p>{{ supplier.cost | currency}}</p>
                               </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                               <strong>Descuento:</strong>
                               <div *ngFor="let supplier of productForDetails.supplierCosts">
                                 <p>{{ supplier.discount | percent}}</p>

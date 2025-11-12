@@ -7,6 +7,7 @@ import { SubcategoryFormComponent } from '../forms/subcategory-form-component/su
 import { SubcategoryRequestDto } from '../../models/subcategory-request-dto';
 import { NotificationService } from '../../services/notification.service';
 import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
+import { HasRoleDirective } from '../../core/has-role.directive';
 
 declare var $: any;
 
@@ -16,7 +17,8 @@ declare var $: any;
     CommonModule,
     FormsModule,
     SubcategoryFormComponent,
-    FilterByPipe
+    FilterByPipe,
+    HasRoleDirective
   ],
   templateUrl: './subcategory-component.html',
   styleUrl: 'subcategory-component.css'

@@ -43,10 +43,6 @@ export class EmployeeComponent implements OnInit {
     this.getEmployees();
   }
 
-  onToggleChange(): void {
-    this.getEmployees();
-  }
-
   openCreateModal(): void {
     this.selectedEmployee = null;
     this.employeeFormModal.resetFormAndModal();
@@ -108,33 +104,15 @@ export class EmployeeComponent implements OnInit {
     }
   }
 
-  desactivateEmployee(employee: Employee): void {
-    this.notify.confirm('¿Estás seguro?', `¿Quieres desactivar el empleado "${employee.firstName} ${employee.lastName}"?`)
+  deleteEmployee(employee: Employee): void {
+    this.notify.confirm('¿Estás seguro?', `¿Quieres eliminar el empleado "${employee.firstName} ${employee.lastName}"?`)
       .then((result) => {
         if (result.isConfirmed) {
           let id: number = employee.id ?? 0;
-          this.employeeService.desactivateEmployee(id).subscribe({
+          this.employeeService.deleteEmployee(id).subscribe({
             next: () => {
               this.getEmployees();
-              this.notify.success('¡Empleado descativado!');
-            },
-            error(err) {
-              console.error(err);
-            }
-          });
-        }
-      });
-  }
-
-  activateEmployee(employee: Employee): void {
-    this.notify.confirm('¿Estás seguro?', `¿Quieres activar el empleado "${employee.firstName} ${employee.lastName}"?`)
-      .then((result) => {
-        if (result.isConfirmed) {
-          let id: number = employee.id ?? 0;
-          this.employeeService.activateEmployee(id).subscribe({
-            next: () => {
-              this.getEmployees();
-              this.notify.success('¡Empleado activado!');
+              this.notify.success('¡Empleado eliminado!');
             },
             error(err) {
               console.error(err);
