@@ -6,6 +6,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { Employee } from '../../../models/employee';
 import { EmployeeRequestDto } from '../../../models/employee-request-dto';
 import { UserRequestDto } from '../../../models/user-request-dto';
+import { CustomValidators } from '../../../custom-validators';
 
 declare var $: any;
 
@@ -25,6 +26,8 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
   @Input() employee: Employee | null = null;
   @Output() saveEmployee = new EventEmitter<EmployeeRequestDto>();
 
+  private readonly passwordMatchValidator = CustomValidators.matchFields('password','confirmPassword');
+
   form!: FormGroup;
   createUser: boolean = false;
   roles = [
@@ -32,6 +35,9 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
     { id: 'manager', name: 'Gerente'},
     { id: 'admin', name: 'Administrador'}
   ];
+
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
 
   constructor(private fb: FormBuilder) {}
 
@@ -46,6 +52,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
       ssn: [''],
       username: [''],
       password: [''],
+      confirmPassword: [''],
       roles: [[]],
       createUser: [false]
     });
@@ -55,6 +62,10 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
     this.c('createUser').valueChanges.subscribe((checked: boolean) => {
       this.applyUserValidators(checked);
     });
+
+    this.c('password').valueChanges.subscribe(() => {
+      this.c('confirmPassword').updateValueAndValidity({ onlySelf: true, emitEvent: false });
+    })
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -70,6 +81,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
         ssn: e.ssn,
         username: null,
         password: null,
+        confirmPassword: null,
         roles: [],
         createUser: false
       });
@@ -118,6 +130,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
       ssn: '',
       username: null,
       password: null,
+      confirmPassword: null,
       roles: []
     });
   }
@@ -126,28 +139,49 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
     return this.form.get(name)!;
   }
 
+  togglePasswordVisibility(field: 'new' | 'confirm'): void {
+    if (field === 'new') {
+      this.showPassword = !this.showPassword;
+    } else {
+      this.showConfirmPassword = !this.showConfirmPassword;
+    }
+  }
+
   private applyUserValidators(enabled: boolean): void {
     const username = this.c('username');
     const password = this.c('password');
+    const confirmPassword = this.c('confirmPassword');
     const roles    = this.c('roles');
   
     if (enabled) {
       username.setValidators([Validators.required]);
       password.setValidators([Validators.required, Validators.minLength(8)]);
+      confirmPassword.setValidators([Validators.required]);
       roles.setValidators([Validators.required]);
+
+      this.form.addValidators(this.passwordMatchValidator);
     } else {
       username.clearValidators();
       password.clearValidators();
+      confirmPassword.clearValidators();
       roles.clearValidators();
+
+      confirmPassword.setErrors(null);
   
       username.setValue('');
       password.setValue('');
+      confirmPassword.setValue('');
       roles.setValue([]);
+
+      this.form.removeValidators(this.passwordMatchValidator);
     }
   
     username.updateValueAndValidity({ emitEvent: false });
     password.updateValueAndValidity({ emitEvent: false });
+    confirmPassword.updateValueAndValidity({ emitEvent: false });
     roles.updateValueAndValidity({ emitEvent: false });
+
+    this.form.updateValueAndValidity({ emitEvent: false });
   }
 
 }
