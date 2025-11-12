@@ -18,14 +18,9 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  getUsers(isActivate?: boolean): Observable<User[]> {
-    let params = new HttpParams();
-    if (isActivate !== undefined) {
-      params = params.set('isActivate', isActivate.toString());
-    }
+  getUsers(): Observable<User[]> {
     return this.http
-      .get<ApiResponse<User[]>>(`${this.apiUrl}${this.apiPath}`, { params })
-      .pipe(map(res => res.data));
+      .get<ApiResponse<User[]>>(`${this.apiUrl}${this.apiPath}`).pipe(map(res => res.data));
   }
 
   activateUser(id: number): Observable<User> {

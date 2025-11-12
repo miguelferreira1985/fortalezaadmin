@@ -36,10 +36,6 @@ export class ClientComponent implements OnInit {
     this.getClients();
   }
 
-  onTooggleChange(): void {
-    this.getClients();
-  }
-
   openCreateModal(): void {
     this.selectedClient = null;
     this.clientFormModal.resetFormAndModal();
@@ -91,6 +87,24 @@ export class ClientComponent implements OnInit {
         }
       });
     }
+  }
+
+  deleteClient(client: Client): void {
+    this.notify.confirm('¿Estás seguro?', `¿Quieres eliminar el cliente "${client.name}"?`)
+      .then((result) => {
+        if (result.isConfirmed) {
+          let id: number = client.id ?? 0;
+          this.clientService.deleteClient(id).subscribe({
+            next: () => {
+              this.getClients();
+              this.notify.success('Cliente eliminado!');
+            },
+            error(err) {
+              console.error(err);
+            }
+          });
+        }
+      });
   }
 
   trackByClient(index: number, item: Client): number {

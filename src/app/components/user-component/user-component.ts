@@ -38,7 +38,6 @@ export class UserComponent implements OnInit {
   users: User[] = [];
   selectedUser: User | null = null;
   searchTerm: string = '';
-  showActiveProducts: boolean = true;
 
   constructor(
     private userService: UserService, 
@@ -80,7 +79,7 @@ export class UserComponent implements OnInit {
   }
 
   getUsers(): void {
-    this.userService.getUsers(this.showActiveProducts).subscribe({
+    this.userService.getUsers().subscribe({
       next: (data) => {
         this.users = data;
       },

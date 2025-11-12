@@ -34,8 +34,8 @@ export class SupplierService {
     return this.http.put<ApiResponse<Supplier>>(`${this.apiUrl}${this.apiPath}/${id}`, supplier);
   }
 
-  deleteSupplier(id: number): Observable<ApiResponse<any>> {
-    return this.http.delete<ApiResponse<any>>(`${this.apiUrl}${this.apiPath}/${id}`);
+  deleteSupplier(id: number): Observable<ApiResponse<Supplier>> {
+    return this.http.patch<ApiResponse<Supplier>>(`${this.apiUrl}${this.apiPath}/${id}/deactivate`, null);
   }
   
 }

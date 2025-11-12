@@ -161,6 +161,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
     const suppliersForApi = (this.supplierCosts.controls || [])
     .map(g => ({
       supplierId: g.get('supplierId')?.value,
+      supplierProductCode: g.get('supplierProductCode')?.value,
       cost: Number(g.get('supplierCostWithTaxes')?.value || 0),
       discount: Number(g.get('discount')?.value || 0)
     }))
@@ -334,10 +335,11 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
     const rows = list.map((sc: any) => {
       const supplierId = Number(sc.supplierId ?? sc.supplier?.id ?? null);
+      const supplierProductCode = sc.supplierProductCode;
       const withTaxes = Number(sc.cost) || 0;
       const withoutTaxes = withTaxes > 0 ? this.round2(withTaxes / (1 + this.IVA_RATE)) : 0;
       const discount = Number(sc.discount) || 0;
-      return this.createSupplierRow({ supplierId, withTaxes, withoutTaxes, discount });
+      return this.createSupplierRow({ supplierId, supplierProductCode, withTaxes, withoutTaxes, discount });
     });
 
     const fa = this.fb.array(rows, this.uniqueSuppliersValidator);
@@ -357,12 +359,14 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
   private createSupplierRow(init?: {
     supplierId?: number | null;
+    supplierProductCode: string;
     withTaxes?: number;
     withoutTaxes?: number;
     discount?: number;
   }): FormGroup {
     const row = this.fb.group({
       supplierId: [init?.supplierId ?? null],
+      supplierProductCode: [{ value: init?.supplierProductCode ?? '', disabled: !init?.supplierId }, Validators.required],
       supplierCostWithoutTaxes: [{ value: init?.withoutTaxes ?? 0, disabled: !init?.supplierId }],
       supplierCostWithTaxes:   [{ value: init?.withTaxes ?? 0,   disabled: !init?.supplierId }],
       discount:                [{ value: init?.discount ?? 0,    disabled: !init?.supplierId }]
@@ -391,7 +395,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
     row.get('discount')?.valueChanges.subscribe(() => this.calculateAverageCost());
   
     const toggleRow = (enabled: boolean) => {
-      const fields = ['supplierCostWithoutTaxes','supplierCostWithTaxes','discount'] as const;
+      const fields = ['supplierProductCode','supplierCostWithoutTaxes','supplierCostWithTaxes','discount'] as const;
       for (const f of fields) {
         const ctrl = row.get(f)!;
         enabled ? ctrl.enable({ emitEvent: false }) : ctrl.disable({ emitEvent: false });
@@ -401,6 +405,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
         costCtrl.setValidators([Validators.required, Validators.min(0.01)]);
       } else {
         costCtrl.clearValidators();
+        row.get('supplierProductCode')?.setValue('', { emitEvent: false });
         row.get('supplierCostWithoutTaxes')?.setValue(0, { emitEvent: false });
         row.get('supplierCostWithTaxes')?.setValue(0, { emitEvent: false });
         row.get('discount')?.setValue(0, { emitEvent: false });

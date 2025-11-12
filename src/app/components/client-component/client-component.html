@@ -37,7 +37,6 @@
 
                   <div class="ml-auto">
                       <button 
-                        *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
                         class="btn btn-success" 
                         (click)="openCreateModal()" 
                         data-toggle="modal" data-target="#clientForm">
@@ -79,7 +78,9 @@
                                   <i class="fa-solid fa-file-pen"></i>
                             </button>
                             <button 
+                              *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
                               class="btn btn-danger btn-sm mr-2" 
+                              (click)="deleteClient(client)"
                               data-bs-toggle="tooltip"
                               data-placement="top"
                               title="Eliminar">
