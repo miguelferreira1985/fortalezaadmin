@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Supplier } from '../models/supplier';
 import { ApiResponse } from '../models/api-response';
+import { Product } from '../models/product';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,15 @@ export class SupplierService {
 
   deleteSupplier(id: number): Observable<ApiResponse<Supplier>> {
     return this.http.patch<ApiResponse<Supplier>>(`${this.apiUrl}${this.apiPath}/${id}/deactivate`, null);
+  }
+
+  getProductsBySupplier(id: number, isActivate?: boolean): Observable<ApiResponse<Product[]>> {
+    let params = new HttpParams();
+    if (isActivate !== undefined) {
+      params = params.set('isActivate', isActivate.toString());
+    }
+    return this.http
+      .get<ApiResponse<Product[]>>(`${this.apiUrl}${this.apiPath}/${id}/products`, { params });
   }
   
 }

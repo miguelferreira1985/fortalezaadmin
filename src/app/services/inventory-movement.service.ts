@@ -15,7 +15,7 @@ export class InventoryMovementService {
 
   constructor(private http: HttpClient) {}
 
-  getByProdcut(id: number): Observable<ApiResponse<InventoryMovement[]>> {
+  getByProduct(id: number): Observable<ApiResponse<InventoryMovement[]>> {
     return this.http.get<ApiResponse<InventoryMovement[]>>(`${this.apiUrl}${this.apiPath}/product/${id}`);
   }
 

@@ -11,6 +11,9 @@ import { StockFormComponent } from "../forms/stock-form-component/stock-form-com
 import { StokcRequestDto } from '../../models/stock-request-dto';
 import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
 import { HasRoleDirective } from '../../core/has-role.directive';
+import { NgSelectComponent } from "@ng-select/ng-select";
+import { Supplier } from '../../models/supplier';
+import { SupplierService } from '../../services/supplier.service';
 
 declare var $: any;
 
@@ -21,8 +24,9 @@ declare var $: any;
     FormsModule,
     ProductFormComponent,
     StockFormComponent,
-    FilterByPipe, 
-    HasRoleDirective
+    FilterByPipe,
+    HasRoleDirective,
+    NgSelectComponent
 ],
   templateUrl: './product-component.html',
   styleUrl: './product-component.css'
@@ -34,21 +38,30 @@ export class ProductComponent implements OnInit {
 
   private readonly IVA_RATE = 0.16; // 16%
   products: Product[] = [];
+  suppliers: Supplier[] = [];
   selectedProduct: Product | null = null;
+  selectedSupplierId: number | null = null;
   productForDetails: Product | null = null;
   searchTerm: string = '';
   profitPercentage: number = 0;
   costWithoutTaxes: number = 0;
   showActiveProducts: boolean = true;
 
-  constructor(private productService: ProductService, private notify: NotificationService) {}
+  constructor(
+    private productService: ProductService,
+    private supplierService: SupplierService, 
+    private notify: NotificationService) {}
 
   ngOnInit(): void {
-    this.getProducts();
+    this.showActiveProducts = true;
+    this.selectedSupplierId = null;
+
+    this.loadSuppliers();
+    this.loadProducts();
   }
 
   onToggleChange(): void {
-    this.getProducts();
+    this.loadProducts();
   }
 
   openCreateModal(): void {
@@ -106,22 +119,51 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  getProducts(): void {
-    this.productService.getProducts(this.showActiveProducts).subscribe({
-      next: (data) => {
-        this.products = data;
-      },
-      error: (error) => {
-        console.error('Error al obtener los productos:', error);
-      }
+  loadSuppliers(): void {
+    this.supplierService.getSuppliers(true).subscribe({
+      next: (data) => this.suppliers = data,
+      error: (err) => console.error(err)
     });
+  }
+
+  loadProducts(): void {
+
+    if (this.selectedSupplierId) {
+      this.supplierService.getProductsBySupplier(this.selectedSupplierId, this.showActiveProducts).subscribe({
+        next: (res) => {
+          this.products = res.data ?? [];
+        },
+        error: (error) => {
+          console.error('Error al obtener los productos:', error);
+        }
+      });
+    } else {
+      this.productService.getProducts(this.showActiveProducts).subscribe({
+        next: (data) => {
+          this.products = data ?? [];
+        },
+        error: (error) => {
+          console.error('Error al obtener los productos:', error);
+        }
+      });
+    }
+  }
+
+  onSupplierChange(supplierId: number | null): void {
+    this.selectedSupplierId = supplierId;
+    this.loadProducts();
+  }
+
+  onClearSupplier(): void {
+    this.selectedSupplierId = null;
+    this.loadProducts();
   }
 
   onProductSaved(productRequestDto: ProductRequestDto): void {
     if (productRequestDto.id) {
       this.productService.updateProduct(productRequestDto.id, productRequestDto).subscribe({
         next: (res) => {
-          this.getProducts()
+          this.loadProducts()
           this.notify.success('¡Producto actualizado!', res?.message);
           this.closeProductForm();
         }, 
@@ -132,7 +174,7 @@ export class ProductComponent implements OnInit {
     } else {
       this.productService.createProduct(productRequestDto).subscribe({
         next: (res) => {
-          this.getProducts();
+          this.loadProducts();
           this.notify.success('¡Producto agregado!', res?.message);
           this.closeProductForm()
         },
@@ -147,7 +189,7 @@ export class ProductComponent implements OnInit {
     if (product.id) {
       this.productService.updateStock(product.id, stockRequestDto).subscribe({
         next: (res) => {
-          this.getProducts();
+          this.loadProducts();
           this.notify.success("¡Stock actualizado!", res?.message);
           this.closeUpdateStockModal()
         },
@@ -165,7 +207,7 @@ export class ProductComponent implements OnInit {
           let id: number = product.id ?? 0;
           this.productService.desactivateProduct(id).subscribe({
             next: () => {
-              this.getProducts();
+              this.loadProducts();
               this.notify.success('¡Producto desactivado!');
             },
             error(err) {
@@ -183,7 +225,7 @@ export class ProductComponent implements OnInit {
           let id: number = product.id ?? 0;
           this.productService.activateProduct(id).subscribe({
             next: () => {
-              this.getProducts();
+              this.loadProducts();
               this.notify.success('¡Producto activado!');
             },
             error(err) {

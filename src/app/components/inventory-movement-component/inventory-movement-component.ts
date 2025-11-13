@@ -56,7 +56,7 @@ export class InventoryMovementComponent implements OnInit {
       return;
     }
 
-    this.inventoryMovementService.getByProdcut(this.selectedProductId).subscribe({
+    this.inventoryMovementService.getByProduct(this.selectedProductId).subscribe({
       next: (res) => this.movements = res.data,
       error: (err) => console.error(err)
     });

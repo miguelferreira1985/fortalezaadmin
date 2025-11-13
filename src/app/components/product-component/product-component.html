@@ -6,6 +6,24 @@
               <h1 class="m-0">Gestión de Productos</h1>
             </div><!-- /.col -->
           </div><!-- /.row -->
+
+          <div class="row">
+            <div class="col-md-6">
+              <label>Seleccionar Provedor</label>
+              <ng-select
+                [items]="suppliers"
+                bindLabel="name"
+                bindValue="id"
+                placeholder="Seleccione un proveedor"
+                [(ngModel)]="selectedSupplierId"
+                (clearable)="true"
+                (ngModelChange)="onSupplierChange($event)"
+                (clear)="onClearSupplier()">
+
+              </ng-select>
+            </div>
+          </div>
+
         </div><!-- /.container-fluid -->
       </div>
       <!-- /.content-header -->
