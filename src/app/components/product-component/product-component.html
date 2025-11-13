@@ -91,7 +91,7 @@
                     <!-- /.card-header -->
                     <div class="card-body p-0">
 
-                      <div class="table-responsive w-100" style="max-height: 72vh; overflow: auto;">
+                      <div class="table-responsive w-100" style="max-height: 60vh; overflow: auto;">
 
                         <table class="table table-hover text-nowrap mb-0 w-100">
 
@@ -102,9 +102,9 @@
                               <th style="position: sticky; top: 0; background: white; z-index: 10;">Costo</th>
                               <th style="position: sticky; top: 0; background: white; z-index: 10;">Precio</th>
                               <th style="position: sticky; top: 0; background: white; z-index: 10;">Stock</th>
-                              <th style="position: sticky; top: 0; background: white; z-index: 10;">Subcategoría</th>
+                              <th style="position: sticky; top: 0; background: white; z-index: 10;">Proveedores</th>
                               <th style="position: sticky; top: 0; background: white; z-index: 10;">Presentación</th>
-                              <th style="position: sticky; top: 0; background: white; z-index: 10;"></th>
+                              <th style="position: sticky; top: 0; background: white;"></th>
                             </tr>
                           </thead>
 
@@ -113,19 +113,14 @@
                               *ngFor="let product of products | filterBy:searchTerm:['code', 'name']; trackBy: trackByProduct"
                               [ngClass]="{'table-danger font-weight-bold': product.isBelowOrEqualMinimumStock}"> -->
                               <tr class="text-center"
-                              *ngFor="let product of products | filterBy:searchTerm:['code', 'name']; trackBy: trackByProduct">
+                              *ngFor="let product of products | filterBy:searchTerm:['code','name','presentation.name']; trackBy: trackByProduct">
   
                               <td class="text-truncate" style="max-width: 150px;">{{ product.code | uppercase }}</td>
                               <td class="text-truncate" style="max-width: 250px;">{{ product.name }}</td>
                               <td>{{ product.cost | currency }}</td>
                               <td>{{ product. price | currency }}</td>
                               <td>{{ product.stock }}</td>
-                              @if (product.subcategory?.name) {
-                                <td>{{ product.subcategory?.name | uppercase}}</td>
-                              } @else {
-                                <td>Sin subcategoría</td>
-                              }
-
+                              <td>{{ product.supplierCosts?.length }}</td>
                               @if (product.presentation?.name) {
                                 <td>{{ product.presentation?.name | uppercase}}</td>
                               } @else {
@@ -187,7 +182,7 @@
 
                           <tfoot>
                             <td colspan="8" class="text-right font-weight-bold">
-                              Total de productos: {{ (products | filterBy:searchTerm:['code', 'name']).length }}
+                              Total de productos: {{ (products | filterBy:searchTerm:['code','name','presentation.name']).length }}
                             </td>
                           </tfoot>
 
