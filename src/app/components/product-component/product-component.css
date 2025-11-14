@@ -1,33 +1,220 @@
-.table tfoot {
-    position: sticky;
-    bottom: 0;
-    background-color: #fff;
-    z-index: 2;
-    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+/* ===== LAYOUT GENERAL DE LA PÁGINA ===== */
+
+.products-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.table tfoot td {
-    font-weight: bold;
-    text-align: right;
-    padding: 10px;
+/* ===== HEADER (TÍTULO + SELECT PROVEEDOR) ===== */
+
+.content-header h1.m-0 {
+  font-size: 1.4rem;
+  font-weight: 600;
 }
 
-.table thead th {
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* sombra cuando haces scroll */
+.content-header label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.content-header ng-select {
+  width: 100%;
+}
+
+/* Fila del filtro de proveedor */
+.products-filter-row {
+  margin-top: 0.25rem;
+}
+
+/* Label + select en línea */
+.filter-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-inline-label {
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 1rem;
+  font-weight: 500;
+  font-style: bold;
+}
+
+.filter-inline-select {
+  flex: 1 1 auto;
+}
+
+/* ===== TOOLBAR DE LA TARJETA (BUSCADOR + TOGGLE + BOTÓN) ===== */
+
+.products-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.products-toolbar-title {
+  flex: 0 0 auto;
+  margin-right: 0.75rem;
+}
+
+/* Buscador */
+.products-search {
+  flex: 1 1 220px;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* Switch "Mostrar activos" */
+.products-toolbar-toggle {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+/* Botón "Agregar producto" */
+.toolbar-actions {
+  flex: 0 0 auto;
+}
+
+/* ===== RESPONSIVE TOOLBAR ===== */
+
+/* Móviles: todo apilado, botón ancho completo */
+@media (max-width: 767.98px) {
+  .products-toolbar {
+    align-items: stretch;
   }
-  
-  .table td, 
-  .table th {
-    vertical-align: middle;
-    white-space: nowrap; /* evita que se corte texto raro */
+
+  .products-toolbar-title {
+    width: 100%;
+  }
+
+  .products-search {
+    order: 2;
+    flex: 1 0 100%;
+    max-width: 100%;
+  }
+
+  .products-toolbar-toggle {
+    order: 3;
+    margin-left: 0;
+  }
+
+  .toolbar-actions {
+    order: 4;
+    width: 100%;
+  }
+
+  .toolbar-actions .btn {
+    width: 100%;
+  }
 }
 
+/* Escritorio / iPad horizontal: más juntito */
+@media (min-width: 992px) {
+  .products-toolbar {
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+  }
+
+  .products-search {
+    flex: 1 1 auto;
+    max-width: none;
+  }
+}
+
+/* ===== TABLA DE PRODUCTOS ===== */
+
+.products-table-wrapper {
+  width: 100%;
+  max-height: 60vh;
+  overflow: auto;
+}
+
+/* Cabecera sticky + sombreada */
+.products-table-wrapper .table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #ffffff;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer sticky en la parte baja del scroll */
+.products-table-wrapper .table tfoot {
+  position: sticky;
+  bottom: 0;
+  background-color: #ffffff;
+  z-index: 2;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.products-table-wrapper .table tfoot td {
+  font-weight: bold;
+  text-align: right;
+  padding: 10px;
+}
+
+/* Celdas por defecto */
+.products-table-wrapper .table td,
+.products-table-wrapper .table th {
+  vertical-align: middle;
+  white-space: nowrap; /* evita cortes raros */
+}
+
+/* Ajustes para pantallas chicas */
+@media (max-width: 575.98px) {
+  .products-table-wrapper .table {
+    font-size: 0.8rem;
+  }
+
+  .products-table-wrapper .table td,
+  .products-table-wrapper .table th {
+    padding: 0.35rem 0.5rem;
+  }
+
+  .products-table-wrapper .btn-sm {
+    padding: 0.15rem 0.25rem;
+    font-size: 0.7rem;
+  }
+
+  .filter-inline {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filter-inline-select {
+    width: 100%;
+  }
+}
+
+/* ===== ESTADOS ESPECIALES ===== */
+
+/* Fila con stock bajo */
 :host ::ng-deep .low-stock {
   background-color: #fff3cd !important;
   color: #856404 !important;
 }
 
+/* ng-select panel por encima de modales Bootstrap */
 .ng-dropdown-panel {
   z-index: 1056 !important; /* Bootstrap modals usan 1050 */
 }
+
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortable-header i.fa {
+  font-size: 0.75rem;
+  opacity: 0.5;
+}
+
+.sortable-header:hover i.fa {
+  opacity: 0.9;
+}
+
   

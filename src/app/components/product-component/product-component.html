@@ -7,20 +7,28 @@
             </div><!-- /.col -->
           </div><!-- /.row -->
 
-          <div class="row">
-            <div class="col-md-6">
-              <label>Filtrar por Provedor</label>
-              <ng-select
-                [items]="suppliers"
-                bindLabel="name"
-                bindValue="id"
-                placeholder="Seleccione un proveedor"
-                [(ngModel)]="selectedSupplierId"
-                (clearable)="true"
-                (ngModelChange)="onSupplierChange($event)"
-                (clear)="onClearSupplier()">
+          <div class="row products-filter-row">
+            <div class="col-12 col-md-8">
+              <div class="filter-inline">
 
-              </ng-select>
+                <label class="filter-inline-label mb-0">
+                  Filtrar por Provedor
+                </label>
+
+                <ng-select
+                  class="filter-inline-select"
+                  [items]="suppliers"
+                  bindLabel="name"
+                  bindValue="id"
+                  placeholder="Seleccione un proveedor"
+                  [(ngModel)]="selectedSupplierId"
+                  (clearable)="true"
+                  (ngModelChange)="onSupplierChange($event)"
+                  (clear)="onClearSupplier()">
+  
+                </ng-select>
+
+              </div>
             </div>
           </div>
 
@@ -31,389 +39,438 @@
       <!-- Main content -->
       <div class="content">
         <div class="container-fluid">
+          <div class="products-page">
+
             <div class="row">
-                <div class="col-12">
-                  <div class="card">
-                    <div class="card-header d-flex w-100 align-items-center">
-                      <h3 class="card-title my-auto">Lista de Productos</h3>
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header d-flex w-100 align-items-center products-toolbar">
+                    <h3 class="card-title my-auto products-toolbar-tittle">Lista de Productos</h3>
 
-                      <div class="input-group input-group-sm mx-auto" style="width: 600px;">
-                        <input 
-                          type="text" 
-                          name="table_search" 
-                          class="form-control" 
-                          placeholder="Buscar producto por nombre, código..."
-                          [(ngModel)]="searchTerm">
-                        <div class="input-group-append">
-                          <button type="button" class="btn btn-default">
-                            <i class="fas fa-search"></i>
-                          </button>
-                        </div>
+                    <div class="input-group input-group-sm products-search">
+                      <input 
+                        type="text" 
+                        name="table_search" 
+                        class="form-control" 
+                        placeholder="Buscar producto por nombre, código..."
+                        [(ngModel)]="searchTerm">
+                      <div class="input-group-append">
+                        <button type="button" class="btn btn-default">
+                          <i class="fas fa-search"></i>
+                        </button>
                       </div>
-
-                      <!-- <div class="form-check form-switch ml-auto">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          role="switch"
-                          id="toggleIsLowStock">
-                        <label class="form-check-label" for="toggleIsLowStock">
-                          Mostrar stock bajo
-                        </label>
-                      </div> -->
-
-                      <div class="form-check form-switch ml-auto">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          role="switch"
-                          id="toggleIsActivate"
-                          [(ngModel)]="showActiveProducts"
-                          (change)="onToggleChange()">
-                        <label class="form-check-label" for="toggleIsActivate">
-                          Mostrar activos
-                        </label>
-                      </div>
-
-                      <div class="ml-auto">
-                          <button 
-                            *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
-                            class="btn btn-success" 
-                            (click)="openCreateModal()" 
-                            data-toggle="modal" data-target="#productForm">
-
-                            <i class="fa-solid fa-circle-plus"></i> Agregar Producto
-
-                          </button> 
-                      </div>
-          
                     </div>
-                    <!-- /.card-header -->
-                    <div class="card-body p-0">
 
-                      <div class="table-responsive w-100" style="max-height: 60vh; overflow: auto;">
+                    <!-- <div class="form-check form-switch ml-auto">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="toggleIsLowStock">
+                      <label class="form-check-label" for="toggleIsLowStock">
+                        Mostrar stock bajo
+                      </label>
+                    </div> -->
 
-                        <table class="table table-hover text-nowrap mb-0 w-100">
+                    <div class="form-check form-switch ml-auto product-toolbar-toggle">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="toggleIsActivate"
+                        [(ngModel)]="showActiveProducts"
+                        (change)="onToggleChange()">
+                      <label class="form-check-label" for="toggleIsActivate">
+                        Mostrar activos
+                      </label>
+                    </div>
 
-                          <thead class="thread-light">
-                            <tr class="text-center">
-                              <th style="position: sticky; top: 0; background: white; z-index: 10;">Clave</th>
-                              <th style="position: sticky; top: 0; background: white; z-index: 10;">Nombre</th>
-                              <th style="position: sticky; top: 0; background: white; z-index: 10;">Costo</th>
-                              <th style="position: sticky; top: 0; background: white; z-index: 10;">Precio</th>
-                              <th style="position: sticky; top: 0; background: white; z-index: 10;">Stock</th>
-                              <th style="position: sticky; top: 0; background: white; z-index: 10;">Proveedores</th>
-                              <th style="position: sticky; top: 0; background: white; z-index: 10;">Presentación</th>
-                              <th style="position: sticky; top: 0; background: white;"></th>
-                            </tr>
-                          </thead>
+                    <div class="ml-auto toolbar-actions">
+                        <button 
+                          *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
+                          class="btn btn-success" 
+                          (click)="openCreateModal()" 
+                          data-toggle="modal" data-target="#productForm">
 
-                          <tbody>
-                              <!-- <tr class="text-center"
-                              *ngFor="let product of products | filterBy:searchTerm:['code', 'name']; trackBy: trackByProduct"
-                              [ngClass]="{'table-danger font-weight-bold': product.isBelowOrEqualMinimumStock}"> -->
-                              <tr class="text-center"
-                              *ngFor="let product of products | filterBy:searchTerm:['code','name','presentation.name']; trackBy: trackByProduct">
-  
-                              <td class="text-truncate" style="max-width: 150px;">{{ product.code | uppercase }}</td>
-                              <td class="text-truncate" style="max-width: 250px;">{{ product.name }}</td>
-                              <td>{{ product.cost | currency }}</td>
-                              <td>{{ product. price | currency }}</td>
-                              <td>{{ product.stock }}</td>
-                              <td>{{ product.supplierCosts?.length }}</td>
-                              @if (product.presentation?.name) {
-                                <td>{{ product.presentation?.name | uppercase}}</td>
-                              } @else {
-                                <td>Sin presentación</td>
-                              }
-                    
-                              <td>
-                                <button 
-                                  class="btn btn-info btn-sm mr-2" 
-                                  (click)="viewProductDetails(product)"
-                                  data-bs-toggle="tooltip"
-                                  data-placement="top"
-                                  title="Ver detalles">
-                                  <i class="fa-solid fa-circle-info"></i>
-                                </button>
-                                <button 
-                                  *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
-                                  class="btn btn-warning btn-sm mr-2" 
-                                  (click)="openEditModal(product)"
-                                  data-bs-toggle="tooltip"
-                                  data-placement="top"
-                                  title="Editar">
-                                      <i class="fa-solid fa-file-pen"></i>
-                                </button>
-                                @if (product.isActivate) {
-                                  <button 
-                                    *hasRole="['ROLE_ADMIN']"
-                                    class="btn btn-danger btn-sm mr-2" 
-                                    (click)="desactivateProduct(product)"
-                                    data-bs-toggle="tooltip"
-                                    data-placement="top"
-                                    title="Desactivar">
-                                    <i class="fa-solid fa-ban"></i>
-                                  </button>
-                                } @else {
-                                  <button 
-                                    *hasRole="['ROLE_ADMIN']"
-                                    class="btn btn-success btn-sm mr-2" 
-                                    (click)="activateProduct(product)"
-                                    data-bs-toggle="tooltip"
-                                    data-placement="top"
-                                    title="Activar">
-                                    <i class="fa-solid fa-check-to-slot"></i>
-                                  </button>
-                                }
-                                <button 
-                                  *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
-                                  class="btn btn-success btn-sm mr-2" 
-                                  (click)="openUpdateStockModal(product)"
-                                  data-bs-toggle="tooltip"
-                                  data-placement="top"
-                                  title="Ajustar inventario">
-                                  
-                                    <i class="fa-solid fa-plus-minus"></i>
+                          <i class="fa-solid fa-circle-plus"></i> Agregar Producto
+
+                        </button> 
+                    </div>
+        
+                  </div>
+                  <!-- /.card-header -->
+                  <div class="card-body p-0">
+
+                    <div class="table-responsive w-100 products-table-wrapper">
+
+                      <table class="table table-hover text-nowrap mb-0 w-100">
+
+                        <thead class="thread-light">
+                          <tr class="text-center">
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('code')">
+                              Clave
+                              <i [class]="getSortIcon('code')" class="ml-1"></i>
+                            </th>
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('name')">
+                              Nombre
+                              <i [class]="getSortIcon('name')" class="ml-1"></i>
+                            </th>
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('cost')">
+                              Costo
+                              <i [class]="getSortIcon('costo')" class="ml-1"></i>
+                            </th>
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('price')">
+                              Precio
+                              <i [class]="getSortIcon('price')" class="ml-1"></i>
+                            </th>
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('stock')">
+                              Stock
+                              <i [class]="getSortIcon('stock')" class="ml-1"></i>
+                            </th>
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('supplierCosts.length')">
+                              Proveedores
+                              <i [class]="getSortIcon('supplierCosts.length')" class="ml-1"></i>
+                            </th>
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('presentation.name')">
+                              Presentación
+                              <i [class]="getSortIcon('presentation.name')" class="ml-1"></i>
+                            </th>
+                            <th style="position: sticky; top: 0; background: white;"></th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                            <!-- <tr class="text-center"
+                            *ngFor="let product of products | filterBy:searchTerm:['code', 'name']; trackBy: trackByProduct"
+                            [ngClass]="{'table-danger font-weight-bold': product.isBelowOrEqualMinimumStock}"> -->
+                            <tr class="text-center"
+                            *ngFor="let product of (products
+                             | filterBy:searchTerm:['code','name','presentation.name']
+                             | orderby: sortField : sortDirection);
+                               trackBy: trackByProduct">
+
+                            <td class="text-truncate" style="max-width: 150px;">{{ product.code | uppercase }}</td>
+                            <td class="text-truncate" style="max-width: 250px;">{{ product.name }}</td>
+                            <td>{{ product.cost | currency }}</td>
+                            <td>{{ product. price | currency }}</td>
+                            <td>{{ product.stock }}</td>
+                            <td>{{ product.supplierCosts?.length }}</td>
+                            @if (product.presentation?.name) {
+                              <td>{{ product.presentation?.name | uppercase}}</td>
+                            } @else {
+                              <td>Sin presentación</td>
+                            }
+                  
+                            <td>
+                              <button 
+                                class="btn btn-info btn-sm mr-2" 
+                                (click)="viewProductDetails(product)"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Ver detalles">
+                                <i class="fa-solid fa-circle-info"></i>
                               </button>
-                              </td>
-                            </tr>
-                          </tbody>
-
-                          <tfoot>
-                            <td colspan="8" class="text-right font-weight-bold">
-                              Total de productos: {{ (products | filterBy:searchTerm:['code','name','presentation.name']).length }}
+                              <button 
+                                *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
+                                class="btn btn-warning btn-sm mr-2" 
+                                (click)="openEditModal(product)"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Editar">
+                                    <i class="fa-solid fa-file-pen"></i>
+                              </button>
+                              @if (product.isActivate) {
+                                <button 
+                                  *hasRole="['ROLE_ADMIN']"
+                                  class="btn btn-danger btn-sm mr-2" 
+                                  (click)="desactivateProduct(product)"
+                                  data-bs-toggle="tooltip"
+                                  data-placement="top"
+                                  title="Desactivar">
+                                  <i class="fa-solid fa-ban"></i>
+                                </button>
+                              } @else {
+                                <button 
+                                  *hasRole="['ROLE_ADMIN']"
+                                  class="btn btn-success btn-sm mr-2" 
+                                  (click)="activateProduct(product)"
+                                  data-bs-toggle="tooltip"
+                                  data-placement="top"
+                                  title="Activar">
+                                  <i class="fa-solid fa-check-to-slot"></i>
+                                </button>
+                              }
+                              <button 
+                                *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
+                                class="btn btn-success btn-sm mr-2" 
+                                (click)="openUpdateStockModal(product)"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Ajustar inventario">
+                                
+                                  <i class="fa-solid fa-plus-minus"></i>
+                            </button>
                             </td>
-                          </tfoot>
+                          </tr>
+                        </tbody>
 
-                        </table>
-                      </div>
+                        <tfoot>
+                          <td colspan="8" class="text-right font-weight-bold">
+                            Total de productos: {{ (products | filterBy:searchTerm:['code','name','presentation.name']).length }}
+                          </td>
+                        </tfoot>
 
+                      </table>
                     </div>
-                    <!-- /.card-body -->
+
                   </div>
-                  <!-- /.card -->
+                  <!-- /.card-body -->
                 </div>
-              </div> 
+                <!-- /.card -->
+              </div>
+            </div> 
 
-              <!-- Form Modal -->
-              <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-xl" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="productModalLabel">
-                        {{ selectedProduct ? 'Editar Producto' : 'Agregar Producto' }}
-                      </h5>
-                      <button type="button" class="close" (click)="closeProductForm()">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <app-product-form
-                        #productFormModal
-                        [product]="selectedProduct" 
-                        (saveProduct)="onProductSaved($event)">
-                      </app-product-form>
-                    </div>
+            <!-- Form Modal -->
+            <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel">
+                      {{ selectedProduct ? 'Editar Producto' : 'Agregar Producto' }}
+                    </h5>
+                    <button type="button" class="close" (click)="closeProductForm()">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <app-product-form
+                      #productFormModal
+                      [product]="selectedProduct" 
+                      (saveProduct)="onProductSaved($event)">
+                    </app-product-form>
                   </div>
                 </div>
               </div>
-              <!-- Form Modal -->
+            </div>
+            <!-- Form Modal -->
 
-              <!-- Form Modal -->
-              <div class="modal fade" id="updateStockModal" tabindex="-1" role="dialog" aria-labelledby="updateStockModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="updateStockModalLabel">
-                          Actualizar Stock
-                      </h5>
-                      <button type="button" class="close" (click)="closeUpdateStockModal()">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                    <app-stock-form-component
-                        #updateStockFormModal
-                        [product]="selectedProduct" 
-                        (saveStock)="updateStock(selectedProduct!, $event)">
-                    </app-stock-form-component>
-                    </div>
+            <!-- Form Modal -->
+            <div class="modal fade" id="updateStockModal" tabindex="-1" role="dialog" aria-labelledby="updateStockModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="updateStockModalLabel">
+                        Actualizar Stock
+                    </h5>
+                    <button type="button" class="close" (click)="closeUpdateStockModal()">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                  <app-stock-form-component
+                      #updateStockFormModal
+                      [product]="selectedProduct" 
+                      (saveStock)="updateStock(selectedProduct!, $event)">
+                  </app-stock-form-component>
                   </div>
                 </div>
               </div>
-              <!-- Form Modal -->
+            </div>
+            <!-- Form Modal -->
 
-              <div class="modal fade" id="productDetailsModal" tabindex="-1" role="dialog" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-md" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="productDetailsModalLabel">Detalles del Producto</h5>
-                      <button type="button" class="close" (click)="closeProductDetails()">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
+            <div class="modal fade" id="productDetailsModal" tabindex="-1" role="dialog" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="productDetailsModalLabel">Detalles del Producto</h5>
+                    <button type="button" class="close" (click)="closeProductDetails()">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+
+                  @if (productForDetails) {
+
+                    <div class="modal-body" *ngIf="productForDetails">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <strong>Nombre:</strong>
+                            <p>{{ productForDetails.name }}</p>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <strong>Clave:</strong>
+                            <p>{{ productForDetails.code }}</p>
+                          </div>
+                        </div>
+                      <div class="form-group">
+                        <strong>Descripción:</strong>
+                        @if (productForDetails.description) {
+                          <p>{{ productForDetails.description }}</p>
+                        } @else {
+                          <p>Sin descripción</p>
+                        }  
+                      </div>
+                    </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <strong>Costo sin IVA:</strong>
+                            <p>{{ costWithoutTaxes | currency }}</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <strong>Costo con IVA:</strong>
+                            <p>{{ productForDetails.cost | currency }}</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <strong>Precio:</strong>
+                            <p>{{ productForDetails.price | currency }}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']" class="col-md-6">
+                          <div class="form-group">
+                            <strong>Gananancia por Producto:</strong>
+                            <p>{{ productForDetails.profitMargin | currency }}</p>
+                          </div>
+                        </div>
+                        <div *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']" class="col-md-6">
+                          <div class="form-group">
+                            <strong>Porcentaje de Ganancia:</strong>
+                            <p>{{ profitPercentage | number:'1.2-2' }} %</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div *hasRole="['ROLE_ADMIN']"  class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <strong>Ganancia del Inventario:</strong>
+                            <p>{{ productForDetails.profitValue | currency}}</p>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <strong>Valor Inventario:</strong>
+                            <p>{{ productForDetails.inventoryValue | currency}}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <strong>Stock Actual:</strong>
+                            <p>{{ productForDetails.stock }}</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <strong>Stock Mínimo:</strong>
+                            <p>{{ productForDetails.minimumStock }}</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <strong>Stock Máximo:</strong>
+                            <p>{{ productForDetails.recommendedStock }}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <strong>Subcategoría:</strong>
+                            @if (productForDetails.subcategory?.name) {
+                              <p>{{ productForDetails.subcategory?.name }}</p>
+                            } @else {
+                              <p>Sin subcategoría</p>
+                            }  
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <strong>Presentación:</strong>
+                            @if (productForDetails.presentation?.name) {
+                              <p>{{ productForDetails.presentation?.name }}</p>
+                            } @else {
+                              <p>Sin presentación</p>
+                            }  
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        @if (!productForDetails.supplierCosts || productForDetails.supplierCosts.length === 0) {
+                          <div class="col-md-6">
+                            <strong>Proveedores:</strong>
+                              <p>Sin Proveedores</p>
+                          </div>
+                        } @else {
+                          <div class="col-md-3">
+                            <strong>Proveedores:</strong>
+                            <div *ngFor="let supplier of productForDetails.supplierCosts">
+                              <p>{{ supplier.supplierName }}</p>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <strong>Clave Proveedor:</strong>
+                            <div *ngFor="let supplier of productForDetails.supplierCosts">
+                              <p>{{ supplier.supplierProductCode | uppercase }}</p>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <strong>Costo Proveedor:</strong>
+                            <div *ngFor="let supplier of productForDetails.supplierCosts">
+                              <p>{{ supplier.cost | currency}}</p>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <strong>Descuento:</strong>
+                            <div *ngFor="let supplier of productForDetails.supplierCosts">
+                              <p>{{ supplier.discount | percent}}</p>
+                            </div>
+                          </div>
+                        }
+                      </div>
                     </div>
 
-                    @if (productForDetails) {
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-primary" (click)="openEditModal(productForDetails)">Editar</button>
+                      <button type="button" class="btn btn-secondary" (click)="closeProductDetails()">Cerrar</button>
+                    </div>
 
-                      <div class="modal-body" *ngIf="productForDetails">
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <strong>Nombre:</strong>
-                              <p>{{ productForDetails.name }}</p>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <strong>Clave:</strong>
-                              <p>{{ productForDetails.code }}</p>
-                            </div>
-                          </div>
-                        <div class="form-group">
-                          <strong>Descripción:</strong>
-                          @if (productForDetails.description) {
-                            <p>{{ productForDetails.description }}</p>
-                          } @else {
-                            <p>Sin descripción</p>
-                          }  
-                        </div>
-                      </div>
-                        <div class="row">
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <strong>Costo sin IVA:</strong>
-                              <p>{{ costWithoutTaxes | currency }}</p>
-                            </div>
-                          </div>
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <strong>Costo con IVA:</strong>
-                              <p>{{ productForDetails.cost | currency }}</p>
-                            </div>
-                          </div>
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <strong>Precio:</strong>
-                              <p>{{ productForDetails.price | currency }}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']" class="col-md-6">
-                            <div class="form-group">
-                              <strong>Gananancia por Producto:</strong>
-                              <p>{{ productForDetails.profitMargin | currency }}</p>
-                            </div>
-                          </div>
-                          <div *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']" class="col-md-6">
-                            <div class="form-group">
-                              <strong>Porcentaje de Ganancia:</strong>
-                              <p>{{ profitPercentage | number:'1.2-2' }} %</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div *hasRole="['ROLE_ADMIN']"  class="row">
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <strong>Ganancia del Inventario:</strong>
-                              <p>{{ productForDetails.profitValue | currency}}</p>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <strong>Valor Inventario:</strong>
-                              <p>{{ productForDetails.inventoryValue | currency}}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <strong>Stock Actual:</strong>
-                              <p>{{ productForDetails.stock }}</p>
-                            </div>
-                          </div>
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <strong>Stock Mínimo:</strong>
-                              <p>{{ productForDetails.minimumStock }}</p>
-                            </div>
-                          </div>
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <strong>Stock Máximo:</strong>
-                              <p>{{ productForDetails.recommendedStock }}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <strong>Subcategoría:</strong>
-                              @if (productForDetails.subcategory?.name) {
-                                <p>{{ productForDetails.subcategory?.name }}</p>
-                              } @else {
-                                <p>Sin subcategoría</p>
-                              }  
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <strong>Presentación:</strong>
-                              @if (productForDetails.presentation?.name) {
-                                <p>{{ productForDetails.presentation?.name }}</p>
-                              } @else {
-                                <p>Sin presentación</p>
-                              }  
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row">
-                          @if (!productForDetails.supplierCosts || productForDetails.supplierCosts.length === 0) {
-                            <div class="col-md-6">
-                              <strong>Proveedores:</strong>
-                                <p>Sin Proveedores</p>
-                            </div>
-                          } @else {
-                            <div class="col-md-3">
-                              <strong>Proveedores:</strong>
-                              <div *ngFor="let supplier of productForDetails.supplierCosts">
-                                <p>{{ supplier.supplierName }}</p>
-                              </div>
-                            </div>
-                            <div class="col-md-3">
-                              <strong>Clave Proveedor:</strong>
-                              <div *ngFor="let supplier of productForDetails.supplierCosts">
-                                <p>{{ supplier.supplierProductCode | uppercase }}</p>
-                              </div>
-                            </div>
-                            <div class="col-md-3">
-                              <strong>Costo Proveedor:</strong>
-                              <div *ngFor="let supplier of productForDetails.supplierCosts">
-                                <p>{{ supplier.cost | currency}}</p>
-                              </div>
-                            </div>
-                            <div class="col-md-3">
-                              <strong>Descuento:</strong>
-                              <div *ngFor="let supplier of productForDetails.supplierCosts">
-                                <p>{{ supplier.discount | percent}}</p>
-                              </div>
-                            </div>
-                          }
-                        </div>
-                      </div>
+                  }
 
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" (click)="openEditModal(productForDetails)">Editar</button>
-                        <button type="button" class="btn btn-secondary" (click)="closeProductDetails()">Cerrar</button>
-                      </div>
-
-                    }
-
-                  </div>
                 </div>
               </div>
+            </div>
+
+          </div>
         </div>
         <!-- /.container-fluid-->
       </div>

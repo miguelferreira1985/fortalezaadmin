@@ -14,7 +14,8 @@ declare const $: any;
     RouterLinkActive,
     HasRoleDirective
   ],
-  templateUrl: './main-layout.html'
+  templateUrl: './main-layout.html',
+  styleUrl: './main-layout.css'
 })
 export class MainLayoutComponent implements AfterViewInit {
 

@@ -14,6 +14,7 @@ import { HasRoleDirective } from '../../core/has-role.directive';
 import { NgSelectComponent } from "@ng-select/ng-select";
 import { Supplier } from '../../models/supplier';
 import { SupplierService } from '../../services/supplier.service';
+import { OrderByPipe } from '../../shared/pipes/order-by-pipe';
 
 declare var $: any;
 
@@ -26,7 +27,8 @@ declare var $: any;
     StockFormComponent,
     FilterByPipe,
     HasRoleDirective,
-    NgSelectComponent
+    NgSelectComponent,
+    OrderByPipe
 ],
   templateUrl: './product-component.html',
   styleUrl: './product-component.css'
@@ -46,6 +48,8 @@ export class ProductComponent implements OnInit {
   profitPercentage: number = 0;
   costWithoutTaxes: number = 0;
   showActiveProducts: boolean = true;
+  sortField: string = 'code';
+  sortDirection: 'asc' | 'desc' = 'asc'; 
 
   constructor(
     private productService: ProductService,
@@ -157,6 +161,22 @@ export class ProductComponent implements OnInit {
   onClearSupplier(): void {
     this.selectedSupplierId = null;
     this.loadProducts();
+  }
+
+  changeSort(field: string): void {
+    if (this.sortField === field) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortField = field;
+      this.sortDirection = 'asc';
+    }
+  }
+
+  getSortIcon(field: string): string {
+    if (this.sortField !== field) {
+      return 'fa fa-sort';
+    }
+    return this.sortDirection === 'asc' ? 'fa fa-sort-up' : 'fa fa-sort-down';
   }
 
   onProductSaved(productRequestDto: ProductRequestDto): void {
