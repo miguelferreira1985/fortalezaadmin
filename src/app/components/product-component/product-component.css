@@ -59,12 +59,13 @@
 .products-toolbar-title {
   flex: 0 0 auto;
   margin-right: 0.75rem;
+  white-space: nowrap;
 }
 
 /* Buscador */
 .products-search {
-  flex: 1 1 220px;
-  max-width: 100%;
+  flex: 0 1 420px;
+  max-width: 520px;
   min-width: 0;
 }
 
@@ -77,6 +78,10 @@
 /* Botón "Agregar producto" */
 .toolbar-actions {
   flex: 0 0 auto;
+}
+
+.toolbar-actions .btn {
+  white-space: nowrap;    
 }
 
 /* ===== RESPONSIVE TOOLBAR ===== */
@@ -120,8 +125,8 @@
   }
 
   .products-search {
-    flex: 1 1 auto;
-    max-width: none;
+    flex: 0 1 520px;
+    max-width: 620px;
   }
 }
 
@@ -129,7 +134,7 @@
 
 .products-table-wrapper {
   width: 100%;
-  max-height: 60vh;
+  max-height: 62vh;
   overflow: auto;
 }
 

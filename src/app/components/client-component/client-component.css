@@ -1,32 +1,179 @@
-.table tfoot {
-    position: sticky;
-    bottom: 0;
-    background-color: #fff;
-    z-index: 2;
-    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+/* ===== LAYOUT GENERAL DE LA PÁGINA ===== */
+
+.clients-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.table tfoot td {
-    font-weight: bold;
-    text-align: right;
-    padding: 10px;
+/* ===== HEADER (TÍTULO) ===== */
+
+.content-header h1.m-0 {
+  font-size: 1.4rem;
+  font-weight: 600;
 }
 
-.table thead th {
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* sombra cuando haces scroll */
+.content-header label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.content-header ng-select {
+  width: 100%;
+}
+
+/* ===== TOOLBAR DE LA TARJETA (BUSCADOR + BOTÓN) ===== */
+
+.clients-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.clients-toolbar-title {
+  flex: 0 0 auto;
+  margin-right: 0.75rem;
+  white-space: nowrap;
+}
+
+/* Buscador */
+.clients-search {
+  flex: 0 1 320px;
+  max-width: 420px;
+  min-width: 0;
+}
+
+/* Contenedor del botón */
+.toolbar-actions {
+  flex: 0 0 auto;
+}
+
+.toolbar-actions .btn {
+  white-space: nowrap;    
+}
+
+/* ===== RESPONSIVE TOOLBAR ===== */
+
+/* Móviles: todo apilado, botón ancho completo */
+@media (max-width: 767.98px) {
+  .clients-toolbar {
+    align-items: stretch;
   }
-  
-  .table td, 
-  .table th {
-    vertical-align: middle;
-    white-space: nowrap; /* evita que se corte texto raro */
+
+  .clients-toolbar-title {
+    width: 100%;
+  }
+
+  .clients-search {
+    order: 2;
+    flex: 1 0 100%;
+    max-width: 100%;
+  }
+
+  .toolbar-actions {
+    order: 3;
+    width: 100%;
+  }
+
+  .toolbar-actions .btn {
+    width: 100%;
+  }
 }
 
+/* Escritorio / iPad horizontal: más juntito */
+@media (min-width: 992px) {
+  .clients-toolbar {
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+  }
+
+  .clients-search {
+    flex: 0 1 520px;
+    max-width: 620px;
+  }
+}
+
+/* ===== TABLA DE CATEGORIAS ===== */
+
+.clients-table-wrapper {
+  width: 100%;
+  max-height: 65vh;
+  overflow: auto;
+}
+
+/* Cabecera sticky + sombreada */
+.clients-table-wrapper .table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #ffffff;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer sticky en la parte baja del scroll */
+.clients-table-wrapper .table tfoot {
+  position: sticky;
+  bottom: 0;
+  background-color: #ffffff;
+  z-index: 2;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.clients-table-wrapper .table tfoot td {
+  font-weight: bold;
+  text-align: right;
+  padding: 10px;
+}
+
+/* Celdas por defecto */
+.clients-table-wrapper .table td,
+.clients-table-wrapper .table th {
+  vertical-align: middle;
+  white-space: nowrap; /* evita cortes raros */
+}
+
+/* Ajustes para pantallas chicas */
+@media (max-width: 575.98px) {
+  .clients-table-wrapper .table {
+    font-size: 0.8rem;
+  }
+
+  .clients-table-wrapper .table td,
+  .clients-table-wrapper .table th {
+    padding: 0.35rem 0.5rem;
+  }
+
+  .clients-table-wrapper .btn-sm {
+    padding: 0.15rem 0.25rem;
+    font-size: 0.7rem;
+  }
+}
+
+/* ===== ESTADOS ESPECIALES ===== */
+
+/* Fila con stock bajo */
 :host ::ng-deep .low-stock {
   background-color: #fff3cd !important;
   color: #856404 !important;
 }
 
+/* ng-select panel por encima de modales Bootstrap */
 .ng-dropdown-panel {
   z-index: 1056 !important; /* Bootstrap modals usan 1050 */
+}
+
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortable-header i.fa {
+  font-size: 0.75rem;
+  opacity: 0.5;
+}
+
+.sortable-header:hover i.fa {
+  opacity: 0.9;
 }

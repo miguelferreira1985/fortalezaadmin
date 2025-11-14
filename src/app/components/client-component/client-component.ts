@@ -7,6 +7,7 @@ import { ClientService } from '../../services/client.service';
 import { NotificationService } from '../../services/notification.service';
 import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
 import { HasRoleDirective } from '../../core/has-role.directive';
+import { OrderByPipe } from '../../shared/pipes/order-by-pipe';
 
 declare var $: any;
 
@@ -17,9 +18,11 @@ declare var $: any;
     FormsModule,
     ClientFormComponent,
     FilterByPipe,
-    HasRoleDirective
+    HasRoleDirective,
+    OrderByPipe
   ],
-  templateUrl: './client-component.html'
+  templateUrl: './client-component.html',
+  styleUrl: './client-component.css'
 })
 export class ClientComponent implements OnInit {
 
@@ -29,6 +32,8 @@ export class ClientComponent implements OnInit {
   selectedClient: Client | null = null;
   searchTerm: string = '';
   showActivateClients: boolean = true;
+  sortField: string = 'code';
+  sortDirection: 'asc' | 'desc' = 'asc'; 
 
   constructor(private clientService: ClientService, private notify: NotificationService) {}
 
@@ -60,6 +65,22 @@ export class ClientComponent implements OnInit {
         console.error('Error al obtener los clientes:', error);
       }
     });
+  }
+
+  changeSort(field: string): void {
+    if (this.sortField === field) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortField = field;
+      this.sortDirection = 'asc';
+    }
+  }
+
+  getSortIcon(field: string): string {
+    if (this.sortField !== field) {
+      return 'fa fa-sort';
+    }
+    return this.sortDirection === 'asc' ? 'fa fa-sort-up' : 'fa fa-sort-down';
   }
 
   onClientSaved(client: Client): void {

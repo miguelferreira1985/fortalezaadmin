@@ -40,8 +40,8 @@
 
 /* Buscador */
 .suppliers-search {
-  flex: 0 1 300px;
-  max-width: 450px;
+  flex: 0 1 320px;
+  max-width: 420px;
   min-width: 0;
 }
 
@@ -90,8 +90,8 @@
   }
 
   .suppliers-search {
-    flex: 0 1 500px;
-    max-width: 500px;
+    flex: 0 1 520px;
+    max-width: 620px;
   }
 }
 

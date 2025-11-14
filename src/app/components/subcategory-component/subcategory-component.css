@@ -39,8 +39,8 @@
 
 /* Buscador */
 .subcategories-search {
-  flex: 1 1 220px;
-  max-width: 100%;
+  flex: 0 1 320px;
+  max-width: 420px;
   min-width: 0;
 }
 
@@ -53,7 +53,9 @@
   }
 
   .subcategories-toolbar-title {
-    width: 100%;
+    flex: 0 0 auto;
+    margin-right: 0.75rem;
+    white-space: nowrap;
   }
 
   .subcategories-search {
@@ -85,8 +87,8 @@
   }
 
   .subcategories-search {
-    flex: 1 1 auto;
-    max-width: 70%;
+    flex: 0 1 520px;
+    max-width: 620px;
   }
 }
 

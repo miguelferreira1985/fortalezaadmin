@@ -39,8 +39,8 @@
 
 /* Buscador */
 .categories-search {
-  flex: 1 1 220px;
-  max-width: 100%;
+  flex: 0 1 320px;
+  max-width: 420px;
   min-width: 0;
 }
 
@@ -62,13 +62,8 @@
     max-width: 100%;
   }
 
-  .categories-toolbar-toggle {
-    order: 3;
-    margin-left: 0;
-  }
-
   .toolbar-actions {
-    order: 4;
+    order: 3;
     width: 100%;
   }
 
@@ -85,8 +80,8 @@
   }
 
   .categories-search {
-    flex: 1 1 auto;
-    max-width: 70%;
+    flex: 0 1 520px;
+    max-width: 620px;
   }
 }
 
@@ -94,7 +89,7 @@
 
 .categories-table-wrapper {
   width: 100%;
-  max-height: 60vh;
+  max-height: 65vh;
   overflow: auto;
 }
 
