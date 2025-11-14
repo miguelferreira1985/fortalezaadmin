@@ -6,6 +6,11 @@
   gap: 1rem;
 }
 
+.products-page .card {
+  margin-left: -0.1rem;
+  margin-right: -0.1rem;
+}
+
 /* ===== HEADER (TÍTULO + SELECT PROVEEDOR) ===== */
 
 .content-header h1.m-0 {
@@ -40,7 +45,6 @@
   white-space: nowrap;
   font-size: 1rem;
   font-weight: 500;
-  font-style: bold;
 }
 
 .filter-inline-select {
@@ -70,7 +74,8 @@
 }
 
 /* Switch "Mostrar activos" */
-.products-toolbar-toggle {
+.products-toolbar-toggle,
+.product-toolbar-toggle {
   flex: 0 0 auto;
   margin-left: auto;
 }
@@ -81,7 +86,7 @@
 }
 
 .toolbar-actions .btn {
-  white-space: nowrap;    
+  white-space: nowrap;
 }
 
 /* ===== RESPONSIVE TOOLBAR ===== */
@@ -102,7 +107,8 @@
     max-width: 100%;
   }
 
-  .products-toolbar-toggle {
+  .products-toolbar-toggle,
+  .product-toolbar-toggle {
     order: 3;
     margin-left: 0;
   }
@@ -134,7 +140,7 @@
 
 .products-table-wrapper {
   width: 100%;
-  max-height: 62vh;
+  max-height: 61vh;
   overflow: auto;
 }
 
@@ -145,6 +151,8 @@
   background-color: #ffffff;
   z-index: 10;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 0.85rem;          /* un poco más pequeño para ganar ancho */
+  padding: 0.55rem 0.75rem;    /* menos padding horizontal */
 }
 
 /* Footer sticky en la parte baja del scroll */
@@ -166,10 +174,40 @@
 .products-table-wrapper .table td,
 .products-table-wrapper .table th {
   vertical-align: middle;
-  white-space: nowrap; /* evita cortes raros */
 }
 
-/* Ajustes para pantallas chicas */
+/* Neutralizar el text-nowrap de Bootstrap SOLO en esta tabla */
+.products-table-wrapper .table.text-nowrap td,
+.products-table-wrapper .table.text-nowrap th {
+  white-space: normal;
+}
+
+/* Truncar contenido de las celdas que ya tienen class="text-truncate"
+   (tu HTML ya lo tiene en los <td> de Clave y Nombre) */
+.products-table-wrapper .table td.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Ajustes para pantallas tipo laptop 13" */
+@media (max-width: 1366px) {
+  .products-page .card {
+    margin-left: -0.25rem;
+    margin-right: -0.25rem;
+  }
+
+  .products-table-wrapper .table {
+    font-size: 0.85rem;
+  }
+
+  .products-table-wrapper .table td,
+  .products-table-wrapper .table th {
+    padding: 0.35rem 0.4rem;
+  }
+}
+
+/* Ajustes para pantallas muy chicas */
 @media (max-width: 575.98px) {
   .products-table-wrapper .table {
     font-size: 0.8rem;
@@ -211,15 +249,63 @@
 .sortable-header {
   cursor: pointer;
   user-select: none;
+  position: relative;
+  /* más espacio a la derecha para que quepa el ícono */
+  padding: 0.75rem 1.6rem 0.75rem 0.75rem;
+  white-space: nowrap;
 }
 
+
+/* neutraliza el viejo estilo genérico de .sortable-header i.fa */
 .sortable-header i.fa {
-  font-size: 0.75rem;
-  opacity: 0.5;
+  opacity: 1;
 }
 
 .sortable-header:hover i.fa {
   opacity: 0.9;
+}
+.sort-icon {
+  position: absolute;
+  right: 6px;              /* pegado a la orilla derecha del th */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  opacity: 0.5;
+  color: #6c757d;
+}
+
+.sortable-header:hover .sort-icon {
+  opacity: 0.9;
+}
+
+/* Columna de acciones: evitar wraps raros y mantener botones alineados */
+.products-table-wrapper .table th:last-child,
+.products-table-wrapper .table td:last-child {
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* Espaciado entre botones de acciones */
+.products-table-wrapper .table td:last-child .btn {
+  margin-right: 0.25rem;
+}
+
+.products-table-wrapper .table td:last-child .btn:last-child {
+  margin-right: 0;
+}
+
+.col-stock {
+  min-width: 75px;          /* este ya se ve bien */
+}
+
+.col-presentations {
+  min-width: 137px;          /* este ya se ve bien */
+}
+
+/* darle más espacio a "Proveedores" */
+.col-suppliers {
+  min-width: 125px;         /* más ancho para el texto + icono */
+  padding-right: 2.2rem;    /* separa más el icono del texto */
 }
 
   

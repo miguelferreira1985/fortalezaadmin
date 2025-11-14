@@ -112,51 +112,51 @@
                               style="position: sticky; top: 0; background: white; z-index: 10;"
                               (click)="changeSort('code')">
                               Clave
-                              <i [class]="getSortIcon('code')" class="ml-1"></i>
+                              <i [ngClass]="getSortIcon('code')" class="ml-1 sort-icon"></i>
                             </th>
                             <th 
                               class="sortable-header"
                               style="position: sticky; top: 0; background: white; z-index: 10;"
                               (click)="changeSort('name')">
                               Nombre
-                              <i [class]="getSortIcon('name')" class="ml-1"></i>
+                              <i [ngClass]="getSortIcon('name')" class="ml-1 sort-icon"></i>
                             </th>
                             <th 
                               class="sortable-header"
                               style="position: sticky; top: 0; background: white; z-index: 10;"
                               (click)="changeSort('cost')">
                               Costo
-                              <i [class]="getSortIcon('costo')" class="ml-1"></i>
+                              <i [ngClass]="getSortIcon('costo')" class="ml-1 sort-icon"></i>
                             </th>
                             <th 
                               class="sortable-header"
                               style="position: sticky; top: 0; background: white; z-index: 10;"
                               (click)="changeSort('price')">
                               Precio
-                              <i [class]="getSortIcon('price')" class="ml-1"></i>
+                              <i [ngClass]="getSortIcon('price')" class="ml-1 sort-icon"></i>
                             </th>
                             <th 
-                              class="sortable-header"
+                              class="sortable-header col-stock"
                               style="position: sticky; top: 0; background: white; z-index: 10;"
                               (click)="changeSort('stock')">
                               Stock
-                              <i [class]="getSortIcon('stock')" class="ml-1"></i>
+                              <i [ngClass]="getSortIcon('stock')" class="ml-1 sort-icon"></i>
                             </th>
                             <th 
-                              class="sortable-header"
+                              class="sortable-header col-suppliers"
                               style="position: sticky; top: 0; background: white; z-index: 10;"
                               (click)="changeSort('supplierCosts.length')">
                               Proveedores
-                              <i [class]="getSortIcon('supplierCosts.length')" class="ml-1"></i>
+                              <i [ngClass]="getSortIcon('supplierCosts.length')" class="ml-1 sort-icon"></i>
                             </th>
                             <th 
-                              class="sortable-header"
+                              class="sortable-header col-presentations"
                               style="position: sticky; top: 0; background: white; z-index: 10;"
                               (click)="changeSort('presentation.name')">
                               Presentación
-                              <i [class]="getSortIcon('presentation.name')" class="ml-1"></i>
+                              <i [ngClass]="getSortIcon('presentation.name')" class="ml-1 sort-icon"></i>
                             </th>
-                            <th style="position: sticky; top: 0; background: white;"></th>
+                            <th></th>
                           </tr>
                         </thead>
 
