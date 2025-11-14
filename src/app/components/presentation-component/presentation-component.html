@@ -14,112 +14,135 @@
       <div class="content">
         <div class="container-fluid">
 
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-header d-flex w-100 align-items-center">
-                  <h3 class="card-title my-auto">Lista de Presentaciones</h3>
+          <div class="presentations-page">
 
-                  <div class="input-group input-group-sm mx-auto" style="width: 600px;">
-                    <input 
-                      type="text" 
-                      name="table_search" 
-                      class="form-control" 
-                      placeholder="Buscar presentación..."
-                      [(ngModel)]="searchTerm">
-                    <div class="input-group-append">
-                      <button type="button" class="btn btn-default">
-                        <i class="fas fa-search"></i>
-                      </button>
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header d-flex w-100 align-items-center presentations-toolbar">
+                    <h3 class="card-title my-auto presentations-toolbar-title">Lista de Presentaciones</h3>
+  
+                    <div class="input-group input-group-sm presentations-search">
+                      <input 
+                        type="text" 
+                        name="table_search" 
+                        class="form-control" 
+                        placeholder="Buscar presentación..."
+                        [(ngModel)]="searchTerm">
+                      <div class="input-group-append">
+                        <button type="button" class="btn btn-default">
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </div>
                     </div>
+  
+                    <div class="ml-auto toolbar-actions">
+                      <button 
+                        class="btn btn-success" 
+                        (click)="openCreateModal()" 
+                        data-toggle="modal" 
+                        data-target="#presentationForm">
+
+                          <i class="fa-solid fa-circle-plus"></i> Agregar Presentación
+
+                      </button> 
                   </div>
-
-                  <div class="ml-auto">
-                    <button class="btn btn-success" (click)="openCreateModal()" data-toggle="modal" data-target="#presentationForm">
-                        <i class="fa-solid fa-circle-plus"></i> Agregar Presentación
-                    </button> 
-                </div>
-      
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body p-0">
-
-                  <div class="table-responsive w-100" style="max-height: 65vh; overflow: auto;">
-
-                    <table class="table table-hover text-nowrap mb-0 w-100">
-
-                      <thead class="thread-light">
-                        <tr class="text-center">
-                          <th>Nombre</th>
-                          <th>Abreviación</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        <tr class="text-center" *ngFor="let presentation of presentations | filterBy:searchTerm:['name']; trackBy: trackByPresentation">
-                          <td>{{ presentation.name | uppercase}}</td>
-                          <td>{{ presentation.abbreviation }}</td>
-                          <td>
-                            <button 
-                            class="btn btn-warning btn-sm mr-2" 
-                            (click)="openEditModal(presentation)"
-                            data-bs-toggle="tooltip"
-                            data-placement="top"
-                            title="Editar">
-                                <i class="fa-solid fa-file-pen"></i>
-                          </button>
-                            <button 
-                              class="btn btn-danger btn-sm mr-2" 
-                              (click)="deletePresentation(presentation)"
+        
+                  </div>
+                  <!-- /.card-header -->
+                  <div class="card-body p-0">
+  
+                    <div class="table-responsive w-100 presentations-table-wrapper">
+  
+                      <table class="table table-hover text-nowrap mb-0 w-100">
+  
+                        <thead class="thread-light">
+                          <tr class="text-center">
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('name')">
+                              Nombre
+                              <i [class]="getSortIcon('name')" class="ml-1"></i>
+                            </th> 
+                            <th>Abreviación</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+  
+                        <tbody>
+                          <tr class="text-center" 
+                            *ngFor="let presentation of (presentations 
+                              | filterBy:searchTerm:['name']
+                              | orderby: sortField : sortDirection); 
+                              trackBy: trackByPresentation">
+                            <td>{{ presentation.name | uppercase}}</td>
+                            <td>{{ presentation.abbreviation }}</td>
+                            <td>
+                              <button 
+                              class="btn btn-warning btn-sm mr-2" 
+                              (click)="openEditModal(presentation)"
                               data-bs-toggle="tooltip"
                               data-placement="top"
-                              title="Eliminar">
-                              <i class="fa-solid fa-trash"></i>
+                              title="Editar">
+                                  <i class="fa-solid fa-file-pen"></i>
                             </button>
+                              <button 
+                                class="btn btn-danger btn-sm mr-2" 
+                                (click)="deletePresentation(presentation)"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Eliminar">
+                                <i class="fa-solid fa-trash"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+  
+                        <tfoot>
+                          <td colspan="8" class="text-right font-weight-bold">
+                            Total de presentaciones: {{ (presentations | filterBy:searchTerm:['name']).length }}
                           </td>
-                        </tr>
-                      </tbody>
-
-                      <tfoot>
-                        <td colspan="8" class="text-right font-weight-bold">
-                          Total de presentaciones: {{ (presentations | filterBy:searchTerm:['name']).length }}
-                        </td>
-                      </tfoot>
-
-                    </table>
+                        </tfoot>
+  
+                      </table>
+                    </div>
+  
                   </div>
-
+                  <!-- /.card-body -->
                 </div>
-                <!-- /.card-body -->
+                <!-- /.card -->
               </div>
-              <!-- /.card -->
+            </div> 
+  
+            <!-- Form Modal -->
+            <div class="modal fade" id="presentationModal" tabindex="-1" role="dialog" aria-labelledby="presentationModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="presentationModalLabel">
+                      {{ selectedPresentation ? 'Editar Presentación' : 'Agregar Presentación' }}
+                    </h5>
+                    <button type="button" class="close" (click)="closePresentationForm()">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <app-presentation-form 
+                      #presentationFormModal
+                      [presentation]="selectedPresentation" 
+                      (savePresentation)="onPresentationSaved($event)">
+                    </app-presentation-form>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div> 
+            <!-- Form Modal -->
 
-              <!-- Form Modal -->
-              <div class="modal fade" id="presentationModal" tabindex="-1" role="dialog" aria-labelledby="presentationModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-sm" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="presentationModalLabel">
-                        {{ selectedPresentation ? 'Editar Presentación' : 'Agregar Presentación' }}
-                      </h5>
-                      <button type="button" class="close" (click)="closePresentationForm()">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <app-presentation-form 
-                        #presentationFormModal
-                        [presentation]="selectedPresentation" 
-                        (savePresentation)="onPresentationSaved($event)">
-                      </app-presentation-form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Form Modal -->
+          </div>
+
+
+
         </div>
         <!-- /.container-fluid-->
       </div>

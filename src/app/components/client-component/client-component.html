@@ -14,119 +14,138 @@
       <div class="content">
         <div class="container-fluid">
 
+          <div class="clients-page">
 
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-header d-flex w-100 align-items-center">
-                  <h3 class="card-title my-auto">Lista de Clientes</h3>
-
-                  <div class="input-group input-group-sm mx-auto" style="width: 600px;">
-                    <input 
-                      type="text" 
-                      name="table_search" 
-                      class="form-control" 
-                      placeholder="Buscar cliente..."
-                      [(ngModel)]="searchTerm">
-                    <div class="input-group-append">
-                      <button type="button" class="btn btn-default">
-                        <i class="fas fa-search"></i>
-                      </button>
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header d-flex w-100 align-items-center clients-toolbar">
+                    <h3 class="card-title my-auto clients-toolbar-title">Lista de Clientes</h3>
+  
+                    <div class="input-group input-group-sm clients-search">
+                      <input 
+                        type="text" 
+                        name="table_search" 
+                        class="form-control" 
+                        placeholder="Buscar cliente..."
+                        [(ngModel)]="searchTerm">
+                      <div class="input-group-append">
+                        <button type="button" class="btn btn-default">
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </div>
                     </div>
+  
+                    <div class="ml-auto toolbar-actions">
+                        <button 
+                          class="btn btn-success" 
+                          (click)="openCreateModal()" 
+                          data-toggle="modal" data-target="#clientForm">
+  
+                          <i class="fa-solid fa-person-circle-plus"></i> Agregar Cliente
+  
+                        </button> 
+                    </div>
+        
                   </div>
-
-                  <div class="ml-auto">
-                      <button 
-                        class="btn btn-success" 
-                        (click)="openCreateModal()" 
-                        data-toggle="modal" data-target="#clientForm">
-
-                        <i class="fa-solid fa-person-circle-plus"></i> Agregar Cliente
-
-                      </button> 
-                  </div>
-      
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body p-0">
-
-                  <div class="table-responsive w-100" style="max-height: 65vh; overflow: auto;">
-
-                    <table class="table table-hover text-nowrap mb-0 w-100">
-
-                      <thead class="thread-light">
-                        <tr>
-                          <th>Nombre</th>
-                          <th>Teléfono</th>
-                          <th>RFC</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        <tr *ngFor="let client of clients | filterBy:searchTerm:['name','rfc'], trackBy: trackByClient">
-                          <td>{{ client.name }}</td>
-                          <td>{{ client.phone }}</td>
-                          <td>{{ client.rfc | uppercase }}</td>
-                          <td>
-                            <button 
-                              class="btn btn-warning btn-sm mr-2" 
-                              (click)="openEditModal(client)"
-                              data-bs-toggle="tooltip"
-                              data-placement="top"
-                              title="Editar">
-                                  <i class="fa-solid fa-file-pen"></i>
-                            </button>
-                            <button 
-                              *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
-                              class="btn btn-danger btn-sm mr-2" 
-                              (click)="deleteClient(client)"
-                              data-bs-toggle="tooltip"
-                              data-placement="top"
-                              title="Eliminar">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
+                  <!-- /.card-header -->
+                  <div class="card-body p-0">
+  
+                    <div class="table-responsive w-100 clients-table-wrapper">
+  
+                      <table class="table table-hover text-nowrap mb-0 w-100">
+  
+                        <thead class="thread-light">
+                          <tr class="text-center">
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('name')">
+                              Nombre
+                              <i [class]="getSortIcon('name')" class="ml-1"></i>
+                            </th>                             
+                            <th>Teléfono</th>
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('rfc')">
+                              RFC
+                              <i [class]="getSortIcon('rfc')" class="ml-1"></i>
+                            </th> 
+                            <th></th>
+                          </tr>
+                        </thead>
+  
+                        <tbody>
+                          <tr class="text-center"
+                            *ngFor="let client of (clients 
+                              | filterBy:searchTerm:['name','rfc']
+                              | orderby: sortField : sortDirection); trackBy: trackByClient">
+                            <td>{{ client.name }}</td>
+                            <td>{{ client.phone }}</td>
+                            <td>{{ client.rfc | uppercase }}</td>
+                            <td>
+                              <button 
+                                class="btn btn-warning btn-sm mr-2" 
+                                (click)="openEditModal(client)"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Editar">
+                                    <i class="fa-solid fa-file-pen"></i>
+                              </button>
+                              <button 
+                                *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
+                                class="btn btn-danger btn-sm mr-2" 
+                                (click)="deleteClient(client)"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Eliminar">
+                                  <i class="fa-solid fa-trash"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+  
+                        <tfoot>
+                          <td colspan="8" class="text-right font-weight-bold">
+                            Total de clientes: {{ (clients | filterBy:searchTerm:['name','rfc']).length }}
                           </td>
-                        </tr>
-                      </tbody>
-
-                      <tfoot>
-                        <td colspan="8" class="text-right font-weight-bold">
-                          Total de clientes: {{ (clients | filterBy:searchTerm:['name','rfc']).length }}
-                        </td>
-                      </tfoot>
-
-                    </table>
+                        </tfoot>
+  
+                      </table>
+                    </div>
+  
                   </div>
-
+                  <!-- /.card-body -->
                 </div>
-                <!-- /.card-body -->
+                <!-- /.card -->
               </div>
-              <!-- /.card -->
+            </div> 
+  
+            <div class="modal fade" id="clientModal" tabindex="-1" role="dialog" aria-labelledby="clientModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="clientModalLabel">
+                      {{ selectedClient ? 'Editar Cliente' : 'Agregar Cliente' }}
+                    </h5>
+                    <button type="button" class="close" (click)="closeClientForm()">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <app-client-form-component
+                      #clientFormModal
+                      [client]="selectedClient" 
+                      (saveClient)="onClientSaved($event)">
+                    </app-client-form-component>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div> 
 
-              <div class="modal fade" id="clientModal" tabindex="-1" role="dialog" aria-labelledby="clientModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-sm" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="clientModalLabel">
-                        {{ selectedClient ? 'Editar Cliente' : 'Agregar Cliente' }}
-                      </h5>
-                      <button type="button" class="close" (click)="closeClientForm()">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <app-client-form-component
-                        #clientFormModal
-                        [client]="selectedClient" 
-                        (saveClient)="onClientSaved($event)">
-                      </app-client-form-component>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          </div>
+
         </div>
         <!-- /.container-fluid-->
       </div>

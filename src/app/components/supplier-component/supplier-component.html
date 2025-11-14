@@ -14,13 +14,16 @@
       <div class="content">
         <div class="container-fluid">
 
+          <div class="suppliers-page">
+
+            
             <div class="row">
               <div class="col-12">
                 <div class="card">
-                  <div class="card-header d-flex w-100 align-items-center">
-                    <h3 class="card-title my-auto">Lista de Proveedores</h3>
+                  <div class="card-header d-flex w-100 align-items-center suppliers-toolbar">
+                    <h3 class="card-title my-auto suppliers-toolbar-title">Lista de Proveedores</h3>
 
-                    <div class="input-group input-group-sm mx-auto" style="width: 600px;">
+                    <div class="input-group input-group-sm suppliers-search">
                       <input 
                         type="text" 
                         name="table_search" 
@@ -34,7 +37,7 @@
                       </div>
                     </div>
 
-                    <div class="ml-auto">
+                    <div class="ml-auto toolbar-actions">
                         <button 
                           *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
                           class="btn btn-success" 
@@ -50,25 +53,45 @@
                   <!-- /.card-header -->
                   <div class="card-body p-0">
 
-                    <div class="table-responsive w-100" style="max-height: 65vh; overflow: auto;">
+                    <div class="table-responsive w-100 suppliers-table-wrapper">
 
                       <table class="table table-hover text-nowrap mb-0 w-100">
 
                         <thead class="thread-light">
-                          <tr>
-                            <th style="position: sticky; top: 0; background: white; z-index: 10;">Nombre</th>
-                            <th style="position: sticky; top: 0; background: white; z-index: 10;">Contacto</th>
+                          <tr class="text-center">
+                            <th
+                              class="sortable-header" 
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('name')">
+                              Nombre
+                              <i [class]="getSortIcon('name')" class="ml-1"></i>
+                            </th>
+                            <th
+                              class="sortable-header" 
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('contact')">
+                              Contacto
+                              <i [class]="getSortIcon('contact')" class="ml-1"></i>
+                            </th>                            
                             <th style="position: sticky; top: 0; background: white; z-index: 10;">Tel. Contacto</th>
                             <th style="position: sticky; top: 0; background: white; z-index: 10;">Tel. Oficina</th>
                             <th style="position: sticky; top: 0; background: white; z-index: 10;">Email</th>
-                            <th style="position: sticky; top: 0; background: white; z-index: 10;">Ubicación</th>
-                            <th style="position: sticky; top: 0; background: white; z-index: 10;"></th>
+                            <th
+                              class="sortable-header" 
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('location')">
+                              Ubicación
+                              <i [class]="getSortIcon('location')" class="ml-1"></i>
+                            </th>                            <th style="position: sticky; top: 0; background: white; z-index: 10;"></th>
                           </tr>
                         </thead>
 
                         <tbody>
-                            <tr 
-                            *ngFor="let supplier of suppliers | filterBy:searchTerm:['name', 'contact', 'location']; trackBy: trackBySupplier">
+                            <tr class="text-center"
+                              *ngFor="let supplier of (suppliers 
+                                | filterBy:searchTerm:['name', 'contact', 'location']
+                                | orderby: sortField : sortDirection); 
+                                  trackBy: trackBySupplier">
 
                             <td class="text-truncate" style="max-width: 150px;">{{ supplier.name | uppercase }}</td>
                             <td class="text-truncate" style="max-width: 250px;">{{ supplier.contact }}</td>
@@ -138,6 +161,7 @@
               </div>
               <!-- From Modal -->
 
+          </div>
               
         </div>
         <!-- /.container-fluid-->

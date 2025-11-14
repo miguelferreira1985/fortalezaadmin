@@ -13,6 +13,7 @@ import { EmployeeService } from '../../services/employee.service';
 import { CreateUserForEmployeeEvent } from '../../models/create-user-for-employee-event';
 import { UpdateRolesFormComponent } from "../forms/update-roles-form-component/update-roles-form-component";
 import { UpdateRolesRequestDto } from '../../models/update-roles-requets-dto';
+import { OrderByPipe } from '../../shared/pipes/order-by-pipe';
 
 declare var $: any;
 
@@ -25,7 +26,8 @@ declare var $: any;
     RoleNamePipe,
     ChangePasswordFormComponent,
     UserFormComponent,
-    UpdateRolesFormComponent
+    UpdateRolesFormComponent,
+    OrderByPipe
 ],
   templateUrl: './user-component.html',
   styleUrl: './user-component.css'
@@ -38,6 +40,8 @@ export class UserComponent implements OnInit {
   users: User[] = [];
   selectedUser: User | null = null;
   searchTerm: string = '';
+  sortField: string = 'code';
+  sortDirection: 'asc' | 'desc' = 'asc'; 
 
   constructor(
     private userService: UserService, 
@@ -76,6 +80,22 @@ export class UserComponent implements OnInit {
 
   closeUpdateRolesModal(): void {
     $('#updateRolesModal').modal('hide');
+  }
+
+  changeSort(field: string): void {
+    if (this.sortField === field) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortField = field;
+      this.sortDirection = 'asc';
+    }
+  }
+
+  getSortIcon(field: string): string {
+    if (this.sortField !== field) {
+      return 'fa fa-sort';
+    }
+    return this.sortDirection === 'asc' ? 'fa fa-sort-up' : 'fa fa-sort-down';
   }
 
   getUsers(): void {

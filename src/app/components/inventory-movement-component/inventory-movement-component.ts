@@ -25,6 +25,8 @@ export class InventoryMovementComponent implements OnInit {
   selectedProductId: number | null = null;
   movements: InventoryMovement[] =[];
   searchTerm: string = '';
+  sortField: string = 'code';
+  sortDirection: 'asc' | 'desc' = 'asc';
 
   constructor(
     private productService: ProductService,
@@ -34,6 +36,22 @@ export class InventoryMovementComponent implements OnInit {
   ngOnInit(): void {
     this.loadProducts();
     this.loadInitialMovements();
+  }
+
+  changeSort(field: string): void {
+    if (this.sortField === field) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortField = field;
+      this.sortDirection = 'asc';
+    }
+  }
+
+  getSortIcon(field: string): string {
+    if (this.sortField !== field) {
+      return 'fa fa-sort';
+    }
+    return this.sortDirection === 'asc' ? 'fa fa-sort-up' : 'fa fa-sort-down';
   }
 
   loadProducts(): void {
