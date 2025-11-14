@@ -9,6 +9,7 @@ import { NotificationService } from '../../services/notification.service';
 import { EmployeeRequestDto } from '../../models/employee-request-dto';
 import { UserService } from '../../services/user.service';
 import { HasRoleDirective } from '../../core/has-role.directive';
+import { OrderByPipe } from '../../shared/pipes/order-by-pipe';
 
 declare var $: any;
 
@@ -19,7 +20,8 @@ declare var $: any;
     FormsModule,
     EmployeeFormComponent,
     FilterByPipe,
-    HasRoleDirective
+    HasRoleDirective,
+    OrderByPipe
   ],
   templateUrl: './employee-component.html', 
   styleUrl: './employee-component.css'
@@ -33,6 +35,8 @@ export class EmployeeComponent implements OnInit {
   employeeForDetails: Employee | null = null;
   searchTerm: string = '';
   showActiveEmployees: boolean = true;
+  sortField: string = 'code';
+  sortDirection: 'asc' | 'desc' = 'asc'; 
 
   constructor(
     private employeeService: EmployeeService, 
@@ -66,6 +70,22 @@ export class EmployeeComponent implements OnInit {
 
   closeEmployeeDetails(): void {
     $('#employeeDetailsModal').modal('hide');
+  }
+
+  changeSort(field: string): void {
+    if (this.sortField === field) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortField = field;
+      this.sortDirection = 'asc';
+    }
+  }
+
+  getSortIcon(field: string): string {
+    if (this.sortField !== field) {
+      return 'fa fa-sort';
+    }
+    return this.sortDirection === 'asc' ? 'fa fa-sort-up' : 'fa fa-sort-down';
   }
 
   getEmployees(): void {

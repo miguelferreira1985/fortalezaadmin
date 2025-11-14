@@ -7,6 +7,7 @@ import { SupplierService } from '../../services/supplier.service';
 import { NotificationService } from '../../services/notification.service';
 import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
 import { HasRoleDirective } from '../../core/has-role.directive';
+import { OrderByPipe } from '../../shared/pipes/order-by-pipe';
 
 declare var $: any;
 
@@ -17,7 +18,8 @@ declare var $: any;
     FormsModule,
     SupplierFormComponent,
     FilterByPipe,
-    HasRoleDirective
+    HasRoleDirective,
+    OrderByPipe
   ],
   templateUrl: './supplier-component.html',
   styleUrl: './supplier-component.css'
@@ -30,6 +32,8 @@ export class SupplierComponent {
   selectedSupplier: Supplier | null = null;
   searchTerm: string = '';
   showActivateClients: boolean = true;
+  sortField: string = 'code';
+  sortDirection: 'asc' | 'desc' = 'asc'; 
 
   constructor(private supplierService: SupplierService, private notify: NotificationService) {}
 
@@ -54,6 +58,22 @@ export class SupplierComponent {
 
   closeSupplierForm(): void {
     $('#supplierModal').modal('hide');
+  }
+
+  changeSort(field: string): void {
+    if (this.sortField === field) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortField = field;
+      this.sortDirection = 'asc';
+    }
+  }
+
+  getSortIcon(field: string): string {
+    if (this.sortField !== field) {
+      return 'fa fa-sort';
+    }
+    return this.sortDirection === 'asc' ? 'fa fa-sort-up' : 'fa fa-sort-down';
   }
 
   getSuppliers(): void {

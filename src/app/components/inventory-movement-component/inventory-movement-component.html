@@ -8,10 +8,17 @@
           </div><!-- /.row -->
           
 
-          <div class="row">
-            <div class="col-md-6">
-                <label>Seleccionar Producto</label>
+          <div class="row movements-filter-row">
+            <div class="col-12 col-md-6">
+
+              <div class="filter-inline">
+
+                <label class="filter-inline-label mb-0">
+                  Filtrar por Producto
+                </label>
+
                 <ng-select
+                    class="filter-inline-select"
                     [items]="products"
                     bindLabel="name"
                     bindValue="id"
@@ -19,6 +26,9 @@
                     [(ngModel)]="selectedProductId"
                     (change)="onProductChange()">
                 </ng-select>
+
+              </div>
+
             </div>
           </div>
 
@@ -30,71 +40,100 @@
       <div class="content">
         <div class="container-fluid">
 
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-header d-flex w-100 align-items-center">
-                  <h3 class="card-title my-auto">Movimientos</h3>
+          <div class="movements-page">
 
-                  <div class="input-group input-group-sm mx-auto" style="width: 600px;">
-                    <input 
-                      type="text" 
-                      name="table_search" 
-                      class="form-control" 
-                      placeholder="Buscar movimiento..."
-                      [(ngModel)]="searchTerm">
-                    <div class="input-group-append">
-                      <button type="button" class="btn btn-default">
-                        <i class="fas fa-search"></i>
-                      </button>
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header d-flex w-100 align-items-center movements-toolbar">
+                    <h3 class="card-title my-auto movements-toolbar-tittle">Movimientos</h3>
+  
+                    <div class="input-group input-group-sm movements-search">
+                      <input 
+                        type="text" 
+                        name="table_search" 
+                        class="form-control" 
+                        placeholder="Buscar movimiento..."
+                        [(ngModel)]="searchTerm">
+                      <div class="input-group-append">
+                        <button type="button" class="btn btn-default">
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body p-0">
-                  <div class="table-responsive w-100" style="max-height: 60vh; overflow: auto;">
-                    <table class="table table-hover text-nowrap mb-0 w-100">
-                      <thead class="thread-light">
-                        <tr class="text-center">
-                          <th>Producto</th>
-                          <th>Stock Previo</th>
-                          <th>Cantidad</th>
-                          <th>Stock Nuevo</th>
-                          <th>Justificación</th>
-                          <th>Tipo de Movimiento</th>
-                          <th>Hecho por</th>
-                          <th>Fecha</th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        <tr class="text-center" *ngFor="let movement of movements | filterBy:searchTerm:['productCode','createdBy','movementType','movementDate']; trackBy: trackByMovement">
-                          <td>{{ movement.productCode | uppercase}}</td>
-                          <td>{{ movement.previousStock }}</td>
-                          <td>{{ movement.quantity }}</td>
-                          <td>{{ movement.newStock }}</td>
-                          <td>{{ movement.description }}</td>
-                          <td>{{ movement.movementType | uppercase }}</td>
-                          <td>{{ movement.createdBy }}</td>
-                          <td>{{ movement.movementDate | date:'dd/MM/yyyy HH:mm' }}</td>
-                        </tr>
-                      </tbody>
-
-                      <tfoot>
-                        <td colspan="8" class="text-right font-weight-bold">
-                          Total de movimientos: {{ (movements | filterBy:searchTerm:['productCode','createdBy','movementType','movementDate']).length }}
-                        </td>
-                      </tfoot>
-
-                    </table>
+                  <!-- /.card-header -->
+                  <div class="card-body p-0">
+                    <div class="table-responsive w-100 movements-table-wrapper">
+                      <table class="table table-hover text-nowrap mb-0 w-100">
+                        <thead class="thread-light">
+                          <tr class="text-center">
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('productCode')">
+                              Producto
+                              <i [class]="getSortIcon('productCode')" class="ml-1"></i>
+                            </th>                            
+                            <th>Stock Previo</th>
+                            <th>Cantidad</th>
+                            <th>Stock Nuevo</th>
+                            <th>Justificación</th>
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('movementType')">
+                              Tipo de Movimiento
+                              <i [class]="getSortIcon('movementType')" class="ml-1"></i>
+                            </th>
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('createdBy')">
+                              Hecho Por
+                              <i [class]="getSortIcon('createdBy')" class="ml-1"></i>
+                            </th>
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('createdBy')">
+                              Fecha
+                              <i [class]="getSortIcon('createdBy')" class="ml-1"></i>
+                            </th>
+                          </tr>
+                        </thead>
+  
+                        <tbody>
+                          <tr class="text-center" *ngFor="let movement of movements | filterBy:searchTerm:['productCode','createdBy','movementType','movementDate']; trackBy: trackByMovement">
+                            <td>{{ movement.productCode | uppercase}}</td>
+                            <td>{{ movement.previousStock }}</td>
+                            <td>{{ movement.quantity }}</td>
+                            <td>{{ movement.newStock }}</td>
+                            <td>{{ movement.description }}</td>
+                            <td>{{ movement.movementType | uppercase }}</td>
+                            <td>{{ movement.createdBy }}</td>
+                            <td>{{ movement.movementDate | date:'dd/MM/yyyy HH:mm' }}</td>
+                          </tr>
+                        </tbody>
+  
+                        <tfoot>
+                          <td colspan="8" class="text-right font-weight-bold">
+                            Total de movimientos: {{ (movements | filterBy:searchTerm:['productCode','createdBy','movementType','movementDate']).length }}
+                          </td>
+                        </tfoot>
+  
+                      </table>
+                    </div>
+  
                   </div>
-
+                  <!-- /.card-body -->
                 </div>
-                <!-- /.card-body -->
+                <!-- /.card -->
               </div>
-              <!-- /.card -->
-            </div>
-          </div> 
+            </div> 
+
+          </div>
+
         </div>
         <!-- /.container-fluid-->
       </div>

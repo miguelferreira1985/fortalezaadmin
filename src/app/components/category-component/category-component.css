@@ -6,7 +6,7 @@
   gap: 1rem;
 }
 
-/* ===== HEADER (TÍTULO + SELECT PROVEEDOR) ===== */
+/* ===== HEADER (TÍTULO) ===== */
 
 .content-header h1.m-0 {
   font-size: 1.4rem;
@@ -23,7 +23,7 @@
   width: 100%;
 }
 
-/* ===== TOOLBAR DE LA TARJETA (BUSCADOR + TOGGLE + BOTÓN) ===== */
+/* ===== TOOLBAR DE LA TARJETA (BUSCADOR + BOTÓN) ===== */
 
 .categories-toolbar {
   display: flex;
@@ -90,7 +90,7 @@
   }
 }
 
-/* ===== TABLA DE PRODUCTOS ===== */
+/* ===== TABLA DE CATEGORIAS ===== */
 
 .categories-table-wrapper {
   width: 100%;

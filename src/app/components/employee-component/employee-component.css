@@ -1,32 +1,174 @@
-.table tfoot {
-    position: sticky;
-    bottom: 0;
-    background-color: #fff;
-    z-index: 2;
-    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+/* ===== LAYOUT GENERAL DE LA PÁGINA ===== */
+
+.employees-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.table tfoot td {
-    font-weight: bold;
-    text-align: right;
-    padding: 10px;
+/* ===== HEADER (TÍTULO) ===== */
+
+.content-header h1.m-0 {
+  font-size: 1.4rem;
+  font-weight: 600;
 }
 
-.table thead th {
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* sombra cuando haces scroll */
+.content-header label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.content-header ng-select {
+  width: 100%;
+}
+
+/* ===== TOOLBAR DE LA TARJETA (BUSCADOR + BOTÓN) ===== */
+
+.employees-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.employees-toolbar-title {
+  flex: 0 0 auto;
+  margin-right: 0.75rem;
+}
+
+/* Buscador */
+.employees-search {
+  flex: 1 1 220px;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* ===== RESPONSIVE TOOLBAR ===== */
+
+/* Móviles: todo apilado, botón ancho completo */
+@media (max-width: 767.98px) {
+  .employees-toolbar {
+    align-items: stretch;
   }
-  
-  .table td, 
-  .table th {
-    vertical-align: middle;
-    white-space: nowrap; /* evita que se corte texto raro */
+
+  .employees-toolbar-title {
+    width: 100%;
+  }
+
+  .employees-search {
+    order: 2;
+    flex: 1 0 100%;
+    max-width: 100%;
+  }
+
+  .employees-toolbar-toggle {
+    order: 3;
+    margin-left: 0;
+  }
+
+  .toolbar-actions {
+    order: 4;
+    width: 100%;
+  }
+
+  .toolbar-actions .btn {
+    width: 100%;
+  }
 }
 
+/* Escritorio / iPad horizontal: más juntito */
+@media (min-width: 992px) {
+  .employees-toolbar {
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+  }
+
+  .employees-search {
+    flex: 1 1 auto;
+    max-width: 70%;
+  }
+}
+
+/* ===== TABLA DE CATEGORIAS ===== */
+
+.employees-table-wrapper {
+  width: 100%;
+  max-height: 60vh;
+  overflow: auto;
+}
+
+/* Cabecera sticky + sombreada */
+.employees-table-wrapper .table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #ffffff;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer sticky en la parte baja del scroll */
+.employees-table-wrapper .table tfoot {
+  position: sticky;
+  bottom: 0;
+  background-color: #ffffff;
+  z-index: 2;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.employees-table-wrapper .table tfoot td {
+  font-weight: bold;
+  text-align: right;
+  padding: 10px;
+}
+
+/* Celdas por defecto */
+.employees-table-wrapper .table td,
+.employees-table-wrapper .table th {
+  vertical-align: middle;
+  white-space: nowrap; /* evita cortes raros */
+}
+
+/* Ajustes para pantallas chicas */
+@media (max-width: 575.98px) {
+  .employees-table-wrapper .table {
+    font-size: 0.8rem;
+  }
+
+  .employees-table-wrapper .table td,
+  .employees-table-wrapper .table th {
+    padding: 0.35rem 0.5rem;
+  }
+
+  .employees-table-wrapper .btn-sm {
+    padding: 0.15rem 0.25rem;
+    font-size: 0.7rem;
+  }
+}
+
+/* ===== ESTADOS ESPECIALES ===== */
+
+/* Fila con stock bajo */
 :host ::ng-deep .low-stock {
   background-color: #fff3cd !important;
   color: #856404 !important;
 }
 
+/* ng-select panel por encima de modales Bootstrap */
 .ng-dropdown-panel {
   z-index: 1056 !important; /* Bootstrap modals usan 1050 */
+}
+
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortable-header i.fa {
+  font-size: 0.75rem;
+  opacity: 0.5;
+}
+
+.sortable-header:hover i.fa {
+  opacity: 0.9;
 }

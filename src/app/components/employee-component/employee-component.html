@@ -14,234 +14,261 @@
       <div class="content">
         <div class="container-fluid">
 
+          <div class="employees-page">
 
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-header d-flex w-100 align-items-center">
-                  <h3 class="card-title my-auto">Lista de Empleados</h3>
-
-                  <div class="input-group input-group-sm mx-auto" style="width: 600px;">
-                    <input 
-                      type="text" 
-                      name="table_search" 
-                      class="form-control" 
-                      placeholder="Buscar empleado..."
-                      [(ngModel)]="searchTerm">
-                    <div class="input-group-append">
-                      <button type="button" class="btn btn-default">
-                        <i class="fas fa-search"></i>
-                      </button>
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header d-flex w-100 align-items-center employees-toolbar">
+                    <h3 class="card-title my-auto employees-search">Lista de Empleados</h3>
+  
+                    <div class="input-group input-group-sm employee-search">
+                      <input 
+                        type="text" 
+                        name="table_search" 
+                        class="form-control" 
+                        placeholder="Buscar empleado..."
+                        [(ngModel)]="searchTerm">
+                      <div class="input-group-append">
+                        <button type="button" class="btn btn-default">
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </div>
                     </div>
+  
+                    <div class="ml-auto toolbar-actions">
+                        <button 
+                          *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
+                          class="btn btn-success" 
+                          (click)="openCreateModal()" 
+                          data-toggle="modal" data-target="#employeeForm">
+  
+                          <i class="fa-solid fa-person-circle-plus"></i> Agregar Empleado
+  
+                        </button> 
+                    </div>
+        
                   </div>
-
-                  <div class="ml-auto">
-                      <button 
-                        *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
-                        class="btn btn-success" 
-                        (click)="openCreateModal()" 
-                        data-toggle="modal" data-target="#employeeForm">
-
-                        <i class="fa-solid fa-person-circle-plus"></i> Agregar Empleado
-
-                      </button> 
-                  </div>
-      
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body p-0">
-
-                  <div class="table-responsive w-100" style="max-height: 65vh; overflow: auto;">
-
-                    <table class="table table-hover text-nowrap mb-0 w-100">
-
-                      <thead class="thread-light">
-                        <tr>
-                          <th>Nombre</th>
-                          <th>Email</th>
-                          <th>Teléfono</th>
-                          <th>NSS</th>
-                          <th>Usuario</th>
-                          <th>Bloqueado</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        <tr *ngFor="let employee of employees | filterBy:searchTerm:['firstName', 'lastName', 'ssn', 'user.username'], trackBy: trackByEmployee" [ngClass]="{'is-blocked': employee.user?.isBlocked}" >
-                          <td>{{ employee.firstName }} {{ employee.lastName }}</td>
-                          <td>{{ employee.email }}</td>
-                          <td>{{ employee.phone }}</td>
-                          <td>{{ employee.ssn }}</td>
-                          @if (employee.user) {
-                              <td>{{ employee.user.username }}</td>
-                              @if (employee.user.isActivate) {
-                                <td class="text-success text-center">
-                                  <i class="fa-solid fa-user-check"></i>
-                                </td>
-                              } @else {
-                                <td class="text-danger text-center">
-                                  <i class="fa-solid fa-user-slash"></i>
-                                </td>                              
-                              }
-                          } @else {
-                              <td>Sin Usuario</td>
-                              <td></td>
-                          }
-                          <td class="text-center">
-                            <button 
-                              class="btn btn-info btn-sm mr-2" 
-                              (click)="viewEmployeeDetails(employee)"
-                              data-bs-toggle="tooltip"
-                              data-placement="top"
-                              title="Ver detalles">
-                              <i class="fa-solid fa-circle-info"></i>
-                            </button>
-                            <button 
-                              class="btn btn-warning btn-sm mr-2" 
-                              (click)="openEditModal(employee)"
-                              data-bs-toggle="tooltip"
-                              data-placement="top"
-                              title="Editar">
-                                  <i class="fa-solid fa-file-pen"></i>
-                            </button>
-                            <button 
-                              class="btn btn-danger btn-sm mr-2" 
-                              (click)="deleteEmployee(employee)"
-                              data-bs-toggle="tooltip"
-                              data-placement="top"
-                              title="Eliminar">
-                              <i class="fa-solid fa-trash"></i>
-                            </button>
+                  <!-- /.card-header -->
+                  <div class="card-body p-0">
+  
+                    <div class="table-responsive w-100 employees-table-wrapper">
+  
+                      <table class="table table-hover text-nowrap mb-0 w-100">
+  
+                        <thead class="thread-light">
+                          <tr class="text-center">
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('name')">
+                              Nombre
+                              <i [class]="getSortIcon('name')" class="ml-1"></i>
+                            </th>                             
+                            <th>Email</th>
+                            <th>Teléfono</th>
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('ssn')">
+                              NSS
+                              <i [class]="getSortIcon('ssn')" class="ml-1"></i>
+                            </th>   
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('user.name')">
+                              Usuario
+                              <i [class]="getSortIcon('user.name')" class="ml-1"></i>
+                            </th>   
+                            <th>Bloqueado</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+  
+                        <tbody>
+                          <tr class="text-center"
+                            *ngFor="let employee of (employees 
+                              | filterBy:searchTerm:['firstName', 'lastName', 'ssn', 'user.username']
+                              | orderby: sortField : sortDirection); 
+                              trackBy: trackByEmployee" 
+                              [ngClass]="{'is-blocked': employee.user?.isBlocked}" >
+                            <td>{{ employee.firstName }} {{ employee.lastName }}</td>
+                            <td>{{ employee.email }}</td>
+                            <td>{{ employee.phone }}</td>
+                            <td>{{ employee.ssn }}</td>
+                            @if (employee.user) {
+                                <td>{{ employee.user.username }}</td>
+                                @if (employee.user.isActivate) {
+                                  <td class="text-success text-center">
+                                    <i class="fa-solid fa-user-check"></i>
+                                  </td>
+                                } @else {
+                                  <td class="text-danger text-center">
+                                    <i class="fa-solid fa-user-slash"></i>
+                                  </td>                              
+                                }
+                            } @else {
+                                <td>Sin Usuario</td>
+                                <td></td>
+                            }
+                            <td class="text-center">
+                              <button 
+                                class="btn btn-info btn-sm mr-2" 
+                                (click)="viewEmployeeDetails(employee)"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Ver detalles">
+                                <i class="fa-solid fa-circle-info"></i>
+                              </button>
+                              <button 
+                                class="btn btn-warning btn-sm mr-2" 
+                                (click)="openEditModal(employee)"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Editar">
+                                    <i class="fa-solid fa-file-pen"></i>
+                              </button>
+                              <button 
+                                class="btn btn-danger btn-sm mr-2" 
+                                (click)="deleteEmployee(employee)"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Eliminar">
+                                <i class="fa-solid fa-trash"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+  
+                        <tfoot>
+                          <td colspan="8" class="text-right font-weight-bold">
+                            Total de empleados: {{ (employees | filterBy:searchTerm:['firstName', 'lastName', 'ssn', 'user.username']).length }}
                           </td>
-                        </tr>
-                      </tbody>
-
-                      <tfoot>
-                        <td colspan="8" class="text-right font-weight-bold">
-                          Total de empleados: {{ (employees | filterBy:searchTerm:['firstName', 'lastName', 'ssn', 'user.username']).length }}
-                        </td>
-                      </tfoot>
-
-                    </table>
+                        </tfoot>
+  
+                      </table>
+                    </div>
+  
                   </div>
-
+                  <!-- /.card-body -->
                 </div>
-                <!-- /.card-body -->
+                <!-- /.card -->
               </div>
-              <!-- /.card -->
+            </div> 
+  
+            <!-- Form Modal -->
+            <div class="modal fade" id="employeeModal" tabindex="-1" role="dialog" aria-labelledby="employeeModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="employeeModalLabel">
+                      {{ selectedEmployee ? 'Editar Empleado' : 'Agregar Empleado' }}
+                    </h5>
+                    <button type="button" class="close" (click)="closeEmployeeForm()">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <app-employee-form-component
+                      #employeeFormModal
+                      [employee]="selectedEmployee" 
+                      (saveEmployee)="onEmployeeSaved($event)">
+                    </app-employee-form-component>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div> 
-
-              <!-- Form Modal -->
-              <div class="modal fade" id="employeeModal" tabindex="-1" role="dialog" aria-labelledby="employeeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="employeeModalLabel">
-                        {{ selectedEmployee ? 'Editar Empleado' : 'Agregar Empleado' }}
-                      </h5>
-                      <button type="button" class="close" (click)="closeEmployeeForm()">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <app-employee-form-component
-                        #employeeFormModal
-                        [employee]="selectedEmployee" 
-                        (saveEmployee)="onEmployeeSaved($event)">
-                      </app-employee-form-component>
-                    </div>
+            <!-- Form Modal -->
+  
+            <div class="modal fade" id="employeeDetailsModal" tabindex="-1" role="dialog" aria-labelledby="employeeDetailsModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="employeeDetailsModalLabel">Detalles del Empleado</h5>
+                    <button type="button" class="close" (click)="closeEmployeeDetails()">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
                   </div>
-                </div>
-              </div>
-              <!-- Form Modal -->
-
-              <div class="modal fade" id="employeeDetailsModal" tabindex="-1" role="dialog" aria-labelledby="employeeDetailsModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-md" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="employeeDetailsModalLabel">Detalles del Empleado</h5>
-                      <button type="button" class="close" (click)="closeEmployeeDetails()">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-
-                    @if (employeeForDetails) {
-
-                      <div class="modal-body">
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <strong>Nombre:</strong>
-                              <p>{{ employeeForDetails.firstName }}</p>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <strong>Apellido:</strong>
-                              <p>{{ employeeForDetails.lastName }}</p>
-                            </div>
-                          </div>
-                        <div class="form-group">
-                          <strong>Dirección:</strong>
-                          @if (employeeForDetails.address) {
-                            <p>{{ employeeForDetails.address }}</p>
-                          } @else {
-                            <p>Sin dirección</p>
-                          }     
+  
+                @if (employeeForDetails) {
+  
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <strong>Nombre:</strong>
+                          <p>{{ employeeForDetails.firstName }}</p>
                         </div>
                       </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <strong>Apellido:</strong>
+                          <p>{{ employeeForDetails.lastName }}</p>
+                        </div>
+                      </div>
+                    <div class="form-group">
+                      <strong>Dirección:</strong>
+                        @if (employeeForDetails.address) {
+                          <p>{{ employeeForDetails.address }}</p>
+                        } @else {
+                          <p>Sin dirección</p>
+                        }     
+                      </div>
+                    </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <strong>Telefono:</strong>
+                          <p>{{ employeeForDetails.phone }}</p>
+                      </div>
+                    </div>
+                  <div class="col-md-5">
+                    <div class="form-group">
+                      <strong>Email:</strong>
+                        <p>{{ employeeForDetails.email }}</p>
+                      </div>
+                    </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <strong>NSS:</strong>
+                        <p>{{ employeeForDetails.ssn }}</p>
+                    </div>
+                  </div>
+                  </div>
+                    @if (employeeForDetails.user) {
                       <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                           <div class="form-group">
-                            <strong>Telefono:</strong>
-                            <p>{{ employeeForDetails.phone }}</p>
-                          </div>
-                        </div>
-                        <div class="col-md-5">
-                          <div class="form-group">
-                            <strong>Email:</strong>
-                            <p>{{ employeeForDetails.email }}</p>
-                          </div>
-                        </div>
-                        <div class="col-md-3">
-                          <div class="form-group">
-                            <strong>NSS:</strong>
-                            <p>{{ employeeForDetails.ssn }}</p>
-                          </div>
-                        </div>
-                      </div>
-                      @if (employeeForDetails.user) {
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <strong>Usuario:</strong>
+                            <strong>Usuario:</strong>
                               <p>{{ employeeForDetails.user.username }}</p>
-                            </div>
                           </div>
-                          <!-- <div class="col-md-6">
-                            <div class="form-group">
-                              <strong>Permisos:</strong>
-                              <div *ngFor="let role of employeeForDetails.user.roles">
-                                <p>{{ role.toString() }}</p>
-                              </div>
-                            </div>
-                          </div> -->
                         </div>
-                      }
+                        <!-- <div class="col-md-6">
+                        <div class="form-group">
+                          <strong>Permisos:</strong>
+                        <div *ngFor="let role of employeeForDetails.user.roles">
+                          <p>{{ role.toString() }}</p>
+                        </div>
                       </div>
-
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" (click)="openEditModal(employeeForDetails)">Editar</button>
-                        <button type="button" class="btn btn-secondary" (click)="closeEmployeeDetails()">Cerrar</button>
-                      </div>
-
-                    }
-
-                  </div>
+                  </div> -->
+                </div>
+                        }
+              </div>
+  
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="openEditModal(employeeForDetails)">Editar</button>
+                <button type="button" class="btn btn-secondary" (click)="closeEmployeeDetails()">Cerrar</button>
+              </div>
+  
+            }
+  
                 </div>
               </div>
+            </div>
+            
+          </div>
+
         </div>
         <!-- /.container-fluid-->
       </div>

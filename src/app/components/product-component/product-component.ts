@@ -4,7 +4,6 @@ import { ProductService } from '../../services/product.service';
 import { CommonModule } from "@angular/common";
 import { FormsModule } from '@angular/forms';
 import { ProductFormComponent } from '../forms/product-form-component/product-form';
-import { BooleanToTextPipe } from '../../shared/pipes/boolean-to-text-pipe';
 import { ProductRequestDto } from '../../models/product-request-dto';
 import { NotificationService } from '../../services/notification.service';
 import { StockFormComponent } from "../forms/stock-form-component/stock-form-component";

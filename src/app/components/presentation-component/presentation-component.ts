@@ -6,6 +6,7 @@ import { Presentation } from '../../models/presentation';
 import { PresentationService } from '../../services/presentation.service';
 import { NotificationService } from '../../services/notification.service';
 import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
+import { OrderByPipe } from '../../shared/pipes/order-by-pipe';
 
 declare var $: any;
 
@@ -15,7 +16,8 @@ declare var $: any;
     CommonModule,
     FormsModule,
     PresentationFormComponent,
-    FilterByPipe
+    FilterByPipe,
+    OrderByPipe
   ],
   templateUrl: './presentation-component.html',
   styleUrl: './presentation-component.css'
@@ -28,6 +30,8 @@ export class PresentationComponent {
   presentations: Presentation[] = [];
   selectedPresentation: Presentation | null = null;
   searchTerm: string = '';
+  sortField: string = 'code';
+  sortDirection: 'asc' | 'desc' = 'asc'; 
 
   constructor(private presentationService: PresentationService, private notify: NotificationService) {}
 
@@ -59,6 +63,22 @@ export class PresentationComponent {
         console.error('Error al obtener las presentaciones:', error);
       }
     });
+  }
+
+  changeSort(field: string): void {
+    if (this.sortField === field) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortField = field;
+      this.sortDirection = 'asc';
+    }
+  }
+
+  getSortIcon(field: string): string {
+    if (this.sortField !== field) {
+      return 'fa fa-sort';
+    }
+    return this.sortDirection === 'asc' ? 'fa fa-sort-up' : 'fa fa-sort-down';
   }
 
   onPresentationSaved(presentation: Presentation): void {

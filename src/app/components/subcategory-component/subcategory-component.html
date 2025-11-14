@@ -14,123 +14,143 @@
       <div class="content">
         <div class="container-fluid">
 
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-header d-flex w-100 align-items-center">
-                  <h3 class="card-title my-auto">Lista de Subcategorías</h3>
+          <div class="subcategories-page">
 
-                  <div class="input-group input-group-sm mx-auto" style="width: 600px;">
-                    <input 
-                      type="text" 
-                      name="table_search" 
-                      class="form-control" 
-                      placeholder="Buscar subcategoría..."
-                      [(ngModel)]="searchTerm">
-                    <div class="input-group-append">
-                      <button type="button" class="btn btn-default">
-                        <i class="fas fa-search"></i>
-                      </button>
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header d-flex w-100 align-items-center subactegories-toolbar">
+                    <h3 class="card-title my-auto sucategories-toolbar-tittle">Lista de Subcategorías</h3>
+  
+                    <div class="input-group input-group-sm subcategories-search">
+                      <input 
+                        type="text" 
+                        name="table_search" 
+                        class="form-control" 
+                        placeholder="Buscar subcategoría..."
+                        [(ngModel)]="searchTerm">
+                      <div class="input-group-append">
+                        <button type="button" class="btn btn-default">
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </div>
                     </div>
+  
+                    <div class="ml-auto toolbar-actions">
+                      <button class="btn btn-success" (click)="openCreateModal()" data-toggle="modal" data-target="#subcategoryForm">
+                          <i class="fa-solid fa-circle-plus"></i> Agregar Subcategoría
+                      </button> 
                   </div>
-
-                  <div class="ml-auto">
-                    <button class="btn btn-success" (click)="openCreateModal()" data-toggle="modal" data-target="#subcategoryForm">
-                        <i class="fa-solid fa-circle-plus"></i> Agregar Subcategoría
-                    </button> 
-                </div>
-      
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body p-0">
-
-                  <div class="table-responsive w-100" style="max-height: 65vh; overflow: auto;">
-
-                    <table class="table table-hover text-nowrap mb-0 w-100">
-
-                      <thead class="thread-light">
-                        <tr class="text-center">
-                          <th>Nombre</th>
-                          <th>Descripción</th>
-                          <th>Categoría</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        <tr class="text-center"
-                          *ngFor="let subcategory of subcategories | filterBy:searchTerm:['name','category.name']; trackBy: trackBySubcategory">
-                          <td>{{ subcategory.name | uppercase}}</td>
-                          @if (subcategory.description) {
-                            <td>{{ subcategory.description }}</td>
-                          } @else {
-                            <td>Sin Descripción</td>
-                          }
-                          @if (subcategory.category) {
-                            <td>{{ subcategory.category.name| uppercase }}</td>
-                          } @else {
-                            <td>Sin Categoría</td>
-                          }
-                          <td>
-                            <button 
-                            class="btn btn-warning btn-sm mr-2"
-                            (click)="openEditModal(subcategory)"
-                            data-bs-toggle="tooltip"
-                            data-placement="top"
-                            title="Editar">
-                                <i class="fa-solid fa-file-pen"></i>
-                          </button>
-                            <button 
-                            *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
-                              class="btn btn-danger btn-sm mr-2" 
-                              (click)="deleteSubcategory(subcategory)"
+        
+                  </div>
+                  <!-- /.card-header -->
+                  <div class="card-body p-0">
+  
+                    <div class="table-responsive w-100 subcategories-table-wrapper">
+  
+                      <table class="table table-hover text-nowrap mb-0 w-100">
+  
+                        <thead class="thread-light">
+                          <tr class="text-center">
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('name')">
+                              Nombre
+                              <i [class]="getSortIcon('name')" class="ml-1"></i>
+                            </th>                             
+                            <th>Descripción</th>
+                            <th 
+                              class="sortable-header"
+                              style="position: sticky; top: 0; background: white; z-index: 10;"
+                              (click)="changeSort('category.name')">
+                              Categoría
+                              <i [class]="getSortIcon('category.name')" class="ml-1"></i>
+                            </th> 
+                            <th></th>
+                          </tr>
+                        </thead>
+  
+                        <tbody>
+                          <tr class="text-center"
+                            *ngFor="let subcategory of (subcategories 
+                              | filterBy:searchTerm:['name','category.name']
+                              |orderby: sortField : sortDirection); 
+                              trackBy: trackBySubcategory">
+                            <td>{{ subcategory.name | uppercase}}</td>
+                            @if (subcategory.description) {
+                              <td>{{ subcategory.description }}</td>
+                            } @else {
+                              <td>Sin Descripción</td>
+                            }
+                            @if (subcategory.category) {
+                              <td>{{ subcategory.category.name| uppercase }}</td>
+                            } @else {
+                              <td>Sin Categoría</td>
+                            }
+                            <td>
+                              <button 
+                              class="btn btn-warning btn-sm mr-2"
+                              (click)="openEditModal(subcategory)"
                               data-bs-toggle="tooltip"
                               data-placement="top"
-                              title="Eliminar">
-                              <i class="fa-solid fa-trash"></i>
+                              title="Editar">
+                                  <i class="fa-solid fa-file-pen"></i>
                             </button>
+                              <button 
+                              *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
+                                class="btn btn-danger btn-sm mr-2" 
+                                (click)="deleteSubcategory(subcategory)"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Eliminar">
+                                <i class="fa-solid fa-trash"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+  
+                        <tfoot>
+                          <td colspan="8" class="text-right font-weight-bold">
+                            Total de subcategorías: {{ (subcategories | filterBy:searchTerm:['name','category.name']).length }}
                           </td>
-                        </tr>
-                      </tbody>
-
-                      <tfoot>
-                        <td colspan="8" class="text-right font-weight-bold">
-                          Total de subcategorías: {{ (subcategories | filterBy:searchTerm:['name','category.name']).length }}
-                        </td>
-                      </tfoot>
-
-                    </table>
+                        </tfoot>
+  
+                      </table>
+                    </div>
+  
                   </div>
-
+                  <!-- /.card-body -->
                 </div>
-                <!-- /.card-body -->
+                <!-- /.card -->
               </div>
-              <!-- /.card -->
+            </div> 
+  
+  
+            <div class="modal fade" id="subcategoryModal" tabindex="-1" role="dialog" aria-labelledby="subcategoryModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="subcategoryModalLabel">
+                      {{ selectedSubcategory ? 'Editar Subcategoría' : 'Agregar Subcategoría' }}
+                    </h5>
+                    <button type="button" class="close" (click)="closeSubcategoryForm()">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <app-subcategory-form 
+                      #subcategoryFormModal
+                      [subcategory]="selectedSubcategory" 
+                      (saveSubcategory)="onSubcategorySaved($event)">
+                    </app-subcategory-form>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div> 
 
+          </div>
 
-              <div class="modal fade" id="subcategoryModal" tabindex="-1" role="dialog" aria-labelledby="subcategoryModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="subcategoryModalLabel">
-                        {{ selectedSubcategory ? 'Editar Subcategoría' : 'Agregar Subcategoría' }}
-                      </h5>
-                      <button type="button" class="close" (click)="closeSubcategoryForm()">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <app-subcategory-form 
-                        #subcategoryFormModal
-                        [subcategory]="selectedSubcategory" 
-                        (saveSubcategory)="onSubcategorySaved($event)">
-                      </app-subcategory-form>
-                    </div>
-                  </div>
-                </div>
-              </div>
         </div>
         <!-- /.container-fluid-->
       </div>
