@@ -170,8 +170,8 @@
                              | orderby: sortField : sortDirection);
                                trackBy: trackByProduct">
 
-                            <td class="text-truncate" style="max-width: 150px;">{{ product.code | uppercase }}</td>
-                            <td class="text-truncate" style="max-width: 250px;">{{ product.name }}</td>
+                            <td class="text-truncate" [title]="product.code" style="max-width: 150px;">{{ product.code | uppercase }}</td>
+                            <td class="text-truncate" [title]="product.name" style="max-width: 250px;">{{ product.name }}</td>
                             <td>{{ product.cost | currency }}</td>
                             <td>{{ product. price | currency }}</td>
                             <td>{{ product.stock }}</td>
