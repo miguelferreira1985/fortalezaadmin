@@ -1,0 +1,191 @@
+<div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0">
+            Órdenes de compra
+            <small *ngIf="supplierName"> – {{ supplierName }}</small>
+          </h1>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="content">
+    <div class="container-fluid">
+  
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+  
+      <!-- Nueva orden -->
+      <div class="card card-primary">
+        <div class="card-header">
+          <h3 class="card-title">Nueva orden de compra</h3>
+        </div>
+
+        <div class="card-body">
+  
+          <form [formGroup]="orderForm" novalidate>
+
+            <div class="form-row mb-3">
+              <div class="form-group col-md-4">
+                <label for="expectedDeliveryDate">Fecha estimada de entrega</label>
+                <input
+                  id="expectedDeliveryDate"
+                  type="date"
+                  class="form-control"
+                  formControlName="expectedDeliveryDate">
+              </div>
+            </div>
+    
+            <!-- Selector de productos -->
+            <div class="form-row align-items-end">
+              <div class="form-group col-md-6">
+                <label>Producto</label>
+                <ng-select
+                  formControlName="productId"
+                  [items]="products"
+                  bindLabel="name"
+                  bindValue="id"
+                  placeholder="Seleccione un producto">
+                </ng-select>
+              </div>
+              <div class="form-group col-md-3">
+                <label>Cantidad</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  min="0.01"
+                  step="0.01"
+                  formControlName="quantity">
+              </div>
+              <div class="form-group col-md-3">
+                <button
+                  class="btn btn-primary btn-block"
+                  [disabled]="!canAddItem"
+                  (click)="addItem()">
+                  Agregar a la orden
+                </button>
+              </div>
+            </div>
+    
+            <!-- Tabla de items en borrador -->
+            <div *ngIf="draftItems.length > 0" class="mt-4">
+              <h5>Productos en la orden</h5>
+              <div class="table-responsive">
+                <table class="table table-sm table-striped">
+                  <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th style="width: 80px;"></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let item of draftItems">
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>
+                      <button class="btn btn-sm btn-danger"
+                              (click)="removeDraftItem(item.product.id!)">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  </tbody>
+                  <tfoot>
+                  <tr>
+                    <th>Total de unidades</th>
+                    <th>{{ draftTotalQuantity }}</th>
+                    <th></th>
+                  </tr>
+                  </tfoot>
+                </table>
+              </div>
+    
+              <button
+                class="btn btn-success"
+                [disabled]="!canCreateOrder || isSaving"
+                (click)="createOrder()">
+                <span *ngIf="!isSaving">Crear orden de compra</span>
+                <span *ngIf="isSaving">
+                  <i class="fas fa-spinner fa-spin"></i> Guardando...
+                </span>
+              </button>
+            </div>
+    
+            <div *ngIf="draftItems.length === 0" class="text-muted mt-3">
+              Agrega uno o más productos para crear una orden.
+            </div>
+
+          </form>
+  
+        </div>
+
+      </div>
+  
+      <!-- Historial de órdenes -->
+      <div class="card card-outline card-secondary mt-3">
+        <div class="card-header">
+          <h3 class="card-title">Órdenes de compra del proveedor</h3>
+        </div>
+        <div class="card-body p-0">
+  
+          <div *ngIf="orders.length === 0" class="p-3 text-muted">
+            Aún no hay órdenes de compra para este proveedor.
+          </div>
+  
+          <div *ngIf="orders.length > 0" class="table-responsive">
+            <table class="table table-striped table-hover mb-0">
+              <thead>
+              <tr>
+                <th>Folio</th>
+                <th>Fecha creación</th>
+                <th>Fecha estimada</th>
+                <th>Status</th>
+                <th>Total c/ IVA</th>
+                <th>Total s/ IVA</th>
+                <th style="width: 150px;">Acciones</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let order of orders">
+                <td>#{{ order.id }}</td>
+                <td>{{ order.createdDateTime | date:'short' }}</td>
+                <td>{{ order.expectedDeliveryDate | date:'shortDate' }}</td>
+                <td>
+                  <span class="badge"
+                        [ngClass]="{
+                          'badge-warning': order.status === statusEnum.PENDIENTE,
+                          'badge-info': order.status === statusEnum.PARCIALMENTE_RECIBIDA,
+                          'badge-success': order.status === statusEnum.COMPLETADA,
+                          'badge-danger': order.status === statusEnum.CANCELADA
+                        }">
+                    {{ order.status }}
+                  </span>
+                </td>
+                <td>{{ order.totalCostWithTaxes | currency }}</td>
+                <td>{{ order.totalCostWithoutTaxes | currency }}</td>
+                <td>
+                  <!-- Aquí luego metemos botones para ver detalle, recibir, cancelar -->
+                  <button class="btn btn-sm btn-outline-primary mr-1" disabled>
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-success mr-1" disabled>
+                    <i class="fas fa-truck"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" disabled>
+                    <i class="fas fa-ban"></i>
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+  
+        </div>
+      </div>
+  
+    </div>
+  </div>

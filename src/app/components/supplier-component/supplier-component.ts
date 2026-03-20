@@ -8,6 +8,7 @@ import { NotificationService } from '../../services/notification.service';
 import { FilterByPipe } from '../../shared/pipes/filter-by-pipe';
 import { HasRoleDirective } from '../../core/has-role.directive';
 import { OrderByPipe } from '../../shared/pipes/order-by-pipe';
+import { Router } from '@angular/router';
 
 declare var $: any;
 
@@ -35,7 +36,10 @@ export class SupplierComponent {
   sortField: string = 'code';
   sortDirection: 'asc' | 'desc' = 'asc'; 
 
-  constructor(private supplierService: SupplierService, private notify: NotificationService) {}
+  constructor(
+    private supplierService: SupplierService, 
+    private router: Router,
+    private notify: NotificationService) {}
 
   ngOnInit(): void {
     this.getSuppliers();
@@ -133,6 +137,10 @@ export class SupplierComponent {
 
   trackBySupplier(index: number, item: Supplier): number {
     return item.id ?? index;
+  }
+
+  goToPurchaseOrders(supplierId: number): void {
+    this.router.navigate(['/suppliers', supplierId, 'purchase-orders']);
   }
 
 }

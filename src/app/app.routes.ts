@@ -85,6 +85,18 @@ export const routes: Routes = [
           import('./components/user-component/user-component').then(m => m.UserComponent),
         canActivate: [authGuard],
         data: { roles: ['ROLE_ADMIN', 'ROLE_MANAGER'] }
+      },
+      {
+        path: 'suppliers/:supplierId/purchase-orders',
+        loadComponent: () =>
+          import('./components/supplier-purchase-orders/supplier-purchase-orders.component').then(m => m.SupplierPurchaseOrdersComponent),
+        canActivate: [authGuard]
+      },
+      {
+        path: 'purchase-orders',
+        loadComponent: () =>
+          import('./components/purchase-order-list/purchase-order-list.component').then(m => m.PurchaseOrderListComponent),
+        canActivate: [authGuard]
       }
     ]
   }

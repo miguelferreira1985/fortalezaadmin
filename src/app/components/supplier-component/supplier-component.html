@@ -111,6 +111,15 @@
                               </button>
                               <button 
                                 *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
+                                class="btn btn-success btn-sm mr-2" 
+                                (click)="goToPurchaseOrders(supplier.id!)"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                title="Ordenes de compra">
+                              <i class="fas fa-file-invoice-dollar"></i>
+                            </button>
+                              <button 
+                                *hasRole="['ROLE_ADMIN', 'ROLE_MANAGER']"
                                 class="btn btn-danger btn-sm mr-2" 
                                 data-bs-toggle="tooltip"
                                 data-placement="top"
